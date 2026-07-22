@@ -37,4 +37,4 @@ class Package(models.Model):
     featured_image = models.FileField(upload_to="packages/")
 
     def _str_(self):
-       return self.name
+       return self.title
