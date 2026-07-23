@@ -38,3 +38,17 @@ class Package(models.Model):
 
     def _str_(self):
        return self.title
+
+class Booking(models.Model):
+    package = models.ForeignKey(Package, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=150)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30)
+    number_of_people = models.PositiveIntegerField()
+    travel_date = models.DateField()
+    special_requests = models.TextField(blank=True, null=True)
+    booked_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.package.title}"
+    

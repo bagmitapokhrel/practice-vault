@@ -1,0 +1,29 @@
+{% extends "userpage/base.html" %}
+{% block title %}Destination Details{% endblock %}
+{% block content %}
+ <section id="destination-detail" class="py-5 my-5">
+        <div class="container py-4">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-5 fw-bold text-dark mt-1">{{ destination.name }}</h2>
+                <span class="text-accent text-uppercase fw-semibold small">{{ destination.location }}</span>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+                    <div class="luxury-card h-100">
+                        <div class="card-img-zoom position-relative" style="height: 400px;">
+                            {% if destination.image %}
+                                <img src="{{ destination.image.url }}" alt="{{ destination.name }}" class="w-100 h-100 object-fit-cover">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Destination Default" class="w-100 h-100 object-fit-cover">
+                            {% endif %}
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray small mb-3">{{ destination.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+{% endblock %}

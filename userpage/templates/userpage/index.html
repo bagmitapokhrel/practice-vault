@@ -24,34 +24,32 @@
             <div class="row" data-aos="fade-up" data-aos-delay="200">
                 <div class="col-lg-10 mx-auto">
                     <div class="search-box-glass">
-                        <form class="row g-3 align-items-center">
+                        <form method="GET" action="" class="row g-3 align-items-center">
                             <div class="col-md-3">
                                 <label class="form-label text-gray small mb-1"><i class="bi bi-geo-alt text-accent me-1"></i> Destination</label>
-                                <select class="form-select bg-dark text-white border-0 py-2">
-                                    <option selected>All Destinations</option>
-                                    <option>Everest Base Camp</option>
-                                    <option>Pokhara</option>
-                                    <option>Annapurna</option>
-                                    <option>Rara Lake</option>
+                                <select name="destination" class="form-select bg-dark text-white border-0 py-2">
+                                    <option selected value="">All Destinations</option>
+                                    {% for dest in destinations %}
+                                        <option value="{{ dest.id }}">{{ dest.name }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label text-gray small mb-1"><i class="bi bi-tree text-accent me-1"></i> Category</label>
-                                <select class="form-select bg-dark text-white border-0 py-2">
-                                    <option selected>All Categories</option>
-                                    <option>Trekking</option>
-                                    <option>Hiking</option>
-                                    <option>Wildlife Safari</option>
-                                    <option>Pilgrimage</option>
+                                <select name="category" class="form-select bg-dark text-white border-0 py-2">
+                                    <option selected value="">All Categories</option>
+                                    {% for cat in categories %}
+                                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label text-gray small mb-1"><i class="bi bi-calendar text-accent me-1"></i> Duration</label>
-                                <select class="form-select bg-dark text-white border-0 py-2">
-                                    <option selected>Any Duration</option>
-                                    <option>1 - 5 Days</option>
-                                    <option>6 - 10 Days</option>
-                                    <option>11+ Days</option>
+                                <select name="duration" class="form-select bg-dark text-white border-0 py-2">
+                                    <option selected value="">Any Duration</option>
+                                    <option value="1-5">1 - 5 Days</option>
+                                    <option value="6-10">6 - 10 Days</option>
+                                    <option value="11+">11+ Days</option>
                                 </select>
                             </div>
                             <div class="col-md-3 d-grid mt-4">
@@ -64,7 +62,7 @@
         </div>
     </section>
 
-    <!-- 2. Popular Destinations -->
+    <!-- 2. Popular Destinations (Dynamic from DB) -->
     <section id="destinations" class="py-5 my-5">
         <div class="container py-4">
             <div class="text-center mb-5" data-aos="fade-up">
@@ -72,48 +70,32 @@
                 <h2 class="display-5 fw-bold text-white mt-1">Popular Destinations</h2>
             </div>
             <div class="row g-4">
+                {% for dest in destinations %}
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="luxury-card h-100">
                         <div class="card-img-zoom position-relative" style="height: 260px;">
-                            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Everest">
-                            <span class="position-absolute top-0 end-m badge bg-accent m-3 px-3 py-2 rounded-pill">15 Tours</span>
+                            {% if dest.image %}
+                                <img src="{{ dest.image.url }}" alt="{{ dest.name }}" class="w-100 h-100 object-fit-cover">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Destination Default" class="w-100 h-100 object-fit-cover">
+                            {% endif %}
+                            <span class="position-absolute top-0 end-0 badge bg-accent m-3 px-3 py-2 rounded-pill">{{ dest.location }}</span>
                         </div>
                         <div class="p-4">
-                            <div class="text-gold mb-2"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                            <h3 class="h4 fw-bold text-white mb-2">Everest</h3>
-                            <p class="text-gray small mb-3">Experience the roof of the world with majestic peaks and legendary Sherpa culture.</p>
+                            <div class="text-gold mb-2">
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                            </div>
+                            <h3 class="h4 fw-bold text-white mb-2">{{ dest.name }}</h3>
+                            <p class="text-gray small mb-3">{{ dest.description|truncatechars:90 }}</p>
                             <a href="#" class="text-accent text-decoration-none fw-semibold small">Explore Destination <i class="bi bi-arrow-right ms-1"></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="luxury-card h-100">
-                        <div class="card-img-zoom position-relative" style="height: 260px;">
-                            <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80" alt="Pokhara">
-                            <span class="position-absolute top-0 end-0 badge bg-accent m-3 px-3 py-2 rounded-pill">22 Tours</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-gold mb-2"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
-                            <h3 class="h4 fw-bold text-white mb-2">Pokhara</h3>
-                            <p class="text-gray small mb-3">A serene city of lakes, reflection views of Annapurna, and high-adrenaline adventure sports.</p>
-                            <a href="#" class="text-accent text-decoration-none fw-semibold small">Explore Destination <i class="bi bi-arrow-right ms-1"></i></a>
-                        </div>
-                    </div>
+                {% empty %}
+                <div class="col-12 text-center text-gray">
+                    <p>No destinations found in the database. Add some via the Django Admin!</p>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="luxury-card h-100">
-                        <div class="card-img-zoom position-relative" style="height: 260px;">
-                            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Rara Lake">
-                            <span class="position-absolute top-0 end-0 badge bg-accent m-3 px-3 py-2 rounded-pill">8 Tours</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-gold mb-2"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                            <h3 class="h4 fw-bold text-white mb-2">Rara Lake</h3>
-                            <p class="text-gray small mb-3">The pearl of Nepal’s pristine wilderness, offering crystal clear blue alpine waters.</p>
-                            <a href="#" class="text-accent text-decoration-none fw-semibold small">Explore Destination <i class="bi bi-arrow-right ms-1"></i></a>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
@@ -129,13 +111,14 @@
                 {% for cat in categories %}
                 <div class="col-lg-3 col-md-4 col-6" data-aos="zoom-in" data-aos-delay="50">
                     <div class="glass-category p-4 text-center">
-                        <h4 class="h6 fw-bold text-white mb-0">{{cat.name}}</h4>
+                        <h4 class="h6 fw-bold text-white mb-0">{{ cat.name }}</h4>
                     </div>
                 </div>
+                {% empty %}
+                <div class="col-12 text-center text-gray">
+                    <p>No categories found.</p>
+                </div>
                 {% endfor %}
-                
-              
-                
             </div>
         </div>
     </section>
@@ -193,7 +176,7 @@
         </div>
     </section>
 
-    <!-- 5. Featured Tours -->
+    <!-- 5. Featured Tours (Dynamic Packages from DB) -->
     <section id="tours" class="py-5 bg-secondary bg-opacity-25">
         <div class="container py-4">
             <div class="text-center mb-5" data-aos="fade-up">
@@ -201,66 +184,40 @@
                 <h2 class="display-5 fw-bold text-white mt-1">Featured Tours</h2>
             </div>
             <div class="row g-4">
+                {% for package in packages %}
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="luxury-card h-100 d-flex flex-column">
                         <div class="card-img-zoom position-relative" style="height: 240px;">
-                            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="EBC">
-                            <span class="position-absolute top-0 start-0 badge bg-dark m-3 px-3 py-2 rounded-pill"><i class="bi bi-clock me-1 text-accent"></i> 14 Days</span>
+                            {% if package.featured_image %}
+                                <img src="{{ package.featured_image.url }}" alt="{{ package.title }}" class="w-100 h-100 object-fit-cover">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Package Default" class="w-100 h-100 object-fit-cover">
+                            {% endif %}
+                            <span class="position-absolute top-0 start-0 badge bg-dark m-3 px-3 py-2 rounded-pill">
+                                <i class="bi bi-clock me-1 text-accent"></i> {{ package.duration }}
+                            </span>
                         </div>
                         <div class="p-4 d-flex flex-column flex-grow-1">
-                            <div class="text-gold mb-1"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></div>
-                            <h3 class="h4 fw-bold text-white mb-2">Everest Base Camp</h3>
-                            <p class="text-gray small flex-grow-1">The classic trek to the foothills of the world's highest peak with expert climbing Sherpas.</p>
+                            <div class="text-gold mb-1">
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                            </div>
+                            <h3 class="h4 fw-bold text-white mb-2">{{ package.title }}</h3>
+                            <p class="text-gray small flex-grow-1">Destination: {{ package.destination.name }} | Difficulty: {{ package.difficulty }}</p>
                             <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top border-secondary">
                                 <div>
                                     <span class="small text-gray d-block">From</span>
-                                    <span class="h5 fw-bold text-white mb-0">$1,200</span>
+                                    <span class="h5 fw-bold text-white mb-0">${{ package.price }}</span>
                                 </div>
-                                <a href="#" class="btn btn-accent btn-sm px-3 rounded-pill">Book Now</a>
+                                <a href="{% url 'package_detail' package.id %}" class="btn btn-accent btn-sm px-3 rounded-pill">Book Now</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="luxury-card h-100 d-flex flex-column">
-                        <div class="card-img-zoom position-relative" style="height: 240px;">
-                            <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80" alt="Annapurna">
-                            <span class="position-absolute top-0 start-0 badge bg-dark m-3 px-3 py-2 rounded-pill"><i class="bi bi-clock me-1 text-accent"></i> 10 Days</span>
-                        </div>
-                        <div class="p-4 d-flex flex-column flex-grow-1">
-                            <div class="text-gold mb-1"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                            <h3 class="h4 fw-bold text-white mb-2">Annapurna Circuit</h3>
-                            <p class="text-gray small flex-grow-1">Voted world's best long-distance trek, traversing diverse eco-zones and high mountain passes.</p>
-                            <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top border-secondary">
-                                <div>
-                                    <span class="small text-gray d-block">From</span>
-                                    <span class="h5 fw-bold text-white mb-0">$950</span>
-                                </div>
-                                <a href="#" class="btn btn-accent btn-sm px-3 rounded-pill">Book Now</a>
-                            </div>
-                        </div>
-                    </div>
+                {% empty %}
+                <div class="col-12 text-center text-gray">
+                    <p>No tour packages found. Add packages in your Django Admin panel!</p>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="luxury-card h-100 d-flex flex-column">
-                        <div class="card-img-zoom position-relative" style="height: 240px;">
-                            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Langtang">
-                            <span class="position-absolute top-0 start-0 badge bg-dark m-3 px-3 py-2 rounded-pill"><i class="bi bi-clock me-1 text-accent"></i> 8 Days</span>
-                        </div>
-                        <div class="p-4 d-flex flex-column flex-grow-1">
-                            <div class="text-gold mb-1"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
-                            <h3 class="h4 fw-bold text-white mb-2">Langtang Valley Trek</h3>
-                            <p class="text-gray small flex-grow-1">Valley of glaciers close to Kathmandu featuring rich Tamang culture and alpine landscapes.</p>
-                            <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top border-secondary">
-                                <div>
-                                    <span class="small text-gray d-block">From</span>
-                                    <span class="h5 fw-bold text-white mb-0">$780</span>
-                                </div>
-                                <a href="#" class="btn btn-accent btn-sm px-3 rounded-pill">Book Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>

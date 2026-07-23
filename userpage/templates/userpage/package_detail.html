@@ -1,0 +1,100 @@
+{% extends 'userpage/base.html' %}
+
+{% block title %}{{ package.title }} | Himalayan Horizons{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show bg-success text-white border-0" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="mb-4">
+                    <span class="badge bg-accent px-3 py-2 rounded-pill mb-3">{{ package.destination.name }}</span>
+                    <h1 class="display-5 fw-bold text-white">{{ package.title }}</h1>
+                </div>
+                
+                {% if package.featured_image %}
+                <div class="rounded-4 overflow-hidden mb-4 shadow-lg" style="max-height: 400px;">
+                    <img src="{{ package.featured_image.url }}" alt="{{ package.title }}" class="w-100 h-100 object-fit-cover">
+                </div>
+                {% endif %}
+
+                <div class="row g-3 mb-4 text-center">
+                    <div class="col-4">
+                        <div class="glass-category p-3">
+                            <span class="text-gray small d-block">Duration</span>
+                            <span class="fw-bold text-white">{{ package.duration }}</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="glass-category p-3">
+                            <span class="text-gray small d-block">Difficulty</span>
+                            <span class="fw-bold text-white">{{ package.difficulty }}</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="glass-category p-3">
+                            <span class="text-gray small d-block">Max Group</span>
+                            <span class="fw-bold text-white">{{ package.max_people }} People</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="luxury-card p-4 mb-4">
+                    <h3 class="h5 fw-bold text-white mb-3">Itinerary</h3>
+                    <p class="text-gray" style="white-space: pre-line;">{{ package.itinerery }}</p>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="luxury-card p-4 sticky-top" style="top: 100px;">
+                    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+                        <span class="text-gray">Price per person</span>
+                        <span class="h3 fw-bold text-accent mb-0">${{ package.price }}</span>
+                    </div>
+
+                    <h3 class="h5 fw-bold text-white mb-3">Book This Tour</h3>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label text-gray small mb-1">Full Name</label>
+                            {{ form.full_name }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-gray small mb-1">Email Address</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-gray small mb-1">Phone Number</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-gray small mb-1">Number of People</label>
+                            {{ form.number_of_people }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-gray small mb-1">Travel Date</label>
+                            {{ form.travel_date }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-gray small mb-1">Special Requests</label>
+                            {{ form.special_requests }}
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-accent py-3 fw-semibold rounded-pill">Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
