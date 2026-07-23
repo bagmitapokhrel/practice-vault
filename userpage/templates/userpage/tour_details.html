@@ -1,0 +1,188 @@
+{% extends 'userpage/base.html' %}
+{% load static %}
+
+{% block title %}{{ tour.package.title }}{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="py-5 bg-dark text-white">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <img src="{{ package.featured_image.url }}"
+                     class="img-fluid rounded-4 shadow"
+                     alt="{{ package.title }}">
+            </div>
+
+            <div class="col-lg-6">
+
+                <span class="badge bg-success mb-3">
+                    {{ tour.package.destination.category.name }}
+                </span>
+
+                <h1 class="fw-bold mb-3">
+                    {{ tour.package.title }}
+                </h1>
+
+                <p class="text-light">
+                    {{ tour.package.destination.description }}
+                </p>
+
+                <div class="row mt-4">
+
+                    <div class="col-6 mb-3">
+                        <strong> Destination</strong><br>
+                        {{ tour.package.destination.name }}
+                    </div>
+
+                    <div class="col-6 mb-3">
+                        <strong> Duration</strong><br>
+                        {{ tour.package.duration }}
+                    </div>
+
+                    <div class="col-6 mb-3">
+                        <strong> Difficulty</strong><br>
+                        {{ tour.package.difficulty }}
+                    </div>
+
+                    <div class="col-6 mb-3">
+                        <strong> Max People</strong><br>
+                        {{ tour.package.max_people }}
+                    </div>
+
+                </div>
+
+                <h2 class="text-warning mt-4">
+                    ${{ tour.package.price }}
+                </h2>
+
+                <a href="#"
+                   class="btn btn-success btn-lg mt-3">
+                    Book Now
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Itinerary -->
+<section class="py-5">
+    <div class="container">
+
+        <h2 class="mb-4">Tour Itinerary</h2>
+
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body">
+
+                {{ tour.package.itinerary|linebreaks }}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Includes / Excludes -->
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-6">
+
+                <div class="card border-0 shadow rounded-4 mb-4">
+
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            ✔ Includes
+                        </h4>
+                    </div>
+
+                    <div class="card-body">
+                        {{ tour.package.includes|linebreaks }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <div class="card border-0 shadow rounded-4">
+
+                    <div class="card-header bg-danger text-white">
+                        <h4 class="mb-0">
+                            ✖ Excludes
+                        </h4>
+                    </div>
+
+                    <div class="card-body">
+                        {{ tour.package.excludes|linebreaks }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Destination -->
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="card border-0 shadow rounded-4">
+
+            <div class="card-body">
+
+                <h2 class="mb-4">
+                    About Destination
+                </h2>
+
+                <p>
+                    {{ tour.package.destination.description }}
+                </p>
+
+                <div class="row mt-4">
+
+                    <div class="col-md-4">
+
+                        <strong> Location</strong><br>
+                        {{ tour.package.destination.location }}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <strong> Best Time</strong><br>
+                        {{ tour.package.destination.best_time_to_visit }}
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <strong>🏷 Category</strong><br>
+                        {{ tour.package.destination.category.name }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}   okay give me reponsive premium tour_detail.html
