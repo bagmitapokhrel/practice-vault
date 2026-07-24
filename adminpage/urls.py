@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import PackageCreateView
 
-urlspatterns = [
+urlpatterns = [
 
-    path('packages/create/', PackageCreateView(), name='package_create'),
+    path('packages/create/', PackageCreateView, name='package_create'),
 ]
