@@ -1,4 +1,5 @@
 from django.db import models
+from django_ckeditor_5.fields import CKEditor5Field
 
 # Create your models here.
 
@@ -31,9 +32,9 @@ class Package(models.Model):
     difficulty = models.CharField(max_length=30)
     price = models.IntegerField()
     max_people = models.IntegerField()
-    itinerery = models.CharField(max_length=10000)
-    includes = models.CharField(max_length=50000)
-    excludes = models.CharField(max_length=50000)
+    itinerery = CKEditor5Field('Intinerary', config_name='default')
+    includes = CKEditor5Field('Includes', config_name='default')
+    excludes = CKEditor5Field('Excludes', config_name='default')    
     featured_image = models.FileField(upload_to="packages/")
 
     def _str_(self):

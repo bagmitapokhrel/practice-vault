@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'adminpage',
     'userpage',
-    'crisp_forms',
+    'crispy_forms',
     'crispy_bootstrap5',
     'django_ckeditor_5',
 

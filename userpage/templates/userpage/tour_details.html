@@ -78,7 +78,7 @@
         <div class="card shadow border-0 rounded-4">
             <div class="card-body">
 
-                {{ tour.package.itinerary|linebreaks }}
+                {{ tour.package.itinerary|safe }}
 
             </div>
         </div>
@@ -104,7 +104,7 @@
                     </div>
 
                     <div class="card-body">
-                        {{ tour.package.includes|linebreaks }}
+                        {{ tour.package.includes|safe }}
                     </div>
 
                 </div>
@@ -122,7 +122,7 @@
                     </div>
 
                     <div class="card-body">
-                        {{ tour.package.excludes|linebreaks }}
+                        {{ tour.package.excludes|safe }}
                     </div>
 
                 </div>
