@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'adminpage',
     'userpage',
+    'crisp_forms',
+    'crispy_bootstrap5',
+    'django_ckeditor_5',
+
 ]
 
 MIDDLEWARE = [
@@ -123,3 +127,36 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+CKEDITOR_5_CONFIGS = {
+     "default": {
+        "toolbar": [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "|",
+            "fontColor",
+            "fontBackgroundColor",
+            "|",
+            "bulletedList",
+            "numberedList",
+            "todoList",
+            "|",
+            "outdent",
+            "indent",
+            "|",
+            "link",
+            "insertTable",
+            "blockQuote",
+            "imageUpload",
+            "mediaEmbed",
+            "|",
+            "undo",
+            "redo",
+        ],
+        "height": "500px",
+    }
+}
