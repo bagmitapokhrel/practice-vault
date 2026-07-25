@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from adminpage.models import Category, Destination, Package, Booking
+from adminpage.models import Category, Destination, Package, Booking, Tour, Review
 from .forms import BookingForm
 # Create your views here.
 def index(request):
@@ -50,3 +50,22 @@ def destination_detail(request, destination_id):
         'destination': destination,
     }
     return render(request, 'userpage/destination_detail.html', context)
+
+def tour(request):
+    tours = Tour.objects.all()
+    context = {
+        'tours': tours,
+    }
+    return render(request, 'userpage/tour.html', context)
+
+def tour_detail(request, tour_id):
+    tour = get_object_or_404(Tour, id=tour_id)
+    
+    context = {
+        'tour': tour,
+    }
+    return render(request, 'userpage/tour_detail.html', context)
+
+def review(request):
+    return render(request, 'userpage/review.html')
+

@@ -32,12 +32,12 @@ class Package(models.Model):
     difficulty = models.CharField(max_length=30)
     price = models.IntegerField()
     max_people = models.IntegerField()
-    itinerery = CKEditor5Field('Intinerary', config_name='default')
-    includes = CKEditor5Field('Includes', config_name='default')
-    excludes = CKEditor5Field('Excludes', config_name='default')    
+    itinerary = CKEditor5Field("Itinerary", config_name="default", blank=True, null=True)
+    includes = CKEditor5Field("Includes", config_name="default")
+    excludes = CKEditor5Field("Excludes", config_name="default")
     featured_image = models.FileField(upload_to="packages/")
 
-    def _str_(self):
+    def __str__(self):
        return self.title
 
 class Booking(models.Model):
@@ -48,21 +48,32 @@ class Booking(models.Model):
     number_of_people = models.PositiveIntegerField()
     travel_date = models.DateField()
     special_requests = models.TextField(blank=True, null=True)
-    booked_at = models.DateTimeField(auto_now_add=True, blank=True,null=True)
+    booked_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return f"{self.full_name} - {self.package.title}"
 
 class Tour(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
     start_date = models.DateField()
-    end_date = models.DateField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+    duration = models.CharField(max_length=50, blank=True, null=True)
+    package = models.ForeignKey(Package, on_delete=models.CASCADE, null=True,blank=True)
+    bookings = models.ManyToManyField(Booking, related_name="tours")
+
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
-    
+
+class Review(models.Model):
+    package = models.ForeignKey(Package, on_delete=models.CASCADE)
+    user_name = models.CharField(max_length=100)
+    rating = models.PositiveIntegerField()
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_name} - {self.package.title}"
+
     
