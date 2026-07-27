@@ -1,0 +1,120 @@
+{% extends "userpage/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<section class="min-vh-100 d-flex align-items-center py-5"
+style="background:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;">
+
+<div class="container">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-5">
+
+<div class="card border-0 shadow-lg rounded-4 overflow-hidden"
+style="backdrop-filter:blur(18px);
+background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.2);">
+
+<div class="card-body p-5">
+
+<div class="text-center mb-4">
+
+<h2 class="fw-bold text-white">
+Welcome Back
+</h2>
+
+<p class="text-light opacity-75">
+Sign in to continue your adventure.
+</p>
+
+</div>
+
+{% if messages %}
+{% for message in messages %}
+
+<div class="alert alert-danger">
+{{ message }}
+</div>
+
+{% endfor %}
+{% endif %}
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label class="form-label text-white">
+Username
+</label>
+
+<input
+type="text"
+name="username"
+class="form-control form-control-lg rounded-3"
+placeholder="Enter your username"
+required>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label text-white">
+Password
+</label>
+
+<input
+type="password"
+name="password"
+class="form-control form-control-lg rounded-3"
+placeholder="Enter your password"
+required>
+
+</div>
+
+<div class="d-grid">
+
+<button class="btn btn-success btn-lg rounded-3">
+
+Login
+
+</button>
+
+</div>
+
+<div class="text-center mt-4">
+
+<span class="text-white">
+Don't have an account?
+</span>
+
+<a href="{% url 'register' %}"
+class="text-warning fw-semibold text-decoration-none">
+
+Create One
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

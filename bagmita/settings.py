@@ -160,3 +160,7 @@ CKEDITOR_5_CONFIGS = {
         "height": "500px",
     }
 }
+
+LOGIN_REDIRECT_URL = "dashboard"
+
+LOGOUT_REDIRECT_URL = "login"
