@@ -14,7 +14,7 @@ class Category(models.Model):
 
 class Destination(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = CKEditor5Field("Description", config_name="default")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     location = models.CharField(max_length=150)
