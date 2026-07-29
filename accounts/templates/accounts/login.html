@@ -1,120 +1,162 @@
-{% extends "userpage/base.html" %}
-{% load crispy_forms_tags %}
-{% load static %}
+{% extends 'userpage/base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Login | Aetheria Journeys{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-section {
+        padding-top: 5rem;
+        padding-bottom: 6rem;
+    }
+
+    .auth-card {
+        background: #FFFFFF;
+        border: 1px solid var(--lux-border);
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+    }
+
+    .form-control-lux {
+        background-color: #FAFAFA !important;
+        border: 1px solid var(--lux-border) !important;
+        color: var(--lux-primary) !important;
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control-lux:focus {
+        background-color: #FFFFFF !important;
+        border-color: var(--lux-primary) !important;
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    .input-group-text-lux {
+        background-color: #FAFAFA !important;
+        border: 1px solid var(--lux-border) !important;
+        border-right: none !important;
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+        color: var(--lux-text-muted);
+    }
+
+    .input-group .form-control-lux {
+        border-left: none !important;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .divider-text {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--lux-text-muted);
+        font-size: 0.85rem;
+    }
+
+    .divider-text::before,
+    .divider-text::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--lux-border);
+    }
+
+    .divider-text:not(:empty)::before {
+        margin-right: .75em;
+    }
+
+    .divider-text:not(:empty)::after {
+        margin-left: .75em;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<section class="auth-section min-vh-100 d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7" data-aos="fade-up" data-aos-duration="800">
+                
+                <div class="auth-card p-4 p-sm-5">
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <span class="text-uppercase text-muted tracking-widest-xl small d-block mb-1">Welcome Back</span>
+                        <h2 class="display-6 font-serif fw-bold text-dark mb-2">Access Your Account</h2>
+                        <p class="text-muted small">Enter your credentials to manage your private expeditions.</p>
+                    </div>
 
-<section class="min-vh-100 d-flex align-items-center py-5"
-style="background:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;">
+                    <!-- Form -->
+                    <form method="POST" action="">
+                        {% csrf_token %}
 
-<div class="container">
+                        <!-- Username/Email Field -->
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label text-dark small fw-semibold">Username or Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-lux"><i class="bi bi-person"></i></span>
+                                <input type="text" name="username" id="id_username" class="form-control form-control-lux" placeholder="Enter your username or email" required>
+                            </div>
+                        </div>
 
-<div class="row justify-content-center">
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label for="id_password" class="form-label text-dark small fw-semibold mb-0">Password</label>
+                                <a href="#" class="small text-muted text-decoration-none hover-dark">Forgot?</a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-lux"><i class="bi bi-lock"></i></span>
+                                <input type="password" name="password" id="id_password" class="form-control form-control-lux" placeholder="••••••••" required>
+                            </div>
+                        </div>
 
-<div class="col-lg-5">
+                        <!-- Remember Me -->
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label small text-muted" for="rememberMe">
+                                    Remember this device
+                                </label>
+                            </div>
+                        </div>
 
-<div class="card border-0 shadow-lg rounded-4 overflow-hidden"
-style="backdrop-filter:blur(18px);
-background:rgba(255,255,255,.12);
-border:1px solid rgba(255,255,255,.2);">
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary-lux py-3 rounded-pill fw-semibold">
+                                Sign In <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
 
-<div class="card-body p-5">
+                        <!-- Divider -->
+                        <div class="divider-text mb-4">OR CONTINUING WITH</div>
 
-<div class="text-center mb-4">
+                        <!-- Quick Social Actions -->
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <a href="#" class="btn btn-outline-lux w-100 py-2 rounded-3 small d-flex align-items-center justify-content-center gap-2">
+                                    <i class="bi bi-google"></i> Google
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="#" class="btn btn-outline-lux w-100 py-2 rounded-3 small d-flex align-items-center justify-content-center gap-2">
+                                    <i class="bi bi-apple"></i> Apple
+                                </a>
+                            </div>
+                        </div>
 
-<h2 class="fw-bold text-white">
-Welcome Back
-</h2>
+                        <!-- Footer Link -->
+                        <div class="text-center">
+                            <p class="small text-muted mb-0">
+                                Don't have an account? 
+                                <a href="{% url 'register' %}" class="text-dark fw-semibold text-decoration-none">Create One</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
 
-<p class="text-light opacity-75">
-Sign in to continue your adventure.
-</p>
-
-</div>
-
-{% if messages %}
-{% for message in messages %}
-
-<div class="alert alert-danger">
-{{ message }}
-</div>
-
-{% endfor %}
-{% endif %}
-
-<form method="POST">
-
-{% csrf_token %}
-
-<div class="mb-3">
-
-<label class="form-label text-white">
-Username
-</label>
-
-<input
-type="text"
-name="username"
-class="form-control form-control-lg rounded-3"
-placeholder="Enter your username"
-required>
-
-</div>
-
-<div class="mb-4">
-
-<label class="form-label text-white">
-Password
-</label>
-
-<input
-type="password"
-name="password"
-class="form-control form-control-lg rounded-3"
-placeholder="Enter your password"
-required>
-
-</div>
-
-<div class="d-grid">
-
-<button class="btn btn-success btn-lg rounded-3">
-
-Login
-
-</button>
-
-</div>
-
-<div class="text-center mt-4">
-
-<span class="text-white">
-Don't have an account?
-</span>
-
-<a href="{% url 'register' %}"
-class="text-warning fw-semibold text-decoration-none">
-
-Create One
-
-</a>
-
-</div>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+            </div>
+        </div>
+    </div>
 </section>
-
 {% endblock %}
