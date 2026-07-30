@@ -1,323 +1,426 @@
-{% extends 'userpage/base.html' %}
-
-{% block title %}Aetheria | Luxury Global Expeditions{% endblock %}
-
-{% block content %}
-
-    <!-- 1. Hero Section -->
-    <section class="hero-section">
-        <div class="container text-center text-lg-start position-relative z-2">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
-                    <span class="text-accent text-uppercase fw-semibold tracking-wider small mb-2 d-block">Discover The Beauty Of Nepal</span>
-                    <h1 class="display-3 fw-bold text-white mb-3">Adventure Begins Here</h1>
-                    <p class="lead text-gray mb-5">Explore breathtaking mountains, hidden valleys, and unforgettable journeys tailored for you.</p>
-                    
-                    <div class="d-flex justify-content-center gap-3 mb-5">
-                        <a href="#tours" class="btn btn-accent btn-lg px-4 rounded-pill">Explore Now <i class="bi bi-arrow-right ms-2"></i></a>
-                        <a href="#" class="btn btn-outline-light btn-lg px-4 rounded-pill">Watch Video <i class="bi bi-play-fill ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Search Box Panel -->
-            <div class="row" data-aos="fade-up" data-aos-delay="200">
-                <div class="col-lg-10 mx-auto">
-                    <div class="search-box-glass">
-                        <form method="GET" action="" class="row g-3 align-items-center">
-                            <div class="col-md-3">
-                                <label class="form-label text-gray small mb-1"><i class="bi bi-geo-alt text-accent me-1"></i> Destination</label>
-                                <select name="destination" class="form-select bg-dark text-white border-0 py-2">
-                                    <option selected value="">All Destinations</option>
-                                    {% for dest in destinations %}
-                                        <option value="{{ dest.id }}">{{ dest.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label text-gray small mb-1"><i class="bi bi-tree text-accent me-1"></i> Category</label>
-                                <select name="category" class="form-select bg-dark text-white border-0 py-2">
-                                    <option selected value="">All Categories</option>
-                                    {% for cat in categories %}
-                                        <option value="{{ cat.id }}">{{ cat.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label text-gray small mb-1"><i class="bi bi-calendar text-accent me-1"></i> Duration</label>
-                                <select name="duration" class="form-select bg-dark text-white border-0 py-2">
-                                    <option selected value="">Any Duration</option>
-                                    <option value="1-5">1 - 5 Days</option>
-                                    <option value="6-10">6 - 10 Days</option>
-                                    <option value="11+">11+ Days</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 d-grid mt-4">
-                                <button type="submit" class="btn btn-accent py-2 fw-semibold"><i class="bi bi-search me-2"></i>Search</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+{% extends 'userpage/base.html' %} {% load static %} {% block title %}Aetheria
+Journeys | Bespoke Luxury Travel & Expeditions{% endblock %} {% block content %}
+<!-- ==========================================================================
+     HERO SECTION
+     ========================================================================== -->
+<section class="position-relative py-5 overflow-hidden">
+  <div class="container py-lg-5">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <span
+          class="badge badge-luxury-light rounded-pill px-3 py-2 mb-3 text-uppercase tracking-wider fs-7"
+        >
+          <i class="bi bi-stars me-1 text-emerald"></i> Bespoke Private
+          Expeditions
+        </span>
+        <h1 class="display-3 font-serif fw-bold text-emerald mb-4 lh-sm">
+          Unveiling Earth’s Most Extraordinary Sanctuaries.
+        </h1>
+        <p class="lead text-muted mb-4 leading-relaxed fs-6">
+          Curated travel experiences, private luxury charters, and high-altitude
+          retreats crafted exclusively for discerning wanderers.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a
+            href="{% url 'destination' %}"
+            class="btn btn-primary-lux rounded-pill px-4 py-3 text-uppercase tracking-wider fs-7 fw-semibold"
+          >
+            Explore Destinations <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+          <a
+            href="{% url 'tour' %}"
+            class="btn btn-outline-lux rounded-pill px-4 py-3 text-uppercase tracking-wider fs-7 fw-semibold"
+          >
+            View Expeditions
+          </a>
         </div>
-    </section>
 
-    <!-- 2. Popular Destinations (Dynamic from DB) -->
-    <section id="destinations" class="py-5 my-5">
-        <div class="container py-4">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-accent text-uppercase fw-semibold small">Top-Rated Spots</span>
-                <h2 class="display-5 fw-bold text-white mt-1">Popular Destinations</h2>
-            </div>
-            <div class="row g-4">
-                {% for dest in destinations %}
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="luxury-card h-100">
-                        <div class="card-img-zoom position-relative" style="height: 260px;">
-                            {% if dest.image %}
-                                <img src="{{ dest.image.url }}" alt="{{ dest.name }}" class="w-100 h-100 object-fit-cover">
-                            {% else %}
-                                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Destination Default" class="w-100 h-100 object-fit-cover">
-                            {% endif %}
-                            <span class="position-absolute top-0 end-0 badge bg-accent m-3 px-3 py-2 rounded-pill">{{ dest.location }}</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-gold mb-2">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                            </div>
-                            <h3 class="h4 fw-bold text-white mb-2">{{ dest.name }}</h3>
-                            <p class="text-gray small mb-3">{{ dest.description|truncatechars:90 }}</p>
-                            <a href="#" class="text-accent text-decoration-none fw-semibold small">Explore Destination <i class="bi bi-arrow-right ms-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-12 text-center text-gray">
-                    <p>No destinations found in the database. Add some via the Django Admin!</p>
-                </div>
-                {% endfor %}
-            </div>
+        <!-- Trust Stats -->
+        <div
+          class="row g-4 mt-4 pt-3 border-top"
+          style="border-color: var(--lux-border) !important"
+        >
+          <div class="col-4">
+            <h3 class="font-serif fw-bold text-emerald mb-0">98%</h3>
+            <p class="small text-muted mb-0">Satisfied Clients</p>
+          </div>
+          <div class="col-4">
+            <h3 class="font-serif fw-bold text-emerald mb-0">45+</h3>
+            <p class="small text-muted mb-0">Secret Havens</p>
+          </div>
+          <div class="col-4">
+            <h3 class="font-serif fw-bold text-emerald mb-0">24/7</h3>
+            <p class="small text-muted mb-0">Private Concierge</p>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- 3. Categories -->
-    <section id="categories" class="py-5 bg-secondary bg-opacity-25">
-        <div class="container py-4">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-accent text-uppercase fw-semibold small">Find Your Passion</span>
-                <h2 class="display-5 fw-bold text-white mt-1">Explore by Category</h2>
+      <!-- Hero Feature Image / Glass Panel -->
+      <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+        <div class="position-relative">
+          <div class="luxury-card rounded-4 overflow-hidden shadow-lg border-0">
+            <div class="img-zoom-container" style="height: 480px">
+              <img
+                src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"
+                alt="Majestic Himalayan Valley"
+                class="w-100 h-100 object-fit-cover"
+              />
             </div>
-            <div class="row g-3">
-                {% for cat in categories %}
-                <div class="col-lg-3 col-md-4 col-6" data-aos="zoom-in" data-aos-delay="50">
-                    <div class="glass-category p-4 text-center">
-                        <h4 class="h6 fw-bold text-white mb-0">{{ cat.name }}</h4>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-12 text-center text-gray">
-                    <p>No categories found.</p>
-                </div>
-                {% endfor %}
+          </div>
+          <!-- Floating Glass Card -->
+          <div
+            class="glass-panel-light position-absolute bottom-0 start-0 m-4 p-3 rounded-4 d-none d-sm-block shadow-lg"
+            style="max-width: 280px; z-index: 5"
+          >
+            <div class="d-flex align-items-center gap-3">
+              <div
+                class="rounded-circle p-2 text-emerald"
+                style="background: rgba(6, 78, 59, 0.1)"
+              >
+                <i class="bi bi-geo-alt-fill fs-4"></i>
+              </div>
+              <div>
+                <h6 class="font-serif fw-bold text-emerald mb-0">
+                  Annapurna Sanctuary
+                </h6>
+                <small class="text-secondary fw-medium"
+                  >Helicopter Access Available</small
+                >
+              </div>
             </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- 4. Why Choose Us -->
-    <section id="about" class="py-5 my-5">
-        <div class="container py-4">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <div class="position-relative">
-                        <img src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=1000&q=80" alt="Mountain Guide" class="img-fluid rounded-4 shadow-lg">
-                        <div class="position-absolute bottom-0 start-0 bg-accent text-white p-4 rounded-4 m-3 shadow">
-                            <h3 class="h2 fw-bold mb-0">15+</h3>
-                            <p class="small mb-0">Years of Experience</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6" data-aos="fade-left">
-                    <span class="text-accent text-uppercase fw-semibold small">Why Travel With Us</span>
-                    <h2 class="display-5 fw-bold text-white mt-1 mb-4">Your Safety, Comfort & Unforgettable Journey</h2>
-                    <p class="text-gray mb-4">We curate hand-crafted itineraries supported by expert local knowledge, ensuring your alpine experiences are safe, immersive, and luxurious.</p>
-                    
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <i class="bi bi-check-circle-fill text-accent fs-5"></i>
-                                <span class="fw-medium">Certified Guides</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <i class="bi bi-check-circle-fill text-accent fs-5"></i>
-                                <span class="fw-medium">Best Price Guarantee</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-check-circle-fill text-accent fs-5"></i>
-                                <span class="fw-medium">Secure Booking</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <i class="bi bi-check-circle-fill text-accent fs-5"></i>
-                                <span class="fw-medium">24/7 Support</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <i class="bi bi-check-circle-fill text-accent fs-5"></i>
-                                <span class="fw-medium">Personalized Tours</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-check-circle-fill text-accent fs-5"></i>
-                                <span class="fw-medium">Trusted by Thousands</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ==========================================================================
+     SEARCH / BOOKING CONCIERGE BAR
+     ========================================================================== -->
+<section class="container my-4 position-relative z-2" data-aos="fade-up">
+  <div class="glass-panel-light p-4 rounded-4 shadow-sm">
+    <form class="row g-3 align-items-center">
+      <div class="col-md-3">
+        <label
+          class="form-label small fw-semibold text-uppercase tracking-wider text-muted mb-1"
+          >Destination</label
+        >
+        <div class="input-group">
+          <span class="input-group-text input-group-text-lux"
+            ><i class="bi bi-compass text-emerald"></i
+          ></span>
+          <input
+            type="text"
+            class="form-control form-control-lux"
+            placeholder="Where to? (e.g., Mustang)"
+          />
         </div>
-    </section>
+      </div>
+      <div class="col-md-3">
+        <label
+          class="form-label small fw-semibold text-uppercase tracking-wider text-muted mb-1"
+          >Travel Style</label
+        >
+        <select class="form-select form-select-lux">
+          <option selected>Himalayan Sanctuary</option>
+          <option value="1">Helicopter Charter</option>
+          <option value="2">Cultural Immersion</option>
+          <option value="3">Private Villa & Spa</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label
+          class="form-label small fw-semibold text-uppercase tracking-wider text-muted mb-1"
+          >Duration</label
+        >
+        <select class="form-select form-select-lux">
+          <option selected>1 - 2 Weeks</option>
+          <option value="1">3 - 5 Days</option>
+          <option value="2">2+ Weeks</option>
+        </select>
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button
+          type="submit"
+          class="btn btn-primary-lux w-100 py-2.5 rounded-3 fw-semibold"
+        >
+          <i class="bi bi-search me-2"></i>Search Journeys
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
 
-    <!-- 5. Featured Tours (Dynamic Packages from DB) -->
-    <section id="tours" class="py-5 bg-secondary bg-opacity-25">
-        <div class="container py-4">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-accent text-uppercase fw-semibold small">Handpicked Itineraries</span>
-                <h2 class="display-5 fw-bold text-white mt-1">Featured Tours</h2>
+<!-- ==========================================================================
+     FEATURED DESTINATIONS
+     ========================================================================== -->
+<section class="section-spacing" id="destinations">
+  <div class="container">
+    <div
+      class="d-flex justify-content-between align-items-end mb-5"
+      data-aos="fade-up"
+    >
+      <div>
+        <span
+          class="text-uppercase tracking-widest-xl text-emerald fw-semibold small"
+          >Curated Havens</span
+        >
+        <h2 class="display-5 font-serif fw-bold text-emerald mb-0">
+          Featured Destinations
+        </h2>
+      </div>
+      <a
+        href="{% url 'destination' %}"
+        class="btn btn-outline-lux rounded-pill px-4 py-2 fs-7"
+      >
+        View All Destinations <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="row g-4">
+      <!-- Destination Card 1 -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="luxury-card h-100">
+          <div class="img-zoom-container" style="height: 260px">
+            <img
+              src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80"
+              class="w-100 h-100 object-fit-cover"
+              alt="Mustang Valley"
+            />
+            <span
+              class="badge badge-luxury-light position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill"
+            >
+              <i class="bi bi-star-fill text-emerald me-1"></i> Exclusive
+            </span>
+          </div>
+          <div class="p-4">
+            <span class="text-uppercase tracking-wider text-muted fs-8"
+              >Forbidden Kingdom</span
+            >
+            <h4 class="font-serif fw-bold text-emerald mt-1 mb-3">
+              Upper Mustang Valley
+            </h4>
+            <p class="text-muted small leading-relaxed mb-4">
+              Explore centuries-old cave monasteries, high-altitude desert
+              plateaus, and royal Tibetan heritage.
+            </p>
+            <div
+              class="d-flex justify-content-between align-items-center pt-3 border-top"
+              style="border-color: var(--lux-border) !important"
+            >
+              <div>
+                <small class="text-muted d-block fs-8">Starting from</small>
+                <span class="fw-bold text-emerald fs-5">$4,200</span>
+                <small class="text-muted">/ person</small>
+              </div>
+              <a
+                href="#"
+                class="btn btn-primary-lux btn-sm rounded-pill px-3 py-2"
+                >Explore</a
+              >
             </div>
-            <div class="row g-4">
-                {% for package in packages %}
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="luxury-card h-100 d-flex flex-column">
-                        <div class="card-img-zoom position-relative" style="height: 240px;">
-                            {% if package.featured_image %}
-                                <img src="{{ package.featured_image.url }}" alt="{{ package.title }}" class="w-100 h-100 object-fit-cover">
-                            {% else %}
-                                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Package Default" class="w-100 h-100 object-fit-cover">
-                            {% endif %}
-                            <span class="position-absolute top-0 start-0 badge bg-dark m-3 px-3 py-2 rounded-pill">
-                                <i class="bi bi-clock me-1 text-accent"></i> {{ package.duration }}
-                            </span>
-                        </div>
-                        <div class="p-4 d-flex flex-column flex-grow-1">
-                            <div class="text-gold mb-1">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                            </div>
-                            <h3 class="h4 fw-bold text-white mb-2">{{ package.title }}</h3>
-                            <p class="text-gray small flex-grow-1">Destination: {{ package.destination.name }} | Difficulty: {{ package.difficulty }}</p>
-                            <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top border-secondary">
-                                <div>
-                                    <span class="small text-gray d-block">From</span>
-                                    <span class="h5 fw-bold text-white mb-0">${{ package.price }}</span>
-                                </div>
-                                <a href="{% url 'package_detail' package.id %}" class="btn btn-accent btn-sm px-3 rounded-pill">Book Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-12 text-center text-gray">
-                    <p>No tour packages found. Add packages in your Django Admin panel!</p>
-                </div>
-                {% endfor %}
-            </div>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- 6. Statistics -->
-    <section class="stats-section py-5">
-        <div class="container py-4">
-            <div class="row text-center g-4">
-                <div class="col-lg-3 col-6" data-aos="fade-up" data-aos-delay="100">
-                    <h3 class="display-4 fw-bold text-accent mb-1">20K+</h3>
-                    <p class="text-gray mb-0">Happy Travelers</p>
-                </div>
-                <div class="col-lg-3 col-6" data-aos="fade-up" data-aos-delay="200">
-                    <h3 class="display-4 fw-bold text-accent mb-1">500+</h3>
-                    <p class="text-gray mb-0">Destinations</p>
-                </div>
-                <div class="col-lg-3 col-6" data-aos="fade-up" data-aos-delay="300">
-                    <h3 class="display-4 fw-bold text-accent mb-1">120</h3>
-                    <p class="text-gray mb-0">Professional Guides</p>
-                </div>
-                <div class="col-lg-3 col-6" data-aos="fade-up" data-aos-delay="400">
-                    <h3 class="display-4 fw-bold text-accent mb-1">15+</h3>
-                    <p class="text-gray mb-0">Years Experience</p>
-                </div>
+      <!-- Destination Card 2 -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="luxury-card h-100">
+          <div class="img-zoom-container" style="height: 260px">
+            <img
+              src="https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&w=800&q=80"
+              class="w-100 h-100 object-fit-cover"
+              alt="Everest Ridge"
+            />
+            <span
+              class="badge badge-luxury-light position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill"
+            >
+              <i class="bi bi-shield-check text-emerald me-1"></i> Charter
+              Included
+            </span>
+          </div>
+          <div class="p-4">
+            <span class="text-uppercase tracking-wider text-muted fs-8"
+              >High Altitude Sanctuary</span
+            >
+            <h4 class="font-serif fw-bold text-emerald mt-1 mb-3">
+              Everest Luxury Ridge
+            </h4>
+            <p class="text-muted small leading-relaxed mb-4">
+              Helicopter transfers, gourmet dining at 13,000 feet, and panoramic
+              views of Mt. Everest.
+            </p>
+            <div
+              class="d-flex justify-content-between align-items-center pt-3 border-top"
+              style="border-color: var(--lux-border) !important"
+            >
+              <div>
+                <small class="text-muted d-block fs-8">Starting from</small>
+                <span class="fw-bold text-emerald fs-5">$6,800</span>
+                <small class="text-muted">/ person</small>
+              </div>
+              <a
+                href="#"
+                class="btn btn-primary-lux btn-sm rounded-pill px-3 py-2"
+                >Explore</a
+              >
             </div>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- 7. Testimonials -->
-    <section class="py-5 my-5">
-        <div class="container py-4">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-accent text-uppercase fw-semibold small">Client Stories</span>
-                <h2 class="display-5 fw-bold text-white mt-1">What Our Travelers Say</h2>
+      <!-- Destination Card 3 -->
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="luxury-card h-100">
+          <div class="img-zoom-container" style="height: 260px">
+            <img
+              src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80"
+              class="w-100 h-100 object-fit-cover"
+              alt="Serene Lakeside Sanctuary"
+            />
+          </div>
+          <div class="p-4">
+            <span class="text-uppercase tracking-wider text-muted fs-8"
+              >Lakeside Retreat</span
+            >
+            <h4 class="font-serif fw-bold text-emerald mt-1 mb-3">
+              Phewatal Private Island
+            </h4>
+            <p class="text-muted small leading-relaxed mb-4">
+              Bespoke wellness lodges overlooking reflective mountain waters
+              with private spa concierge.
+            </p>
+            <div
+              class="d-flex justify-content-between align-items-center pt-3 border-top"
+              style="border-color: var(--lux-border) !important"
+            >
+              <div>
+                <small class="text-muted d-block fs-8">Starting from</small>
+                <span class="fw-bold text-emerald fs-5">$3,100</span>
+                <small class="text-muted">/ person</small>
+              </div>
+              <a
+                href="#"
+                class="btn btn-primary-lux btn-sm rounded-pill px-3 py-2"
+                >Explore</a
+              >
             </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8" data-aos="fade-up">
-                    <div class="luxury-card p-5 text-center">
-                        <div class="text-gold mb-3 fs-5">
-                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                        </div>
-                        <p class="lead text-gray fst-italic mb-4">"An absolute breathtaking and life-changing experience. Our mountain guide was incredible, highly knowledgeable, and kept us safe throughout the entire Everest Base Camp journey."</p>
-                        <h5 class="fw-bold text-white mb-1">Sarah Jenkins</h5>
-                        <span class="small text-accent">United States</span>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- 8. Gallery -->
-    <section id="gallery" class="py-5 bg-secondary bg-opacity-25">
-        <div class="container py-4">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-accent text-uppercase fw-semibold small">Visual Journey</span>
-                <h2 class="display-5 fw-bold text-white mt-1">Scenic Gallery</h2>
-            </div>
-            <div class="row g-3">
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="gallery-img">
-                        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80" alt="Gallery">
-                        <div class="gallery-overlay"><span class="text-white fw-bold"><i class="bi bi-eye me-2"></i>View</span></div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="gallery-img">
-                        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Gallery">
-                        <div class="gallery-overlay"><span class="text-white fw-bold"><i class="bi bi-eye me-2"></i>View</span></div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="gallery-img">
-                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80" alt="Gallery">
-                        <div class="gallery-overlay"><span class="text-white fw-bold"><i class="bi bi-eye me-2"></i>View</span></div>
-                    </div>
-                </div>
-            </div>
+<!-- ==========================================================================
+     WHY AETHERIA (BRAND VALUES)
+     ========================================================================== -->
+<section
+  class="section-spacing bg-white border-top border-bottom"
+  style="border-color: var(--lux-border) !important"
+  id="about"
+>
+  <div class="container">
+    <div class="text-center max-w-2xl mx-auto mb-5" data-aos="fade-up">
+      <span
+        class="text-uppercase tracking-widest-xl text-emerald fw-semibold small"
+        >Unmatched Distinction</span
+      >
+      <h2 class="display-5 font-serif fw-bold text-emerald mt-2">
+        Crafted Without Compromise
+      </h2>
+      <p class="text-muted small">
+        Every detail of your expedition is meticulously managed by our dedicated
+        global private concierges.
+      </p>
+    </div>
+
+    <div class="row g-4 text-center">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="p-4">
+          <div
+            class="social-icon mb-3 bg-emerald-light border-0"
+            style="width: 60px; height: 60px"
+          >
+            <i class="bi bi-shield-lock text-emerald fs-3"></i>
+          </div>
+          <h5 class="font-serif fw-bold text-emerald mb-2">Absolute Privacy</h5>
+          <p class="text-muted small leading-relaxed">
+            Discreet logistics, private aviation access, and confidential
+            bookings guaranteed for all travelers.
+          </p>
         </div>
-    </section>
+      </div>
 
-    <!-- 9. Newsletter -->
-    <section class="py-5 my-5">
-        <div class="container">
-            <div class="newsletter-gradient p-5 text-center position-relative overflow-hidden" data-aos="fade-up">
-                <div class="row justify-content-center">
-                    <div class="col-lg-7">
-                        <h2 class="fw-bold text-white mb-3">Ready For Your Next Adventure?</h2>
-                        <p class="text-gray mb-4">Subscribe to our newsletter to receive exclusive mountain travel packages, seasonal discounts, and explorer guides.</p>
-                        <form class="row g-2 justify-content-center">
-                            <div class="col-sm-8">
-                                <input type="email" class="form-control bg-dark text-white border-0 py-3 rounded-pill px-4" placeholder="Enter your email address...">
-                            </div>
-                            <div class="col-sm-4 d-grid">
-                                <button type="submit" class="btn btn-accent py-3 rounded-pill fw-semibold">Subscribe</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="p-4">
+          <div
+            class="social-icon mb-3 bg-emerald-light border-0"
+            style="width: 60px; height: 60px"
+          >
+            <i class="bi bi-compass text-emerald fs-3"></i>
+          </div>
+          <h5 class="font-serif fw-bold text-emerald mb-2">
+            Bespoke Itineraries
+          </h5>
+          <p class="text-muted small leading-relaxed">
+            No cookie-cutter tours. Every single day is tailored to your pacing,
+            preferences, and desires.
+          </p>
         </div>
-    </section>
+      </div>
 
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="p-4">
+          <div
+            class="social-icon mb-3 bg-emerald-light border-0"
+            style="width: 60px; height: 60px"
+          >
+            <i class="bi bi-award text-emerald fs-3"></i>
+          </div>
+          <h5 class="font-serif fw-bold text-emerald mb-2">Master Guides</h5>
+          <p class="text-muted small leading-relaxed">
+            Accompanied by top-tier mountaineering experts, historians, and
+            private culinary staff.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     CTA BANNER
+     ========================================================================== -->
+<section class="section-spacing position-relative my-5" id="contact">
+  <div class="container" data-aos="zoom-in">
+    <div
+      class="p-5 rounded-4 position-relative overflow-hidden text-center text-white"
+      style="background: linear-gradient(135deg, #064e3b 0%, #022c22 100%)"
+    >
+      <div class="position-relative z-1 max-w-xl mx-auto py-3">
+        <span
+          class="text-uppercase tracking-widest-xl text-emerald-accent small fw-semibold"
+          >Begin Your Odyssey</span
+        >
+        <h2 class="display-4 font-serif fw-bold my-3">
+          Ready to Experience Unrivaled Luxury?
+        </h2>
+        <p class="text-white-50 leading-relaxed mb-4">
+          Contact our 24/7 private concierge team to start designing your
+          tailor-made journey today.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <a
+            href="mailto:concierge@aetheria.com"
+            class="btn btn-light text-emerald fw-semibold rounded-pill px-4 py-3"
+          >
+            <i class="bi bi-envelope me-2"></i>Contact Concierge
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}
