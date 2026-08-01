@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Aetheria | Luxury Global Expeditions{% endblock %}</title>
+    <title>{% block title %}Aetheria | Bespoke Global Journeys{% endblock %}</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,60 +20,51 @@
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <!-- Premium Light Styling -->
+    <!-- External Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Theme Overrides for Light & Emerald Theme -->
     <style>
         :root {
-            --lux-bg: #FAFAFA;
-            --lux-card-bg: #FFFFFF;
-            --lux-border: #E8ECEF;
-            --lux-primary: #0F172A; /* Deep Obsidian */
-            --lux-accent: #2563EB; /* Premium Subtle Royal Blue */
-            --lux-text-muted: #64748B;
+            --lux-bg: #FAF9F5;               /* Warm Soft White */
+            --lux-card-bg: #FFFFFF;          /* Pure Crisp White */
+            --lux-border: #E5E7EB;          /* Very Light Gray Border */
+            --lux-primary: #064E3B;         /* Premium Deep Emerald Green */
+            --lux-primary-hover: #022C22;   /* Darker Emerald */
+            --lux-accent: #059669;          /* Emerald Bright Accent */
+            --lux-text-main: #1F2937;       /* Soft Charcoal Text */
+            --lux-text-muted: #6B7280;      /* Muted Neutral */
             --font-serif: 'Cormorant Garamond', Georgia, serif;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
             background-color: var(--lux-bg);
-            color: var(--lux-primary);
+            color: var(--lux-text-main);
             font-family: var(--font-sans);
             overflow-x: hidden;
-            letter-spacing: -0.01em;
         }
 
-        .font-serif {
-            font-family: var(--font-serif);
-        }
-
-        .text-accent {
-            color: var(--lux-accent) !important;
-        }
-
-        .bg-accent {
-            background-color: var(--lux-accent) !important;
-        }
-
-        /* Clean Glass Navbar */
+        /* Glass Navbar */
         .custom-navbar {
             transition: all 0.4s ease;
-            background: rgba(250, 250, 250, 0.85);
+            background: rgba(250, 249, 245, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--lux-border);
         }
 
         .custom-navbar.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 4px 25px rgba(6, 78, 59, 0.05);
             padding-top: 0.8rem !important;
             padding-bottom: 0.8rem !important;
         }
 
         .nav-link {
-            color: #334155 !important;
+            color: var(--lux-text-main) !important;
             font-weight: 500;
             font-size: 0.95rem;
-            letter-spacing: 0.02em;
             transition: color 0.3s ease;
         }
 
@@ -82,36 +73,37 @@
             font-weight: 600;
         }
 
-        /* Premium Minimalist Buttons */
+        /* Premium Deep Emerald Buttons */
         .btn-primary-lux {
             background: var(--lux-primary);
             color: #FFFFFF !important;
             font-weight: 500;
             border: 1px solid var(--lux-primary);
-            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 4px 14px rgba(6, 78, 59, 0.15);
             transition: all 0.3s ease;
         }
 
         .btn-primary-lux:hover {
-            background: #1E293B;
+            background: var(--lux-primary-hover);
+            border-color: var(--lux-primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+            box-shadow: 0 8px 22px rgba(6, 78, 59, 0.22);
         }
 
         .btn-outline-lux {
-            border: 1px solid var(--lux-border);
+            border: 1px solid var(--lux-primary);
             color: var(--lux-primary) !important;
-            background: #FFFFFF;
+            background: transparent;
             transition: all 0.3s ease;
         }
 
         .btn-outline-lux:hover {
-            border-color: var(--lux-primary);
-            background: var(--lux-bg);
+            background: var(--lux-primary);
+            color: #FFFFFF !important;
             transform: translateY(-2px);
         }
 
-        /* Footer Aesthetics */
+        /* Social Icons */
         .social-icon {
             width: 42px;
             height: 42px;
@@ -133,7 +125,7 @@
             transform: translateY(-3px);
         }
 
-        .hover-dark:hover {
+        .text-emerald {
             color: var(--lux-primary) !important;
         }
     </style>
@@ -145,12 +137,12 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top custom-navbar py-4">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2 text-dark font-serif fs-3 fw-bold tracking-wide" href="{% url 'index' %}">
-                <i class="bi bi-globe-americas text-dark fs-3"></i>Aetheria<span class="text-secondary font-sans fw-light fs-5">Journeys</span>
+            <a class="navbar-brand d-flex align-items-center gap-2 font-serif fs-3 fw-bold tracking-wide text-emerald" href="{% url 'index' %}">
+                <i class="bi bi-compass text-emerald fs-3"></i>Aetheria<span class="text-muted font-sans fw-light fs-5">Journeys</span>
             </a>
             
-            <button class="navbar-toggler border-0 text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="bi bi-list fs-1 text-dark"></i>
+            <button class="navbar-toggler border-0 text-emerald" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-1 text-emerald"></i>
             </button>
             
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -176,63 +168,62 @@
         <div class="container position-fixed top-0 start-50 translate-middle-x z-3 mt-5 pt-4" style="max-width: 600px;">
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show bg-white border text-dark shadow-sm rounded-4" role="alert">
-                    <i class="bi bi-info-circle me-2 text-primary"></i>{{ message }}
+                    <i class="bi bi-info-circle me-2 text-emerald"></i>{{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 
-    <!-- Main Content -->
+    <!-- Main Content Block -->
     <main class="min-vh-100 pt-5">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="custom-footer text-dark pt-5 pb-5 border-top bg-white position-relative z-2">
+    <footer class="custom-footer pt-5 pb-5 border-top bg-white position-relative z-2">
         <div class="container pt-4">
             <div class="row g-5 justify-content-between">
                 <div class="col-lg-4 col-md-6">
-                    <a class="d-flex align-items-center gap-2 text-dark font-serif fs-3 fw-bold mb-3 text-decoration-none" href="{% url 'index' %}">
-                        <i class="bi bi-globe-americas text-dark fs-3"></i>Aetheria<span class="text-secondary font-sans fw-light fs-5">Journeys</span>
+                    <a class="d-flex align-items-center gap-2 font-serif fs-3 fw-bold mb-3 text-decoration-none text-emerald" href="{% url 'index' %}">
+                        <i class="bi bi-compass text-emerald fs-3"></i>Aetheria<span class="text-muted font-sans fw-light fs-5">Journeys</span>
                     </a>
-                    <p class="text-muted small leading-relaxed mb-4">Crafting extraordinary bespoke expeditions, private charter access, and ultra-luxury mountain sanctuaries tailored for the world's most discerning travelers.</p>
+                    <p class="text-muted small leading-relaxed mb-4">Crafting extraordinary bespoke expeditions, private charter access, and ultra-luxury sanctuaries tailored for discerning travelers worldwide.</p>
                     <div class="social-links d-flex gap-2">
                         <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
                         <a href="#" class="social-icon"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="social-icon"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
                     </div>
                 </div>
                 
                 <div class="col-lg-2 col-md-6">
-                    <h5 class="text-dark font-serif fw-bold mb-3 fs-5">Quick Links</h5>
+                    <h5 class="font-serif fw-bold mb-3 fs-5 text-emerald">Navigation</h5>
                     <ul class="list-unstyled d-flex flex-column gap-2 small">
-                        <li><a href="{% url 'index' %}" class="text-muted text-decoration-none hover-dark">Home</a></li>
-                        <li><a href="{% url 'destination' %}" class="text-muted text-decoration-none hover-dark">Destinations</a></li>
-                        <li><a href="{% url 'tour' %}" class="text-muted text-decoration-none hover-dark">Expeditions</a></li>
-                        <li><a href="#about" class="text-muted text-decoration-none hover-dark">The Standard</a></li>
-                        <li><a href="#contact" class="text-muted text-decoration-none hover-dark">Concierge</a></li>
+                        <li><a href="{% url 'index' %}" class="text-muted text-decoration-none">Home</a></li>
+                        <li><a href="{% url 'destination' %}" class="text-muted text-decoration-none">Destinations</a></li>
+                        <li><a href="{% url 'tour' %}" class="text-muted text-decoration-none">Expeditions</a></li>
+                        <li><a href="{% url 'about' %}" class="text-muted text-decoration-none">About Us</a></li>
+                        <li><a href="#contact" class="text-muted text-decoration-none">Concierge</a></li>
                     </ul>
                 </div>
                 
                 <div class="col-lg-2 col-md-6">
-                    <h5 class="text-dark font-serif fw-bold mb-3 fs-5">Iconic Sanctuaries</h5>
+                    <h5 class="font-serif fw-bold mb-3 fs-5 text-emerald">Sanctuaries</h5>
                     <ul class="list-unstyled d-flex flex-column gap-2 small">
-                        <li><a href="#" class="text-muted text-decoration-none hover-dark">Annapurna Sanctuary</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none hover-dark">Everest Luxury Ridge</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none hover-dark">Mustang Valley Sanctuary</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none hover-dark">Langtang Secret Valley</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none hover-dark">Swiss Alps Heli-Skis</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Annapurna Sanctuary</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Everest Luxury Ridge</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Mustang Valley</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Langtang Secret Pass</a></li>
                     </ul>
                 </div>
                 
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-dark font-serif fw-bold mb-3 fs-5">Global Concierge</h5>
+                    <h5 class="font-serif fw-bold mb-3 fs-5 text-emerald">Global Concierge</h5>
                     <ul class="list-unstyled d-flex flex-column gap-3 small text-muted">
-                        <li class="d-flex align-items-center gap-2"><i class="bi bi-geo-alt text-dark me-1"></i>740 Park Avenue, New York, NY</li>
-                        <li class="d-flex align-items-center gap-2"><i class="bi bi-telephone text-dark me-1"></i>+1 (800) 980-2384</li>
-                        <li class="d-flex align-items-center gap-2"><i class="bi bi-envelope text-dark me-1"></i>concierge@aetheria.com</li>
+                        <li class="d-flex align-items-center gap-2"><i class="bi bi-geo-alt text-emerald me-1"></i>740 Park Avenue, New York, NY</li>
+                        <li class="d-flex align-items-center gap-2"><i class="bi bi-telephone text-emerald me-1"></i>+1 (800) 980-2384</li>
+                        <li class="d-flex align-items-center gap-2"><i class="bi bi-envelope text-emerald me-1"></i>concierge@aetheria.com</li>
                     </ul>
                 </div>
             </div>
@@ -244,7 +235,7 @@
                     <p class="small text-muted mb-0">&copy; 2026 Aetheria Journeys Ltd. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <p class="small text-muted mb-0">Designed for bespoke luxury international travelers worldwide.</p>
+                    <p class="small text-muted mb-0">Crafted with precision for ultra-luxury experiences.</p>
                 </div>
             </div>
         </div>
@@ -257,7 +248,7 @@
     <script>
         AOS.init({ duration: 1000, once: true });
 
-        // Navbar scroll glass effect
+        // Navbar Glass Scroll Effect
         window.addEventListener('scroll', function () {
             const navbar = document.querySelector('.custom-navbar');
             if (window.scrollY > 50) {

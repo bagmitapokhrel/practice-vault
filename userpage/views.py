@@ -69,3 +69,5 @@ def tour_detail(request, tour_id):
 def review(request):
     return render(request, 'userpage/review.html')
 
+def about(request):
+    return render(request, "userpage/about.html")
