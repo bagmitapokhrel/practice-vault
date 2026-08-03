@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from adminpage.models import Category, Destination, Package, Booking, Tour, Review
+from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review
 from .forms import BookingForm
 # Create your views here.
 def index(request):
@@ -16,6 +16,13 @@ def index(request):
         'bookings' : bookings,
     }
     return render(request, 'userpage/index.html', context)
+
+def package(request):
+    packages = Package.objects.all()
+    context = {
+        'packages': packages,
+    }
+    return render(request, 'userpage/packages.html', context)
 
 def package_detail_view(request, package_id):
     package = get_object_or_404(Package, id=package_id)
@@ -71,3 +78,10 @@ def review(request):
 
 def about(request):
     return render(request, "userpage/about.html")
+
+def gallery(request):
+    galleries = Gallery.objects.all().order_by("-uploaded_at")  # Order by uploaded_at in descending order
+    context = {
+        'galleries': galleries,
+    }
+    return render(request, 'userpage/gallery.html', context)

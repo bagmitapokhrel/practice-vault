@@ -76,4 +76,13 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.user_name} - {self.package.title}"
 
+class Gallery(models.Model):
+    title = models.CharField(max_length=100)
+    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='gallery_images')
+    image = models.FileField(upload_to="gallery/")
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
     
