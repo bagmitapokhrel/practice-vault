@@ -80,7 +80,7 @@ def about(request):
     return render(request, "userpage/about.html")
 
 def gallery(request):
-    galleries = Gallery.objects.all().order_by("-uploaded_at")  # Order by uploaded_at in descending order
+    galleries = Gallery.objects.all()   
     context = {
         'galleries': galleries,
     }
