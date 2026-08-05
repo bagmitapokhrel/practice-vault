@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from adminpage.models import Booking
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from django.shortcuts import render, redirect
@@ -44,10 +46,20 @@ def user_login(request):
     return render(request, "accounts/login.html")
 
 
-def dashboard(request):
-    return render(request, "accounts/dashboard.html")
+
 
 
 def user_logout(request):
     logout(request)
     return redirect("login")
+
+@login_required
+def dashboard(request):
+
+    bookings = Booking.objects.filter(email=request.user.email)
+
+    context = {
+        "bookings": bookings,
+    }
+
+    return render(request, "accounts/dashboard.html", context)
