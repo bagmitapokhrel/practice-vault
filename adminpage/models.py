@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 
 # Create your models here.
@@ -84,5 +85,76 @@ class Gallery(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class TravelPlan(models.Model):
+
+    HOTEL_CHOICES = [
+        ("Budget", "Budget"),
+        ("Standard", "Standard"),
+        ("Luxury", "Luxury"),
+    ]
+
+    TRANSPORT_CHOICES = [
+        ("Flight", "Flight"),
+        ("Train", "Train"),
+        ("Bus", "Bus"),
+        ("Cruise", "Cruise"),
+    ]
+
+    MEAL_CHOICES = [
+        ("Breakfast Only", "Breakfast Only"),
+        ("Half Board", "Half Board"),
+        ("Full Board", "Full Board"),
+        ("All Inclusive", "All Inclusive"),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    destination = models.ForeignKey(
+        Destination,
+        on_delete=models.CASCADE
+    )
+
+    travel_date = models.DateField()
+
+    travelers = models.PositiveIntegerField()
+
+    budget = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    hotel = models.CharField(
+        max_length=30,
+        choices=HOTEL_CHOICES
+    )
+
+    transport = models.CharField(
+        max_length=30,
+        choices=TRANSPORT_CHOICES
+    )
+
+    meals = models.CharField(
+        max_length=30,
+        choices=MEAL_CHOICES
+    )
+
+    special_requests = models.TextField(
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.destination.name} - {self.travelers} Travelers"
 
     
