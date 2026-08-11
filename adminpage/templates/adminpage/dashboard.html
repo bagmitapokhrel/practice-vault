@@ -1,0 +1,867 @@
+{% extends "adminpage/base.html" %}
+
+{% block title %}
+Admin Dashboard | ExploreWorld
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    /* =========================
+       DASHBOARD
+    ========================= */
+
+    .dashboard-header {
+        margin-bottom: 30px;
+    }
+
+    .dashboard-header h2 {
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .dashboard-header p {
+        color: #6b7280;
+    }
+
+
+    /* =========================
+       STAT CARDS
+    ========================= */
+
+    .stat-card {
+        background: white;
+        border: none;
+        border-radius: 18px;
+
+        padding: 24px;
+
+        box-shadow: 0 5px 20px rgba(0, 0, 0, .05);
+
+        transition: .25s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+
+        box-shadow:
+            0 12px 30px rgba(0, 0, 0, .08);
+    }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+
+        border-radius: 14px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 22px;
+    }
+
+    .icon-green {
+        background: rgba(25, 135, 84, .12);
+        color: #198754;
+    }
+
+    .icon-blue {
+        background: rgba(13, 110, 253, .12);
+        color: #0d6efd;
+    }
+
+    .icon-orange {
+        background: rgba(255, 159, 67, .15);
+        color: #e67e22;
+    }
+
+    .icon-purple {
+        background: rgba(111, 66, 193, .12);
+        color: #6f42c1;
+    }
+
+    .stat-number {
+        font-size: 30px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .stat-label {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       QUICK ACTIONS
+    ========================= */
+
+    .section-card {
+        background: white;
+        border: none;
+        border-radius: 18px;
+
+        box-shadow:
+            0 5px 20px rgba(0, 0, 0, .05);
+    }
+
+    .section-card-header {
+        padding: 22px 25px;
+
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .section-card-header h5 {
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .quick-action {
+        border: 1px solid #eeeeee;
+
+        border-radius: 14px;
+
+        padding: 18px;
+
+        text-decoration: none;
+
+        color: #212529;
+
+        display: flex;
+        align-items: center;
+
+        gap: 15px;
+
+        transition: .25s;
+    }
+
+    .quick-action:hover {
+        border-color: #198754;
+
+        background: rgba(25, 135, 84, .04);
+
+        transform: translateY(-2px);
+
+        color: #198754;
+    }
+
+    .quick-action-icon {
+        width: 45px;
+        height: 45px;
+
+        border-radius: 12px;
+
+        background: #f3f4f6;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 20px;
+    }
+
+
+    /* =========================
+       RECENT ACTIVITY
+    ========================= */
+
+    .activity-item {
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        padding: 17px 25px;
+
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: rgba(25, 135, 84, .1);
+
+        color: #198754;
+    }
+
+    .activity-text {
+        flex: 1;
+    }
+
+    .activity-text strong {
+        display: block;
+
+        font-size: 14px;
+    }
+
+    .activity-text small {
+        color: #9ca3af;
+    }
+
+
+    /* =========================
+       WELCOME CARD
+    ========================= */
+
+    .welcome-card {
+
+        background: linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+
+        color: white;
+
+        border-radius: 20px;
+
+        padding: 30px;
+
+        position: relative;
+
+        overflow: hidden;
+    }
+
+    .welcome-card::after {
+
+        content: "";
+
+        position: absolute;
+
+        width: 180px;
+        height: 180px;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,.08);
+
+        right: -50px;
+        top: -60px;
+    }
+
+    .welcome-card h3 {
+        font-weight: 800;
+    }
+
+    .welcome-card p {
+        opacity: .9;
+    }
+
+    .welcome-icon {
+        font-size: 70px;
+        opacity: .9;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 768px) {
+
+        .welcome-icon {
+            display: none;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="dashboard-header">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h2>
+                    Dashboard
+                </h2>
+
+                <p class="mb-0">
+                    Welcome back! Here's what's happening
+                    with your tourism platform.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <a href="{% url 'index' %}"
+                   class="btn btn-outline-success rounded-pill px-4">
+
+                    <i class="bi bi-globe2 me-2"></i>
+
+                    View Website
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         WELCOME
+    ========================= -->
+
+    <div class="welcome-card mb-4">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <span class="badge bg-light text-dark rounded-pill mb-3 px-3 py-2">
+
+                    <i class="bi bi-stars me-1"></i>
+
+                    ExploreWorld Admin
+
+                </span>
+
+
+                <h3>
+                    Manage Your Travel World 🌍
+                </h3>
+
+
+                <p class="mb-0">
+
+                    Manage destinations, packages, tours,
+                    bookings and customers from one place.
+
+                </p>
+
+            </div>
+
+
+            <div class="col-lg-4 text-center">
+
+                <i class="bi bi-compass welcome-icon"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         STATISTICS
+    ========================= -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- Destinations -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <div class="stat-label mb-2">
+                            Destinations
+                        </div>
+
+                        <div class="stat-number">
+                            {{ destinations_count|default:"0" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon icon-green">
+
+                        <i class="bi bi-geo-alt-fill"></i>
+
+                    </div>
+
+                </div>
+
+                <small class="text-success">
+
+                    <i class="bi bi-arrow-up"></i>
+
+                    Available destinations
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Packages -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <div class="stat-label mb-2">
+                            Packages
+                        </div>
+
+                        <div class="stat-number">
+                            {{ packages_count|default:"0" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon icon-blue">
+
+                        <i class="bi bi-map-fill"></i>
+
+                    </div>
+
+                </div>
+
+                <small class="text-primary">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    Travel packages
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Bookings -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <div class="stat-label mb-2">
+                            Bookings
+                        </div>
+
+                        <div class="stat-number">
+                            {{ bookings_count|default:"0" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon icon-orange">
+
+                        <i class="bi bi-calendar-check-fill"></i>
+
+                    </div>
+
+                </div>
+
+                <small class="text-warning">
+
+                    <i class="bi bi-clock"></i>
+
+                    Customer bookings
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Users -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="stat-card">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <div class="stat-label mb-2">
+                            Users
+                        </div>
+
+                        <div class="stat-number">
+                            {{ users_count|default:"0" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon icon-purple">
+
+                        <i class="bi bi-people-fill"></i>
+
+                    </div>
+
+                </div>
+
+                <small style="color:#6f42c1;">
+
+                    <i class="bi bi-person-check"></i>
+
+                    Registered users
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         MAIN ROW
+    ========================= -->
+
+    <div class="row g-4">
+
+
+        <!-- =====================
+             QUICK ACTIONS
+        ====================== -->
+
+        <div class="col-lg-7">
+
+            <div class="section-card">
+
+                <div class="section-card-header">
+
+                    <div class="d-flex justify-content-between">
+
+                        <h5>
+
+                            <i class="bi bi-lightning-charge-fill
+                                      text-warning me-2"></i>
+
+                            Quick Actions
+
+                        </h5>
+
+                    </div>
+
+                </div>
+
+
+                <div class="p-4">
+
+                    <div class="row g-3">
+
+
+                        <!-- Add Destination -->
+
+                        <div class="col-md-6">
+
+                            <a href="{% url 'destination_create' %}"
+                               class="quick-action">
+
+                                <div class="quick-action-icon">
+
+                                    <i class="bi bi-geo-alt-fill"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Add Destination
+                                    </strong>
+
+                                    <small class="d-block text-muted">
+                                        Create a destination
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+
+
+                        <!-- Add Package -->
+
+                        <div class="col-md-6">
+
+                            <a href="{% url 'package_create' %}"
+                               class="quick-action">
+
+                                <div class="quick-action-icon">
+
+                                    <i class="bi bi-map-fill"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Add Package
+                                    </strong>
+
+                                    <small class="d-block text-muted">
+                                        Create a travel package
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+
+
+                        <!-- Travel Planner -->
+
+                        <div class="col-md-6">
+
+                            <a href="{% url 'travel_plan' %}"
+                               class="quick-action">
+
+                                <div class="quick-action-icon">
+
+                                    <i class="bi bi-airplane-fill"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Travel Planner
+                                    </strong>
+
+                                    <small class="d-block text-muted">
+                                        Create a personalized trip
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+
+
+                        <!-- Gallery -->
+
+                        <div class="col-md-6">
+
+                            <a href="{% url 'gallery' %}"
+                               class="quick-action">
+
+                                <div class="quick-action-icon">
+
+                                    <i class="bi bi-images"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Manage Gallery
+                                    </strong>
+
+                                    <small class="d-block text-muted">
+                                        Add travel photos
+                                    </small>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================
+             RECENT ACTIVITY
+        ====================== -->
+
+        <div class="col-lg-5">
+
+            <div class="section-card">
+
+                <div class="section-card-header">
+
+                    <h5>
+
+                        <i class="bi bi-activity
+                                  text-success me-2"></i>
+
+                        Recent Activity
+
+                    </h5>
+
+                </div>
+
+
+                <div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+
+                            <i class="bi bi-geo-alt-fill"></i>
+
+                        </div>
+
+                        <div class="activity-text">
+
+                            <strong>
+                                Destinations
+                            </strong>
+
+                            <small>
+                                {{ destinations_count|default:"0" }}
+                                destinations available
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+
+                            <i class="bi bi-map-fill"></i>
+
+                        </div>
+
+                        <div class="activity-text">
+
+                            <strong>
+                                Travel Packages
+                            </strong>
+
+                            <small>
+                                {{ packages_count|default:"0" }}
+                                packages available
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+
+                            <i class="bi bi-calendar-check-fill"></i>
+
+                        </div>
+
+                        <div class="activity-text">
+
+                            <strong>
+                                Bookings
+                            </strong>
+
+                            <small>
+                                {{ bookings_count|default:"0" }}
+                                total bookings
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+
+                            <i class="bi bi-people-fill"></i>
+
+                        </div>
+
+                        <div class="activity-text">
+
+                            <strong>
+                                Customers
+                            </strong>
+
+                            <small>
+                                {{ users_count|default:"0" }}
+                                registered users
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

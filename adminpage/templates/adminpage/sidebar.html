@@ -1,0 +1,83 @@
+<aside class="admin-sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+        <div class="logo-icon">
+            <i class="bi bi-compass-fill"></i>
+        </div>
+
+        <div>
+            <h5>ExploreWorld</h5>
+            <small>Admin Panel</small>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+
+        <p class="menu-title">MAIN</p>
+
+        <a href="{% url 'admin_dashboard' %}" class="sidebar-link">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <p class="menu-title">TOURISM</p>
+
+        <a href="{% url 'destination_create' %}" class="sidebar-link">
+            <i class="bi bi-geo-alt-fill"></i>
+            <span>Destinations</span>
+        </a>
+
+        <a href="{% url 'package_create' %}" class="sidebar-link active">
+            <i class="bi bi-map-fill"></i>
+            <span>Packages</span>
+        </a>
+
+        <a href="#" class="sidebar-link">
+            <i class="bi bi-signpost-split-fill"></i>
+            <span>Tours</span>
+        </a>
+
+        <a href="#" class="sidebar-link">
+            <i class="bi bi-images"></i>
+            <span>Gallery</span>
+        </a>
+
+        <p class="menu-title">MANAGEMENT</p>
+
+        <a href="#" class="sidebar-link">
+            <i class="bi bi-calendar-check-fill"></i>
+            <span>Bookings</span>
+        </a>
+
+        <a href="#" class="sidebar-link">
+            <i class="bi bi-star-fill"></i>
+            <span>Reviews</span>
+        </a>
+
+        <a href="#" class="sidebar-link">
+            <i class="bi bi-people-fill"></i>
+            <span>Users</span>
+        </a>
+
+    </nav>
+
+    <!-- Bottom -->
+    <div class="sidebar-bottom">
+
+        <a href="{% url 'index' %}" class="sidebar-link">
+            <i class="bi bi-globe2"></i>
+            <span>View Website</span>
+        </a>
+
+        <a href="{% url 'admin_logout' %}" class="sidebar-link logout-link">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>

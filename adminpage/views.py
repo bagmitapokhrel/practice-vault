@@ -1,8 +1,17 @@
 from django.shortcuts import render, redirect
 from .forms import PackageForm, DestinationForm
 from django.contrib import messages
+from .models import Destination, Package, Booking
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
+
+
+
 
 # Create your views here.
+@staff_member_required(login_url="/adminpage/login/")
 def PackageCreateView(request):
     if request.method == 'POST':
         form = PackageForm(request.POST, request.FILES)
@@ -18,6 +27,7 @@ def PackageCreateView(request):
     
     return render(request, 'adminpage/package_form.html', {'form': form})
 
+@staff_member_required(login_url="/adminpage/login/")
 def DestinationCreateView(request):
     if request.method == 'POST':
         form = DestinationForm(request.POST, request.FILES)
@@ -32,3 +42,109 @@ def DestinationCreateView(request):
         form = DestinationForm()
     
     return render(request, 'adminpage/destination_form.html', {'form': form})
+
+
+from .forms import TravelPlanForm
+
+@staff_member_required(login_url="/adminpage/login/")
+def travel_plan(request):
+
+    if request.method == "POST":
+
+        form = TravelPlanForm(request.POST)
+
+        if form.is_valid():
+
+            plan = form.save(commit=False)
+
+            if request.user.is_authenticated:
+                plan.user = request.user
+
+            plan.save()
+
+            messages.success(
+                request,
+                "Travel plan created successfully!"
+            )
+
+            return redirect("travel_plan")
+
+    else:
+
+        form = TravelPlanForm()
+
+    return render(
+        request,
+        "adminpage/travel_plan.html",
+        {
+            "form": form
+        },
+    )
+
+@staff_member_required(login_url="/adminpage/login/")
+def admin_dashboard(request):
+
+    context = {
+        "destinations_count": Destination.objects.count(),
+        "packages_count": Package.objects.count(),
+        "bookings_count": Booking.objects.count(),
+        "users_count": User.objects.count(),
+    }
+
+    return render(
+        request,
+        "adminpage/dashboard.html",
+        context
+    )
+
+
+def admin_login(request):
+
+    if request.user.is_authenticated:
+        return redirect("admin_dashboard")
+
+    if request.method == "POST":
+
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+
+            # Only allow staff/admin users
+            if user.is_staff:
+
+                login(request, user)
+
+                return redirect("admin_dashboard")
+
+            else:
+
+                messages.error(
+                    request,
+                    "You do not have permission to access the admin dashboard."
+                )
+
+        else:
+
+            messages.error(
+                request,
+                "Invalid username or password."
+            )
+
+    return render(
+        request,
+        "adminpage/login.html"
+    )
+
+@staff_member_required(login_url="/adminpage/login/")
+def admin_logout(request):
+
+    logout(request)
+
+    return redirect("admin_login")
