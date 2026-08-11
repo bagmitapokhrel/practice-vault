@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category,Destination, Package, Booking, Tour, Gallery
+from .models import Category,Destination, Package, Booking, Tour, Gallery, Payment
 
 # Register your models here.
 admin.site.register(Category)
@@ -14,3 +14,25 @@ class GalleryAdmin(admin.ModelAdmin):
     search_fields = ('title', 'destination__name')  # Allow searching by title and destination name
     list_filter = ('destination',)  # Add a filter for destination
 
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "booking",
+        "amount",
+        "payment_method",
+        "status",
+        "transaction_id",
+        "created_at",
+    )
+
+    list_filter = (
+        "payment_method",
+        "status",
+    )
+
+    search_fields = (
+        "transaction_id",
+    )

@@ -157,4 +157,58 @@ class TravelPlan(models.Model):
     def __str__(self):
         return f"{self.destination.name} - {self.travelers} Travelers"
 
-    
+
+
+
+class Payment(models.Model):
+
+    PAYMENT_METHODS = [
+        ("esewa", "eSewa"),
+        ("cod", "Cash on Delivery"),
+    ]
+
+    PAYMENT_STATUS = [
+        ("pending", "Pending"),
+        ("paid", "Paid"),
+        ("failed", "Failed"),
+        ("refunded", "Refunded"),
+    ]
+
+    booking = models.OneToOneField(
+        "Booking",
+        on_delete=models.CASCADE,
+        related_name="payment"
+    )
+
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PAYMENT_METHODS
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS,
+        default="pending"
+    )
+
+    transaction_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.booking} - {self.amount}"

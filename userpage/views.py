@@ -85,3 +85,72 @@ def gallery(request):
         'galleries': galleries,
     }
     return render(request, 'userpage/gallery.html', context)
+
+
+def payment(request, booking_id):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id
+    )
+
+    if request.method == "POST":
+
+        payment_method = request.POST.get(
+            "payment_method"
+        )
+
+        if payment_method not in ["esewa", "cod"]:
+
+            messages.error(
+                request,
+                "Please select a payment method."
+            )
+
+            return redirect(
+                "payment",
+                booking_id=booking.id
+            )
+
+        payment = Payment.objects.create(
+
+            booking=booking,
+
+            amount=booking.package.price,
+
+            payment_method=payment_method,
+
+            status="pending"
+
+        )
+
+        if payment_method == "cod":
+
+            payment.status = "pending"
+
+            payment.save()
+
+            return redirect(
+                "payment_success",
+                payment_id=payment.id
+            )
+
+        if payment_method == "esewa":
+
+            # For now we create the payment record.
+            # eSewa Sandbox will be connected next.
+
+            return redirect(
+                "payment_success",
+                payment_id=payment.id
+            )
+
+
+    return render(
+        request,
+        "userpage/payment.html",
+        {
+            "booking": booking
+        }
+    )
+
