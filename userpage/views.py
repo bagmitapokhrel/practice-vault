@@ -108,6 +108,16 @@ def review(request):
 def about(request):
     return render(request, "userpage/about.html")
 
+def contact(request):
+    return render(request, "userpage/contact.html")
+
+def review(request):
+    reviews = Review.objects.all()
+    context = {
+        'reviews': reviews,
+    }
+    return render(request, 'userpage/review.html', context)
+
 def gallery(request):
     galleries = Gallery.objects.all()   
     context = {
@@ -116,20 +126,77 @@ def gallery(request):
     return render(request, 'userpage/gallery.html', context)
 
 def booking(request, package_id):
-    package = get_object_or_404(Package, id=package_id)
+
+    package = get_object_or_404(
+        Package,
+        id=package_id
+    )
 
     if request.method == "POST":
+
         form = BookingForm(request.POST)
+
         if form.is_valid():
+
             booking = form.save(commit=False)
+
+            # Attach the selected package
             booking.package = package
+
+            # Get number of people
+            number_of_people = booking.number_of_people
+
+            # Check minimum
+            if number_of_people < 1:
+
+                messages.error(
+                    request,
+                    "You must book for at least one guest."
+                )
+
+                return redirect(
+                    "package_detail",
+                    package_id=package.id
+                )
+
+            # Check maximum capacity
+            if (
+                package.max_people
+                and number_of_people > package.max_people
+            ):
+
+                messages.error(
+                    request,
+                    f"Maximum {package.max_people} guests "
+                    f"are allowed for this package."
+                )
+
+                return redirect(
+                    "package_detail",
+                    package_id=package.id
+                )
+
+            # Calculate total price
+            booking.price = (
+                package.price * number_of_people
+            )
+
+            # Save booking
             booking.save()
+
             messages.success(
                 request,
-                "Your booking has been successfully submitted! We will contact you shortly."
+                "Your booking has been successfully submitted! "
+                "We will contact you shortly."
             )
-            return redirect("package_detail", package_id=package.id)
+
+            return redirect(
+                "package_detail",
+                package_id=package.id
+            )
+
     else:
+
         form = BookingForm()
 
     context = {

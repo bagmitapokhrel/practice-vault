@@ -1,0 +1,443 @@
+{% extends "adminpage/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Admin Dashboard | Edit Destination
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    body {
+        background: #f5f7fa;
+        font-family: Arial, sans-serif;
+    }
+
+    .main-content {
+        padding: 35px;
+    }
+
+    /* PAGE HEADER */
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-header h2 {
+        font-weight: 800;
+        color: #1f2937;
+    }
+
+
+    /* MAIN CARD */
+
+    .edit-card {
+        border: none;
+        border-radius: 22px;
+
+        box-shadow:
+            0 10px 35px rgba(0, 0, 0, .07);
+
+        overflow: hidden;
+    }
+
+
+    /* CARD HEADER */
+
+    .edit-header {
+        background: linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+
+        color: white;
+
+        padding: 30px 35px;
+    }
+
+    .edit-header h4 {
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .edit-header p {
+        margin-bottom: 0;
+        opacity: .9;
+    }
+
+
+    /* FORM BODY */
+
+    .edit-body {
+        padding: 40px;
+        background: white;
+    }
+
+
+    /* FORM */
+
+    .form-control,
+    .form-select {
+
+        border-radius: 12px;
+
+        padding: 12px 15px;
+
+        border: 1px solid #dee2e6;
+
+        transition: .2s ease;
+    }
+
+
+    .form-control:focus,
+    .form-select:focus {
+
+        border-color: #00a896;
+
+        box-shadow:
+            0 0 0 3px rgba(0, 168, 150, .10);
+    }
+
+
+    /* BUTTONS */
+
+    .save-btn {
+
+        border: none;
+
+        border-radius: 50px;
+
+        padding: 13px 30px;
+
+        font-weight: 700;
+
+        background: linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+
+        color: white;
+
+        transition: .25s ease;
+    }
+
+
+    .save-btn:hover {
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 8px 20px rgba(0, 168, 150, .25);
+
+        color: white;
+    }
+
+
+    .cancel-btn {
+
+        border-radius: 50px;
+
+        padding: 13px 28px;
+
+        font-weight: 600;
+    }
+
+
+    /* IMAGE PREVIEW */
+
+    .image-preview {
+
+        width: 180px;
+
+        height: 120px;
+
+        object-fit: cover;
+
+        border-radius: 15px;
+
+        border: 1px solid #dee2e6;
+
+        margin-top: 10px;
+    }
+
+
+    .current-image {
+
+        background: #f8f9fa;
+
+        border-radius: 15px;
+
+        padding: 18px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .current-image-title {
+
+        font-size: 13px;
+
+        font-weight: 700;
+
+        color: #6b7280;
+
+        margin-bottom: 10px;
+    }
+
+
+    /* ALERT */
+
+    .alert {
+
+        border-radius: 12px;
+
+        border: none;
+    }
+
+
+    /* RESPONSIVE */
+
+    @media (max-width: 768px) {
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .edit-body {
+            padding: 25px 20px;
+        }
+
+        .edit-header {
+            padding: 25px 20px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="main-content">
+
+
+    <!-- =================================
+         PAGE HEADER
+    ================================== -->
+
+    <div class="page-header">
+
+        <div
+            class="d-flex justify-content-between align-items-center flex-wrap gap-3"
+        >
+
+            <div>
+
+                <span class="text-muted small">
+                    Admin Dashboard
+                </span>
+
+                <h2 class="mb-1">
+                    Edit Destination
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Update destination information and details.
+                </p>
+
+            </div>
+
+
+            <div class="d-flex gap-2">
+
+                <a
+                    href="{% url 'destination_list' %}"
+                    class="btn btn-outline-secondary rounded-pill px-4"
+                >
+
+                    <i class="bi bi-arrow-left me-1"></i>
+
+                    Back to Destinations
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================
+         EDIT CARD
+    ================================== -->
+
+    <div class="card edit-card">
+
+
+        <!-- HEADER -->
+
+        <div class="edit-header">
+
+            <div class="d-flex align-items-center">
+
+                <div class="me-3">
+
+                    <i
+                        class="bi bi-geo-alt-fill fs-1"
+                    ></i>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        {{ destination.name }}
+                    </h4>
+
+                    <p>
+                        Edit destination information
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BODY -->
+
+        <div class="edit-body">
+
+
+            <!-- MESSAGES -->
+
+            {% for message in messages %}
+
+                <div
+                    class="alert
+                    {% if message.tags == 'success' %}
+                        alert-success
+                    {% else %}
+                        alert-danger
+                    {% endif %}
+                    alert-dismissible fade show"
+                    role="alert"
+                >
+
+                    <i
+                        class="bi
+                        {% if message.tags == 'success' %}
+                            bi-check-circle
+                        {% else %}
+                            bi-exclamation-circle
+                        {% endif %}
+                        me-2"
+                    ></i>
+
+                    {{ message }}
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                    ></button>
+
+                </div>
+
+            {% endfor %}
+
+
+
+            <!-- CURRENT IMAGE -->
+
+            {% if destination.image %}
+
+                <div class="current-image">
+
+                    <div class="current-image-title">
+
+                        <i class="bi bi-image me-1"></i>
+
+                        Current Featured Image
+
+                    </div>
+
+                    <img
+                        src="{{ destination.image.url }}"
+                        alt="{{ destination.name }}"
+                        class="image-preview"
+                    >
+
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- FORM -->
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+
+                {{ form|crispy }}
+
+
+                <!-- BUTTONS -->
+
+                <div
+                    class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top"
+                >
+
+                    <a
+                        href="#"
+                        class="btn btn-outline-secondary cancel-btn"
+                    >
+
+                        <i class="bi bi-x-lg me-1"></i>
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{{ form.media }}
+
+{% endblock %}

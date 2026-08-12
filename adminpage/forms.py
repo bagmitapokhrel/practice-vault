@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from adminpage.models import Package, Booking, Destination
+from adminpage.models import Package, Booking, Destination, Tour
 
 
 class PackageForm(ModelForm):
@@ -10,7 +10,12 @@ class PackageForm(ModelForm):
 class DestinationForm(ModelForm):
     class Meta:
         model = Destination
-        fields = '__all__'  
+        fields = '__all__' 
+
+class TourForm(ModelForm):
+    class Meta:
+        model = Tour
+        fields = '__all__'
 
 from django import forms
 from .models import TravelPlan

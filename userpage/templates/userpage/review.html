@@ -1,0 +1,1071 @@
+{% extends "userpage/base.html" %}
+
+{% block title %}
+Reviews | ExploreWorld
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* =====================================================
+   REVIEW PAGE
+===================================================== */
+
+.review-page {
+    background: #f7f9f8;
+    min-height: 100vh;
+    color: #17211f;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.review-hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 100px 0 120px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #063c38,
+            #087f8c
+        );
+
+    color: white;
+}
+
+
+.review-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    top: -280px;
+    right: -100px;
+}
+
+
+.review-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    bottom: -190px;
+    left: 10%;
+}
+
+
+.review-hero-content {
+    position: relative;
+    z-index: 2;
+
+    max-width: 750px;
+}
+
+
+.review-label {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 16px;
+
+    border-radius: 50px;
+
+    background: rgba(255,255,255,.12);
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+}
+
+
+.review-hero h1 {
+    margin-top: 25px;
+
+    font-size: clamp(42px, 6vw, 70px);
+
+    line-height: 1.05;
+
+    letter-spacing: -.04em;
+
+    font-weight: 800;
+}
+
+
+.review-hero h1 span {
+    color: #8de0d5;
+}
+
+
+.review-hero p {
+    max-width: 650px;
+
+    margin-top: 22px;
+
+    color: rgba(255,255,255,.78);
+
+    font-size: 18px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.review-section {
+    padding: 90px 0;
+}
+
+
+/* =====================================================
+   FORM CARD
+===================================================== */
+
+.review-form-card {
+    background: white;
+
+    border-radius: 28px;
+
+    padding: 40px;
+
+    border: 1px solid #e7eeec;
+
+    box-shadow:
+        0 20px 60px rgba(20,60,55,.09);
+}
+
+
+.review-form-card h3 {
+    font-size: 27px;
+
+    font-weight: 800;
+
+    margin-bottom: 8px;
+}
+
+
+.review-form-card > p {
+    color: #6b7280;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-bottom: 30px;
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-label {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #374151;
+
+    margin-bottom: 8px;
+}
+
+
+.form-control,
+.form-select {
+    min-height: 52px;
+
+    border-radius: 13px;
+
+    border: 1px solid #dfe7e5;
+
+    background: #fbfcfc;
+
+    padding: 13px 16px;
+
+    transition: .25s ease;
+}
+
+
+textarea.form-control {
+    min-height: 140px;
+
+    resize: vertical;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #00a896;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 4px rgba(0,168,150,.09);
+}
+
+
+/* =====================================================
+   RATING
+===================================================== */
+
+.rating-box {
+    padding: 20px;
+
+    border-radius: 16px;
+
+    background: #f7faf9;
+
+    border: 1px solid #e5ecea;
+
+    margin-bottom: 25px;
+}
+
+
+.rating-title {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+}
+
+
+.stars {
+    display: flex;
+
+    flex-direction: row-reverse;
+
+    justify-content: flex-end;
+
+    gap: 5px;
+}
+
+
+.stars input {
+    display: none;
+}
+
+
+.stars label {
+    cursor: pointer;
+
+    font-size: 30px;
+
+    color: #d6dddb;
+
+    transition: .2s;
+}
+
+
+.stars label:hover,
+.stars label:hover ~ label,
+.stars input:checked ~ label {
+    color: #f5b301;
+}
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.review-btn {
+    width: 100%;
+
+    min-height: 55px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+
+    color: white;
+
+    font-weight: 800;
+
+    letter-spacing: .04em;
+
+    transition: .3s ease;
+}
+
+
+.review-btn:hover {
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 28px rgba(0,168,150,.25);
+}
+
+
+/* =====================================================
+   REVIEW CARDS
+===================================================== */
+
+.review-heading {
+    margin-bottom: 30px;
+}
+
+
+.review-heading span {
+    color: #087f8c;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: .13em;
+
+    text-transform: uppercase;
+}
+
+
+.review-heading h2 {
+    font-size: 35px;
+
+    font-weight: 800;
+
+    margin-top: 8px;
+}
+
+
+.review-card {
+    height: 100%;
+
+    padding: 28px;
+
+    background: white;
+
+    border: 1px solid #e7eeec;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 10px 35px rgba(20,60,55,.06);
+
+    transition: .3s ease;
+}
+
+
+.review-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 18px 45px rgba(20,60,55,.10);
+}
+
+
+.reviewer {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.avatar {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+
+    color: white;
+
+    font-weight: 800;
+
+    font-size: 16px;
+}
+
+
+.reviewer h6 {
+    font-weight: 800;
+
+    margin-bottom: 3px;
+}
+
+
+.reviewer small {
+    color: #899391;
+}
+
+
+.review-stars {
+    color: #f5b301;
+
+    letter-spacing: 2px;
+
+    margin: 20px 0 14px;
+}
+
+
+.review-text {
+    color: #68736f;
+
+    line-height: 1.8;
+
+    font-size: 14px;
+
+    margin-bottom: 0;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-reviews {
+    padding: 60px 20px;
+
+    text-align: center;
+
+    background: white;
+
+    border: 1px dashed #d8e2df;
+
+    border-radius: 22px;
+}
+
+
+.empty-reviews i {
+    font-size: 45px;
+
+    color: #087f8c;
+}
+
+
+.empty-reviews h5 {
+    font-weight: 800;
+
+    margin-top: 15px;
+}
+
+
+.empty-reviews p {
+    color: #899391;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 991px) {
+
+    .review-form-card {
+        margin-bottom: 50px;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .review-hero {
+        padding: 70px 0 90px;
+    }
+
+    .review-section {
+        padding: 60px 0;
+    }
+
+    .review-form-card {
+        padding: 28px 22px;
+
+        border-radius: 22px;
+    }
+
+}
+
+</style>
+
+
+<div class="review-page">
+
+
+    <!-- =================================================
+         HERO
+    ================================================== -->
+
+    <section class="review-hero">
+
+        <div class="container">
+
+            <div class="review-hero-content">
+
+                <span class="review-label">
+
+                    <i class="bi bi-chat-heart"></i>
+
+                    Traveler Stories
+
+                </span>
+
+
+                <h1>
+
+                    Your journey.
+                    <span>Your story.</span>
+
+                </h1>
+
+
+                <p>
+
+                    Every adventure creates a story worth sharing.
+                    Tell fellow travelers about your experience and
+                    help them discover their next unforgettable journey.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         REVIEW CONTENT
+    ================================================== -->
+
+    <section class="review-section">
+
+        <div class="container">
+
+            <div class="row g-5">
+
+
+                <!-- =====================================
+                     REVIEW FORM
+                ====================================== -->
+
+                <div class="col-lg-5">
+
+                    <div class="review-form-card">
+
+                        <h3>
+                            Share your experience
+                        </h3>
+
+                        <p>
+                            Your feedback helps other travelers make
+                            better decisions and helps us create
+                            even better experiences.
+                        </p>
+
+
+                        <!-- Messages -->
+
+                        {% if messages %}
+
+                            {% for message in messages %}
+
+                                <div
+                                    class="alert alert-success alert-dismissible fade show"
+                                    role="alert"
+                                >
+
+                                    <i class="bi bi-check-circle me-2"></i>
+
+                                    {{ message }}
+
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="alert"
+                                    ></button>
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+
+                            <!-- FORM -->
+
+                            {% if form %}
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Your Name
+                                    </label>
+
+                                    {{ form.name }}
+
+                                    {% if form.name.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ form.name.errors }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Destination
+                                    </label>
+
+                                    {{ form.destination }}
+
+                                    {% if form.destination.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ form.destination.errors }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- Rating -->
+
+                                <div class="rating-box">
+
+                                    <div class="rating-title">
+
+                                        How would you rate your experience?
+
+                                    </div>
+
+
+                                    <div class="stars">
+
+                                        <input
+                                            type="radio"
+                                            id="star5"
+                                            name="rating"
+                                            value="5"
+                                        >
+
+                                        <label for="star5">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="star4"
+                                            name="rating"
+                                            value="4"
+                                        >
+
+                                        <label for="star4">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="star3"
+                                            name="rating"
+                                            value="3"
+                                        >
+
+                                        <label for="star3">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="star2"
+                                            name="rating"
+                                            value="2"
+                                        >
+
+                                        <label for="star2">
+                                            ★
+                                        </label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="star1"
+                                            name="rating"
+                                            value="1"
+                                            checked
+                                        >
+
+                                        <label for="star1">
+                                            ★
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mb-4">
+
+                                    <label class="form-label">
+                                        Your Review
+                                    </label>
+
+                                    {{ form.comment }}
+
+                                    {% if form.comment.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ form.comment.errors }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                            {% else %}
+
+                                <!-- Fallback form -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Your Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        class="form-control"
+                                        placeholder="Your name"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Destination
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="destination"
+                                        class="form-control"
+                                        placeholder="Where did you travel?"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="rating-box">
+
+                                    <div class="rating-title">
+                                        Your Rating
+                                    </div>
+
+                                    <div class="stars">
+
+                                        <input
+                                            type="radio"
+                                            id="fstar5"
+                                            name="rating"
+                                            value="5"
+                                        >
+
+                                        <label for="fstar5">★</label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="fstar4"
+                                            name="rating"
+                                            value="4"
+                                        >
+
+                                        <label for="fstar4">★</label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="fstar3"
+                                            name="rating"
+                                            value="3"
+                                        >
+
+                                        <label for="fstar3">★</label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="fstar2"
+                                            name="rating"
+                                            value="2"
+                                        >
+
+                                        <label for="fstar2">★</label>
+
+
+                                        <input
+                                            type="radio"
+                                            id="fstar1"
+                                            name="rating"
+                                            value="1"
+                                            checked
+                                        >
+
+                                        <label for="fstar1">★</label>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mb-4">
+
+                                    <label class="form-label">
+                                        Your Review
+                                    </label>
+
+                                    <textarea
+                                        name="comment"
+                                        class="form-control"
+                                        placeholder="Tell us about your experience..."
+                                        required
+                                    ></textarea>
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <button
+                                type="submit"
+                                class="review-btn"
+                            >
+
+                                <i class="bi bi-send me-2"></i>
+
+                                Publish My Review
+
+                            </button>
+
+
+                            <div class="text-center mt-3">
+
+                                <small class="text-muted">
+
+                                    <i class="bi bi-shield-check me-1"></i>
+
+                                    Your review helps our travel community.
+
+                                </small>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     REVIEWS
+                ====================================== -->
+
+                <div class="col-lg-7">
+
+
+                    <div class="review-heading">
+
+                        <span>
+                            Traveler feedback
+                        </span>
+
+                        <h2>
+                            Stories from the road.
+                        </h2>
+
+                    </div>
+
+
+
+                    <div class="row g-4">
+
+
+                        {% for review in reviews %}
+
+                        <div class="col-md-6">
+
+                            <div class="review-card">
+
+
+                                <div class="reviewer">
+
+                                    <div class="avatar">
+
+                                        {{ review.name|first|upper }}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <h6>
+                                            {{ review.name }}
+                                        </h6>
+
+                                        <small>
+
+                                            {{ review.destination }}
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- Rating -->
+
+                                <div class="review-stars">
+
+                                    {% if review.rating == 5 %}
+
+                                        ★★★★★
+
+                                    {% elif review.rating == 4 %}
+
+                                        ★★★★☆
+
+                                    {% elif review.rating == 3 %}
+
+                                        ★★★☆☆
+
+                                    {% elif review.rating == 2 %}
+
+                                        ★★☆☆☆
+
+                                    {% else %}
+
+                                        ★☆☆☆☆
+
+                                    {% endif %}
+
+                                </div>
+
+
+
+                                <p class="review-text">
+
+                                    "{{ review.comment }}"
+
+                                </p>
+
+
+                            </div>
+
+                        </div>
+
+
+                        {% empty %}
+
+                        <div class="col-12">
+
+                            <div class="empty-reviews">
+
+                                <i class="bi bi-chat-square-heart"></i>
+
+                                <h5>
+                                    No reviews yet
+                                </h5>
+
+                                <p>
+                                    Be the first traveler to share
+                                    your experience.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+{% endblock %}

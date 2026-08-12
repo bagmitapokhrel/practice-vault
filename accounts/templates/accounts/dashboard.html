@@ -1,131 +1,844 @@
 {% extends "userpage/base.html" %}
 {% load static %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}My Dashboard | ExploreWorld{% endblock %}
 
 {% block content %}
 
-<section class="py-5 bg-light min-vh-100">
-    <div class="container">
+<style>
+    /* =========================================
+       DASHBOARD
+    ========================================= */
 
-        <div class="row">
+    .dashboard-page {
+        background: #f5f8f7;
+        min-height: 100vh;
+        padding: 45px 0 70px;
+    }
 
-            <!-- Sidebar -->
-            <div class="col-lg-3 mb-4">
+    .dashboard-container {
+        max-width: 1350px;
+    }
 
-                <div class="card border-0 shadow rounded-4">
+    /* =========================================
+       SIDEBAR
+    ========================================= */
 
-                    <div class="card-body text-center">
+    .dashboard-sidebar {
+        background: #ffffff;
+        border: 1px solid #e8eeec;
+        border-radius: 24px;
+        overflow: hidden;
+        position: sticky;
+        top: 100px;
+        box-shadow: 0 12px 40px rgba(20, 50, 45, 0.06);
+    }
 
-                        <img src="{% static 'images/avatar.png' %}"
-                             class="rounded-circle shadow mb-3"
-                             width="100"
-                             height="100">
+    .profile-box {
+        padding: 30px 25px 25px;
+        text-align: center;
+        background:
+            linear-gradient(
+                180deg,
+                #eefaf7 0%,
+                #ffffff 100%
+            );
+    }
 
-                        <h5 class="fw-bold">
-                            {{ request.user.username }}
-                        </h5>
+    .profile-avatar-wrapper {
+        position: relative;
+        width: 92px;
+        height: 92px;
+        margin: 0 auto 15px;
+    }
 
-                        <p class="text-muted">
-                            Traveler
-                        </p>
+    .profile-avatar {
+        width: 92px;
+        height: 92px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #ffffff;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, .12);
+    }
 
-                        <hr>
+    .online-dot {
+        position: absolute;
+        right: 3px;
+        bottom: 5px;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        background: #20c997;
+        border: 3px solid #ffffff;
+    }
 
-                        <div class="list-group list-group-flush">
+    .profile-name {
+        font-weight: 800;
+        color: #17211f;
+        margin-bottom: 3px;
+    }
 
-                            <a href="{% url 'dashboard' %}" class="list-group-item list-group-item-action active">
-                                <i class="bi bi-speedometer2 me-2"></i>
-                                Dashboard
-                            </a>
+    .profile-role {
+        color: #788581;
+        font-size: 13px;
+        margin-bottom: 0;
+    }
 
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="bi bi-person me-2"></i>
-                                My Profile
-                            </a>
+    .dashboard-nav {
+        padding: 15px;
+    }
 
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="bi bi-calendar-check me-2"></i>
-                                My Bookings
-                            </a>
+    .nav-label {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: #9aa6a2;
+        padding: 10px 13px 8px;
+    }
 
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="bi bi-heart me-2"></i>
-                                Wishlist
-                            </a>
+    .dashboard-nav .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #596763;
+        padding: 12px 14px;
+        margin-bottom: 5px;
+        border-radius: 13px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all .2s ease;
+    }
 
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="bi bi-star me-2"></i>
-                                Reviews
-                            </a>
+    .dashboard-nav .nav-link i {
+        width: 21px;
+        text-align: center;
+        font-size: 17px;
+    }
 
-                            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger">
-                                <i class="bi bi-box-arrow-right me-2"></i>
-                                Logout
-                            </a>
+    .dashboard-nav .nav-link:hover {
+        background: #f0f8f6;
+        color: #087f8c;
+        transform: translateX(2px);
+    }
+
+    .dashboard-nav .nav-link.active {
+        background: linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+        color: #ffffff;
+        box-shadow: 0 8px 20px rgba(0, 168, 150, .20);
+    }
+
+    .dashboard-nav .nav-link.logout {
+        color: #dc3545;
+        margin-top: 8px;
+    }
+
+    .dashboard-nav .nav-link.logout:hover {
+        background: #fff1f2;
+        color: #dc3545;
+    }
+
+    /* =========================================
+       MAIN HEADER
+    ========================================= */
+
+    .welcome-card {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        border-radius: 25px;
+        min-height: 230px;
+        background:
+            linear-gradient(
+                120deg,
+                #075f69,
+                #087f8c 45%,
+                #00a896
+            );
+        color: white;
+        box-shadow: 0 18px 45px rgba(0, 120, 110, .18);
+    }
+
+    .welcome-card::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.08);
+        right: -100px;
+        top: -130px;
+    }
+
+    .welcome-card::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.06);
+        right: 100px;
+        bottom: -160px;
+    }
+
+    .welcome-content {
+        position: relative;
+        z-index: 2;
+        padding: 38px 40px;
+    }
+
+    .welcome-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 13px;
+        border-radius: 50px;
+        background: rgba(255,255,255,.14);
+        border: 1px solid rgba(255,255,255,.18);
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .welcome-title {
+        font-size: 30px;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .welcome-description {
+        max-width: 650px;
+        color: rgba(255,255,255,.82);
+        margin-bottom: 22px;
+        line-height: 1.7;
+    }
+
+    .explore-btn {
+        background: #ffffff;
+        color: #087f8c;
+        border: none;
+        border-radius: 50px;
+        padding: 11px 21px;
+        font-weight: 700;
+        transition: .2s;
+    }
+
+    .explore-btn:hover {
+        background: #f2fffc;
+        color: #087f8c;
+        transform: translateY(-2px);
+    }
+
+    .welcome-plane {
+        position: absolute;
+        right: 55px;
+        bottom: 35px;
+        font-size: 90px;
+        opacity: .12;
+        transform: rotate(-15deg);
+    }
+
+    /* =========================================
+       STATISTICS
+    ========================================= */
+
+    .stats-row {
+        margin-top: 25px;
+    }
+
+    .stat-card {
+        height: 100%;
+        background: #ffffff;
+        border: 1px solid #e8eeec;
+        border-radius: 20px;
+        padding: 23px;
+        box-shadow: 0 8px 30px rgba(20, 50, 45, .05);
+        transition: .25s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(20, 50, 45, .09);
+    }
+
+    .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        font-size: 20px;
+    }
+
+    .icon-teal {
+        background: #e6f7f4;
+        color: #087f8c;
+    }
+
+    .icon-red {
+        background: #fff0f1;
+        color: #dc3545;
+    }
+
+    .icon-yellow {
+        background: #fff8df;
+        color: #d39e00;
+    }
+
+    .icon-green {
+        background: #eaf8ef;
+        color: #198754;
+    }
+
+    .stat-number {
+        font-size: 27px;
+        font-weight: 800;
+        margin: 18px 0 2px;
+        color: #17211f;
+    }
+
+    .stat-label {
+        color: #7d8985;
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .stat-arrow {
+        color: #a0aaa7;
+        font-size: 14px;
+    }
+
+    /* =========================================
+       CONTENT CARDS
+    ========================================= */
+
+    .dashboard-card {
+        background: #ffffff;
+        border: 1px solid #e8eeec;
+        border-radius: 22px;
+        box-shadow: 0 8px 30px rgba(20, 50, 45, .05);
+        overflow: hidden;
+    }
+
+    .card-heading {
+        padding: 22px 25px;
+        border-bottom: 1px solid #edf1ef;
+    }
+
+    .card-heading h5 {
+        font-weight: 800;
+        color: #17211f;
+        margin-bottom: 3px;
+    }
+
+    .card-heading p {
+        color: #8a9692;
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .view-all {
+        color: #087f8c;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .view-all:hover {
+        color: #00a896;
+    }
+
+    /* =========================================
+       BOOKINGS TABLE
+    ========================================= */
+
+    .booking-table {
+        margin-bottom: 0;
+    }
+
+    .booking-table thead th {
+        border: none;
+        background: #fafcfc;
+        color: #87938f;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+        padding: 14px 22px;
+    }
+
+    .booking-table tbody td {
+        padding: 18px 22px;
+        border-color: #f0f3f2;
+        color: #4e5a56;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .booking-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .package-name {
+        font-weight: 700;
+        color: #26322f;
+    }
+
+    .date-text {
+        font-size: 13px;
+        color: #697571;
+    }
+
+    .people-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #596763;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 12px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .status-confirmed {
+        background: #e8f7ee;
+        color: #198754;
+    }
+
+    .status-pending {
+        background: #fff7df;
+        color: #a87800;
+    }
+
+    .status-cancelled {
+        background: #fff0f1;
+        color: #dc3545;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    /* =========================================
+       EMPTY STATE
+    ========================================= */
+
+    .empty-state {
+        padding: 55px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 75px;
+        height: 75px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        border-radius: 22px;
+        background: #eef8f6;
+        color: #087f8c;
+        font-size: 30px;
+    }
+
+    .empty-state h5 {
+        font-weight: 800;
+        color: #26322f;
+    }
+
+    .empty-state p {
+        color: #899490;
+        font-size: 14px;
+    }
+
+    .empty-btn {
+        border-radius: 50px;
+        padding: 10px 22px;
+        font-weight: 700;
+    }
+
+    /* =========================================
+       QUICK ACTIONS
+    ========================================= */
+
+    .quick-action {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 16px;
+        border-radius: 15px;
+        background: #f8faf9;
+        text-decoration: none;
+        color: #34413d;
+        transition: .2s;
+        margin-bottom: 10px;
+    }
+
+    .quick-action:last-child {
+        margin-bottom: 0;
+    }
+
+    .quick-action:hover {
+        background: #eef8f6;
+        color: #087f8c;
+        transform: translateX(3px);
+    }
+
+    .quick-icon {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #087f8c;
+        box-shadow: 0 3px 10px rgba(0,0,0,.05);
+    }
+
+    .quick-action strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 2px;
+    }
+
+    .quick-action small {
+        color: #8a9692;
+        font-size: 11px;
+    }
+
+    .quick-arrow {
+        margin-left: auto;
+        color: #a4aeab;
+    }
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 991px) {
+
+        .dashboard-sidebar {
+            position: static;
+        }
+
+        .welcome-plane {
+            display: none;
+        }
+
+    }
+
+    @media (max-width: 767px) {
+
+        .dashboard-page {
+            padding: 25px 0 50px;
+        }
+
+        .welcome-content {
+            padding: 28px 24px;
+        }
+
+        .welcome-title {
+            font-size: 24px;
+        }
+
+        .stats-row {
+            margin-top: 18px;
+        }
+
+        .dashboard-card {
+            border-radius: 18px;
+        }
+
+        .booking-table {
+            min-width: 700px;
+        }
+
+    }
+
+</style>
+
+
+<section class="dashboard-page">
+
+    <div class="container dashboard-container">
+
+        <div class="row g-4">
+
+            <!-- =====================================
+                 SIDEBAR
+            ====================================== -->
+
+            <div class="col-lg-3">
+
+                <aside class="dashboard-sidebar">
+
+                    <div class="profile-box">
+
+                        <div class="profile-avatar-wrapper">
+
+                            <img
+                                src="{% static 'images/avatar.png' %}"
+                                class="profile-avatar"
+                                alt="Profile"
+                            >
+
+                            <span class="online-dot"></span>
 
                         </div>
 
+                        <h5 class="profile-name">
+
+                            {{ request.user.first_name|default:request.user.username }}
+
+                        </h5>
+
+                        <p class="profile-role">
+
+                            Traveler · Explore the world
+
+                        </p>
+
                     </div>
 
-                </div>
+
+                    <nav class="dashboard-nav">
+
+                        <div class="nav-label">
+                            My Account
+                        </div>
+
+
+                        <a
+                            href="{% url 'dashboard' %}"
+                            class="nav-link active"
+                        >
+
+                            <i class="bi bi-grid-1x2-fill"></i>
+
+                            Dashboard
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="nav-link"
+                        >
+
+                            <i class="bi bi-person"></i>
+
+                            My Profile
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="nav-link"
+                        >
+
+                            <i class="bi bi-calendar2-check"></i>
+
+                            My Bookings
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="nav-link"
+                        >
+
+                            <i class="bi bi-heart"></i>
+
+                            Wishlist
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="nav-link"
+                        >
+
+                            <i class="bi bi-star"></i>
+
+                            My Reviews
+
+                        </a>
+
+
+                        <div class="nav-label mt-3">
+                            Account
+                        </div>
+
+
+                        <a
+                            href="{% url 'logout' %}"
+                            class="nav-link logout"
+                        >
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                            Logout
+
+                        </a>
+
+                    </nav>
+
+                </aside>
 
             </div>
 
-            <!-- Main Content -->
+
+            <!-- =====================================
+                 MAIN CONTENT
+            ====================================== -->
+
             <div class="col-lg-9">
 
-                <!-- Welcome -->
-                <div class="card border-0 shadow rounded-4 text-white mb-4"
-                     style="background:linear-gradient(135deg,#0d6efd,#20c997);">
 
-                    <div class="card-body p-5">
+                <!-- WELCOME -->
 
-                        <h2 class="fw-bold">
+                <div class="welcome-card">
+
+                    <div class="welcome-content">
+
+                        <div class="welcome-badge">
+
+                            <i class="bi bi-stars"></i>
+
+                            Traveler Dashboard
+
+                        </div>
+
+
+                        <h1 class="welcome-title">
+
                             Welcome back,
                             {{ request.user.first_name|default:request.user.username }} 👋
-                        </h2>
 
-                        <p class="mb-0">
-                            Ready for your next adventure? Explore amazing destinations and manage your trips.
+                        </h1>
+
+
+                        <p class="welcome-description">
+
+                            Your next adventure is waiting.
+                            Manage your bookings, discover new destinations,
+                            and keep your travel plans organized in one place.
+
                         </p>
+
+
+                        <a
+                            href="{% url 'package' %}"
+                            class="btn explore-btn"
+                        >
+
+                            Explore Packages
+
+                            <i class="bi bi-arrow-right ms-2"></i>
+
+                        </a>
 
                     </div>
 
+
+                    <i class="bi bi-airplane-engines welcome-plane"></i>
+
                 </div>
 
-                <!-- Statistics -->
-                <div class="row g-4">
 
-                    <div class="col-md-3">
 
-                        <div class="card border-0 shadow rounded-4 text-center p-4">
+                <!-- =====================================
+                     STATISTICS
+                ====================================== -->
 
-                            <i class="bi bi-calendar-check display-5 text-primary"></i>
+                <div class="row g-3 stats-row">
 
-                            <h2 class="fw-bold mt-3">
+
+                    <!-- BOOKINGS -->
+
+                    <div class="col-6 col-xl-3">
+
+                        <div class="stat-card">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon icon-teal">
+
+                                    <i class="bi bi-calendar2-check"></i>
+
+                                </div>
+
+                                <i class="bi bi-arrow-up-right stat-arrow"></i>
+
+                            </div>
+
+
+                            <h3 class="stat-number">
+
                                 {{ bookings.count }}
-                            </h2>
 
-                            <p class="text-muted mb-0">
-                                Bookings
+                            </h3>
+
+                            <p class="stat-label">
+
+                                Total Bookings
+
                             </p>
 
                         </div>
 
                     </div>
 
-                    <div class="col-md-3">
 
-                        <div class="card border-0 shadow rounded-4 text-center p-4">
 
-                            <i class="bi bi-heart-fill display-5 text-danger"></i>
+                    <!-- WISHLIST -->
 
-                            <h2 class="fw-bold mt-3">
+                    <div class="col-6 col-xl-3">
+
+                        <div class="stat-card">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon icon-red">
+
+                                    <i class="bi bi-heart-fill"></i>
+
+                                </div>
+
+                                <i class="bi bi-arrow-up-right stat-arrow"></i>
+
+                            </div>
+
+
+                            <h3 class="stat-number">
                                 0
-                            </h2>
+                            </h3>
 
-                            <p class="text-muted mb-0">
+                            <p class="stat-label">
                                 Wishlist
                             </p>
 
@@ -133,17 +846,32 @@
 
                     </div>
 
-                    <div class="col-md-3">
 
-                        <div class="card border-0 shadow rounded-4 text-center p-4">
 
-                            <i class="bi bi-star-fill display-5 text-warning"></i>
+                    <!-- REVIEWS -->
 
-                            <h2 class="fw-bold mt-3">
+                    <div class="col-6 col-xl-3">
+
+                        <div class="stat-card">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon icon-yellow">
+
+                                    <i class="bi bi-star-fill"></i>
+
+                                </div>
+
+                                <i class="bi bi-arrow-up-right stat-arrow"></i>
+
+                            </div>
+
+
+                            <h3 class="stat-number">
                                 0
-                            </h2>
+                            </h3>
 
-                            <p class="text-muted mb-0">
+                            <p class="stat-label">
                                 Reviews
                             </p>
 
@@ -151,17 +879,32 @@
 
                     </div>
 
-                    <div class="col-md-3">
 
-                        <div class="card border-0 shadow rounded-4 text-center p-4">
 
-                            <i class="bi bi-globe display-5 text-success"></i>
+                    <!-- DESTINATIONS -->
 
-                            <h2 class="fw-bold mt-3">
+                    <div class="col-6 col-xl-3">
+
+                        <div class="stat-card">
+
+                            <div class="stat-top">
+
+                                <div class="stat-icon icon-green">
+
+                                    <i class="bi bi-globe-americas"></i>
+
+                                </div>
+
+                                <i class="bi bi-arrow-up-right stat-arrow"></i>
+
+                            </div>
+
+
+                            <h3 class="stat-number">
                                 25+
-                            </h2>
+                            </h3>
 
-                            <p class="text-muted mb-0">
+                            <p class="stat-label">
                                 Destinations
                             </p>
 
@@ -171,92 +914,347 @@
 
                 </div>
 
-                <!-- Recent Bookings -->
-                <div class="card border-0 shadow rounded-4 mt-5">
 
-                    <div class="card-header bg-white">
 
-                        <h4 class="fw-bold mb-0">
-                            Recent Bookings
-                        </h4>
+                <!-- =====================================
+                     LOWER CONTENT
+                ====================================== -->
+
+                <div class="row g-4 mt-1">
+
+
+                    <!-- RECENT BOOKINGS -->
+
+                    <div class="col-xl-8">
+
+                        <div class="dashboard-card">
+
+                            <div class="card-heading">
+
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <div>
+
+                                        <h5>
+                                            Recent Bookings
+                                        </h5>
+
+                                        <p>
+                                            Keep track of your upcoming adventures.
+                                        </p>
+
+                                    </div>
+
+
+                                    {% if bookings %}
+
+                                        <a
+                                            href="#"
+                                            class="view-all"
+                                        >
+
+                                            View all
+                                            <i class="bi bi-arrow-right ms-1"></i>
+
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            {% if bookings %}
+
+                                <div class="table-responsive">
+
+                                    <table class="table booking-table">
+
+                                        <thead>
+
+                                            <tr>
+
+                                                <th>Package</th>
+
+                                                <th>Travel Date</th>
+
+                                                <th>Guests</th>
+
+                                                <th>Status</th>
+
+                                            </tr>
+
+                                        </thead>
+
+
+                                        <tbody>
+
+                                            {% for booking in bookings %}
+
+                                            <tr>
+
+                                                <td>
+
+                                                    <div class="package-name">
+
+                                                        {{ booking.package.title }}
+
+                                                    </div>
+
+                                                </td>
+
+
+                                                <td>
+
+                                                    <span class="date-text">
+
+                                                        <i class="bi bi-calendar3 me-1"></i>
+
+                                                        {{ booking.travel_date }}
+
+                                                    </span>
+
+                                                </td>
+
+
+                                                <td>
+
+                                                    <span class="people-count">
+
+                                                        <i class="bi bi-people"></i>
+
+                                                        {{ booking.number_of_people }}
+
+                                                    </span>
+
+                                                </td>
+
+
+                                                <td>
+
+                                                    {% if booking.status == "Confirmed" %}
+
+                                                        <span class="status-pill status-confirmed">
+
+                                                            <span class="status-dot"></span>
+
+                                                            Confirmed
+
+                                                        </span>
+
+                                                    {% elif booking.status == "Pending" %}
+
+                                                        <span class="status-pill status-pending">
+
+                                                            <span class="status-dot"></span>
+
+                                                            Pending
+
+                                                        </span>
+
+                                                    {% elif booking.status == "Cancelled" %}
+
+                                                        <span class="status-pill status-cancelled">
+
+                                                            <span class="status-dot"></span>
+
+                                                            Cancelled
+
+                                                        </span>
+
+                                                    {% else %}
+
+                                                        <span class="status-pill status-pending">
+
+                                                            <span class="status-dot"></span>
+
+                                                            {{ booking.status }}
+
+                                                        </span>
+
+                                                    {% endif %}
+
+                                                </td>
+
+                                            </tr>
+
+                                            {% endfor %}
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+
+                                        <i class="bi bi-compass"></i>
+
+                                    </div>
+
+
+                                    <h5>
+                                        No adventures booked yet
+                                    </h5>
+
+                                    <p>
+                                        Your travel story starts with your first booking.
+                                    </p>
+
+
+                                    <a
+                                        href="{% url 'package' %}"
+                                        class="btn btn-success empty-btn"
+                                    >
+
+                                        Discover Tours
+
+                                        <i class="bi bi-arrow-right ms-2"></i>
+
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
 
                     </div>
 
-                    <div class="card-body">
 
-                        {% if bookings %}
 
-                        <div class="table-responsive">
+                    <!-- QUICK ACTIONS -->
 
-                            <table class="table align-middle">
+                    <div class="col-xl-4">
 
-                                <thead>
+                        <div class="dashboard-card">
 
-                                    <tr>
+                            <div class="card-heading">
 
-                                        <th>Package</th>
-                                        <th>Date</th>
-                                        <th>People</th>
-                                        <th>Status</th>
+                                <h5>
+                                    Quick Actions
+                                </h5>
 
-                                    </tr>
+                                <p>
+                                    Manage your travel journey.
+                                </p>
 
-                                </thead>
+                            </div>
 
-                                <tbody>
 
-                                    {% for booking in bookings %}
+                            <div class="p-3">
 
-                                    <tr>
 
-                                        <td>{{ booking.package.title }}</td>
+                                <a href="{% url 'package' %}" class="quick-action">
 
-                                        <td>{{ booking.travel_date }}</td>
+                                    <div class="quick-icon">
 
-                                        <td>{{ booking.number_of_people }}</td>
+                                        <i class="bi bi-compass"></i>
 
-                                        <td>
+                                    </div>
 
-                                            <span class="badge bg-success">
-                                                Confirmed
-                                            </span>
+                                    <div>
 
-                                        </td>
+                                        <strong>
+                                            Explore Packages
+                                        </strong>
 
-                                    </tr>
+                                        <small>
+                                            Find your next adventure
+                                        </small>
 
-                                    {% endfor %}
+                                    </div>
 
-                                </tbody>
+                                    <i class="bi bi-chevron-right quick-arrow"></i>
 
-                            </table>
+                                </a>
+
+
+
+                                <a href="#" class="quick-action">
+
+                                    <div class="quick-icon">
+
+                                        <i class="bi bi-heart"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            My Wishlist
+                                        </strong>
+
+                                        <small>
+                                            View saved destinations
+                                        </small>
+
+                                    </div>
+
+                                    <i class="bi bi-chevron-right quick-arrow"></i>
+
+                                </a>
+
+
+
+                                <a href="#" class="quick-action">
+
+                                    <div class="quick-icon">
+
+                                        <i class="bi bi-star"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Write a Review
+                                        </strong>
+
+                                        <small>
+                                            Share your experience
+                                        </small>
+
+                                    </div>
+
+                                    <i class="bi bi-chevron-right quick-arrow"></i>
+
+                                </a>
+
+
+
+                                <a href="#" class="quick-action">
+
+                                    <div class="quick-icon">
+
+                                        <i class="bi bi-person"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Edit Profile
+                                        </strong>
+
+                                        <small>
+                                            Update your information
+                                        </small>
+
+                                    </div>
+
+                                    <i class="bi bi-chevron-right quick-arrow"></i>
+
+                                </a>
+
+                            </div>
 
                         </div>
-
-                        {% else %}
-
-                        <div class="text-center py-5">
-
-                            <i class="bi bi-calendar-x display-1 text-secondary"></i>
-
-                            <h4 class="mt-3">
-                                No bookings yet
-                            </h4>
-
-                            <p class="text-muted">
-                                Book your first tour today.
-                            </p>
-
-                            <a href="{% url 'package' %}"
-                               class="btn btn-success rounded-pill px-4">
-
-                                Explore Packages
-
-                            </a>
-
-                        </div>
-
-                        {% endif %}
 
                     </div>
 
@@ -267,6 +1265,7 @@
         </div>
 
     </div>
+
 </section>
 
 {% endblock %}

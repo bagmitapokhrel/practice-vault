@@ -91,6 +91,8 @@ class Tour(models.Model):
     start_date = models.DateField()
     duration = models.CharField(max_length=50, blank=True, null=True)
     package = models.ForeignKey(Package, on_delete=models.CASCADE, null=True,blank=True)
+    image = models.FileField(upload_to="tours/", blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     bookings = models.ManyToManyField(Booking, related_name="tours")
 
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)

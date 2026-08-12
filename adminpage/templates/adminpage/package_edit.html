@@ -1,0 +1,479 @@
+{% extends "adminpage/base.html" %}
+
+{% block title %}Edit Package{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+            <span class="text-muted small text-uppercase">
+                Package Management
+            </span>
+
+            <h2 class="fw-bold mb-1">
+                Edit Package
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update the details of {{ package.title }}.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'package_list' %}"
+            class="btn btn-light border rounded-pill px-4"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Packages
+        </a>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <form
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- Form Errors -->
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger rounded-3">
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- BASIC INFORMATION -->
+
+                        <div class="mb-4">
+
+                            <h5 class="fw-bold mb-1">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Basic Information
+                            </h5>
+
+                            <p class="text-muted small">
+                                Update the main information about this package.
+                            </p>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+
+                            <!-- Title -->
+
+                            <div class="col-12">
+
+                                <label
+                                    for="{{ form.title.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    Package Title
+                                </label>
+
+                                {{ form.title }}
+
+                                {% if form.title.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.title.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- Destination -->
+
+                            <div class="col-md-6">
+
+                                <label
+                                    for="{{ form.destination.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    Destination
+                                </label>
+
+                                {{ form.destination }}
+
+                                {% if form.destination.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.destination.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- Duration -->
+
+                            <div class="col-md-6">
+
+                                <label
+                                    for="{{ form.duration.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    Duration
+                                </label>
+
+                                {{ form.duration }}
+
+                                {% if form.duration.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.duration.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- Difficulty -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    for="{{ form.difficulty.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    Difficulty
+                                </label>
+
+                                {{ form.difficulty }}
+
+                                {% if form.difficulty.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.difficulty.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- Price -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    for="{{ form.price.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    Price Per Person
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        Rs.
+                                    </span>
+
+                                    {{ form.price }}
+
+                                </div>
+
+                                {% if form.price.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.price.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- Max People -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    for="{{ form.max_people.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    Maximum Guests
+                                </label>
+
+                                {{ form.max_people }}
+
+                                {% if form.max_people.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.max_people.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <hr class="my-5">
+
+
+
+                        <!-- ITINERARY -->
+
+                        <div class="mb-4">
+
+                            <h5 class="fw-bold mb-1">
+                                <i class="bi bi-map me-2"></i>
+                                Itinerary
+                            </h5>
+
+                            <p class="text-muted small">
+                                Create or update the day-by-day travel itinerary.
+                            </p>
+
+                        </div>
+
+
+                        <div class="mb-4">
+
+                            {{ form.itinerary }}
+
+                            {% if form.itinerary.errors %}
+
+                                <div class="text-danger small mt-1">
+                                    {{ form.itinerary.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <hr class="my-5">
+
+
+
+                        <!-- INCLUDES / EXCLUDES -->
+
+                        <div class="mb-4">
+
+                            <h5 class="fw-bold mb-1">
+                                <i class="bi bi-check2-circle me-2"></i>
+                                Package Services
+                            </h5>
+
+                            <p class="text-muted small">
+                                Specify what is included and excluded from this package.
+                            </p>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+
+                            <!-- Includes -->
+
+                            <div class="col-lg-6">
+
+                                <label
+                                    for="{{ form.includes.id_for_label }}"
+                                    class="form-label fw-semibold text-success"
+                                >
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    What's Included
+                                </label>
+
+                                {{ form.includes }}
+
+                                {% if form.includes.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.includes.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- Excludes -->
+
+                            <div class="col-lg-6">
+
+                                <label
+                                    for="{{ form.excludes.id_for_label }}"
+                                    class="form-label fw-semibold text-danger"
+                                >
+                                    <i class="bi bi-x-circle me-1"></i>
+                                    What's Excluded
+                                </label>
+
+                                {{ form.excludes }}
+
+                                {% if form.excludes.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.excludes.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <hr class="my-5">
+
+
+
+                        <!-- IMAGE -->
+
+                        <div class="mb-4">
+
+                            <h5 class="fw-bold mb-1">
+                                <i class="bi bi-image me-2"></i>
+                                Featured Image
+                            </h5>
+
+                            <p class="text-muted small">
+                                Change the main image displayed for this package.
+                            </p>
+
+                        </div>
+
+
+                        <div class="row g-4 align-items-center">
+
+
+                            <!-- Current Image -->
+
+                            {% if package.featured_image %}
+
+                            <div class="col-md-4">
+
+                                <div class="rounded-4 overflow-hidden border">
+
+                                    <img
+                                        src="{{ package.featured_image.url }}"
+                                        alt="{{ package.title }}"
+                                        class="img-fluid w-100"
+                                        style="height: 220px; object-fit: cover;"
+                                    >
+
+                                </div>
+
+                                <small class="text-muted d-block mt-2">
+                                    Current featured image
+                                </small>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <!-- Upload -->
+
+                            <div class="col-md-8">
+
+                                <label
+                                    for="{{ form.featured_image.id_for_label }}"
+                                    class="form-label fw-semibold"
+                                >
+                                    Upload New Image
+                                </label>
+
+                                {{ form.featured_image }}
+
+                                {% if form.featured_image.errors %}
+
+                                    <div class="text-danger small mt-1">
+                                        {{ form.featured_image.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                                <small class="text-muted d-block mt-2">
+                                    Recommended: landscape image, at least 1200px wide.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- ACTIONS -->
+
+                        <div
+                            class="d-flex flex-wrap justify-content-end gap-2 mt-5 pt-4 border-top"
+                        >
+
+                            <a
+                                href="#"
+                                class="btn btn-light border rounded-pill px-4"
+                            >
+                                Cancel
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-success rounded-pill px-5"
+                            >
+
+                                <i class="bi bi-check-lg me-1"></i>
+
+                                Update Package
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

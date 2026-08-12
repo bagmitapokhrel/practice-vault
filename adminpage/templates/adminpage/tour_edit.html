@@ -1,0 +1,575 @@
+{% extends "adminpage/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Edit Tour | Admin Dashboard
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    body {
+        background: #f5f7fa;
+        font-family: Arial, sans-serif;
+    }
+
+    .main-content {
+        padding: 35px;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-header h2 {
+        font-weight: 800;
+        color: #17211f;
+    }
+
+    .page-header p {
+        color: #7b8783;
+    }
+
+    /* Main Card */
+
+    .edit-card {
+        border: none;
+        border-radius: 22px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, .07);
+    }
+
+    /* Header */
+
+    .edit-header {
+        padding: 28px 32px;
+        background: linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+        color: white;
+    }
+
+    .edit-header h4 {
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .edit-header p {
+        margin-bottom: 0;
+        opacity: .85;
+        font-size: 14px;
+    }
+
+    .header-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: rgba(255,255,255,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    /* Form */
+
+    .form-body {
+        padding: 35px;
+    }
+
+    .section-title {
+        font-weight: 800;
+        color: #26322f;
+        margin-bottom: 20px;
+    }
+
+    .section-title i {
+        color: #087f8c;
+    }
+
+    /* Crispy Form */
+
+    .form-label {
+        font-weight: 600;
+        color: #49534f;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 12px;
+        padding: 12px 14px;
+        border: 1px solid #dfe6e3;
+        transition: .2s;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #00a896;
+        box-shadow: 0 0 0 3px rgba(0,168,150,.10);
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+    }
+
+    /* Image */
+
+    .current-image {
+        background: #f8faf9;
+        border: 1px solid #e7ecea;
+        border-radius: 16px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .current-image img {
+        width: 180px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .image-label {
+        font-size: 12px;
+        color: #899490;
+        margin-bottom: 8px;
+    }
+
+    /* Buttons */
+
+    .btn-save {
+        border: none;
+        border-radius: 50px;
+        padding: 12px 28px;
+        font-weight: 700;
+        background: linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+        color: white;
+        transition: .25s;
+    }
+
+    .btn-save:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,168,150,.25);
+    }
+
+    .btn-cancel {
+        border-radius: 50px;
+        padding: 11px 25px;
+        font-weight: 600;
+    }
+
+    /* Alert */
+
+    .alert {
+        border: none;
+        border-radius: 13px;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 768px) {
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .form-body {
+            padding: 25px 20px;
+        }
+
+        .edit-header {
+            padding: 25px 20px;
+        }
+
+        .current-image img {
+            width: 100%;
+            height: 180px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="main-content">
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+            <div>
+
+                <span class="text-muted small">
+                    Admin Dashboard / Tours
+                </span>
+
+                <h2 class="mb-1">
+                    Edit Tour
+                </h2>
+
+                <p class="mb-0">
+                    Update tour information, schedule and package details.
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'tour_list' %}"
+                class="btn btn-outline-secondary rounded-pill px-4"
+            >
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Back to Tours
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    {% for message in messages %}
+
+        <div
+            class="alert alert-{{ message.tags }} alert-dismissible fade show"
+            role="alert"
+        >
+
+            <i class="bi bi-info-circle me-2"></i>
+
+            {{ message }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+
+        </div>
+
+    {% endfor %}
+
+
+    <!-- EDIT CARD -->
+
+    <div class="edit-card">
+
+        <!-- HEADER -->
+
+        <div class="edit-header">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="header-icon">
+
+                    <i class="bi bi-pencil-square"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        Update Tour
+                    </h4>
+
+                    <p>
+                        Editing:
+                        <strong>{{ tour.name }}</strong>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM BODY -->
+
+        <div class="form-body">
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- TOUR INFORMATION -->
+
+                <div class="mb-4">
+
+                    <h5 class="section-title">
+
+                        <i class="bi bi-info-circle me-2"></i>
+
+                        Tour Information
+
+                    </h5>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Tour Name
+                            </label>
+
+                            {{ form.name }}
+
+                            {% if form.name.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.name.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Package
+                            </label>
+
+                            {{ form.package }}
+
+                            {% if form.package.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.package.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Start Date
+                            </label>
+
+                            {{ form.start_date }}
+
+                            {% if form.start_date.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.start_date.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Duration
+                            </label>
+
+                            {{ form.duration }}
+
+                            {% if form.duration.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.duration.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- CURRENT IMAGE -->
+
+                {% if tour.image %}
+
+                <div class="mb-4">
+
+                    <h5 class="section-title">
+
+                        <i class="bi bi-image me-2"></i>
+
+                        Current Tour Image
+
+                    </h5>
+
+
+                    <div class="current-image">
+
+                        <div class="image-label">
+                            Current featured image
+                        </div>
+
+                        <img
+                            src="{{ tour.image.url }}"
+                            alt="{{ tour.name }}"
+                        >
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- IMAGE -->
+
+                <div class="mb-4">
+
+                    <h5 class="section-title">
+
+                        <i class="bi bi-camera me-2"></i>
+
+                        Tour Image
+
+                    </h5>
+
+
+                    <label class="form-label">
+
+                        Upload New Image
+
+                    </label>
+
+                    {{ form.image }}
+
+                    <small class="text-muted d-block mt-2">
+
+                        Leave empty if you want to keep the current image.
+
+                    </small>
+
+                    {% if form.image.errors %}
+
+                        <div class="text-danger small mt-1">
+
+                            {{ form.image.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="mb-4">
+
+                    <h5 class="section-title">
+
+                        <i class="bi bi-file-text me-2"></i>
+
+                        Tour Description
+
+                    </h5>
+
+
+                    <label class="form-label">
+
+                        Description
+
+                    </label>
+
+                    {{ form.description }}
+
+                    {% if form.description.errors %}
+
+                        <div class="text-danger small mt-1">
+
+                            {{ form.description.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- ACTIONS -->
+
+                <div class="d-flex justify-content-end gap-2 flex-wrap">
+
+                    <a
+                        href="{% url 'tour_list' %}"
+                        class="btn btn-outline-secondary btn-cancel"
+                    >
+
+                        <i class="bi bi-x-lg me-1"></i>
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-save"
+                    >
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{{ form.media }}
+
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from .forms import PackageForm, DestinationForm
+from .forms import PackageForm, DestinationForm, TourForm, TravelPlanForm
 from django.contrib import messages
-from .models import Destination, Package, Booking
+from .models import Destination, Package, Booking, Tour
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -43,8 +43,21 @@ def DestinationCreateView(request):
     
     return render(request, 'adminpage/destination_form.html', {'form': form})
 
-
-from .forms import TravelPlanForm
+@staff_member_required(login_url="/adminpage/login/")
+def TourCreateView(request):
+    if request.method == 'POST':
+        form = TourForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Tour created successfully!")
+            return redirect('tour_create')
+        else:
+            messages.error(request, "There was an error creating the tour. Please check the form for errors.")
+            return render(request, 'adminpage/tour_form.html', {'form': form})
+    else:
+        form = TourForm()
+    
+    return render(request, 'adminpage/tour_form.html', {'form': form})
 
 @staff_member_required(login_url="/adminpage/login/")
 def travel_plan(request):
@@ -227,3 +240,80 @@ def destination_list(request):
         "adminpage/destination_list.html",
         context
     )
+
+@staff_member_required(login_url="/adminpage/login/")
+def destination_edit(request, destination_id):
+    destination = Destination.objects.get(id=destination_id)
+
+    if request.method == "POST":
+        form = DestinationForm(request.POST, request.FILES, instance=destination)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Destination updated successfully!")
+            return redirect("destination_list")
+        else:
+            messages.error(request, "There was an error updating the destination. Please check the form for errors.")
+    else:
+        form = DestinationForm(instance=destination)
+
+    context = {
+        "form": form,
+        "destination": destination
+    }
+
+    return render(
+        request,
+        "adminpage/destination_edit.html",
+        context
+    )
+
+@staff_member_required(login_url="/adminpage/login/")
+def package_list(request):
+    packages = Package.objects.all()
+    context = {
+        "packages": packages
+    }
+    return render(
+        request,
+        "adminpage/package_list.html",
+        context
+    )
+
+@staff_member_required(login_url="/adminpage/login/")
+def package_edit(request, package_id):
+    package = Package.objects.get(id=package_id)
+
+    if request.method == "POST":
+        form = PackageForm(request.POST, request.FILES, instance=package)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Package updated successfully!")
+            return redirect("package_list")
+        else:
+            messages.error(request, "There was an error updating the package. Please check the form for errors.")
+    else:
+        form = PackageForm(instance=package)
+
+    context = {
+        "form": form,
+        "package": package
+    }
+
+    return render(
+        request,
+        "adminpage/package_edit.html",
+        context
+    )
+
+@staff_member_required(login_url="/adminpage/login/")
+def tour_list(request):
+    tours = Tour.objects.all()
+    context = {
+        "tours": tours
+    }
+    return render(
+        request,
+        "adminpage/tour_list.html",
+        context
+    )
+

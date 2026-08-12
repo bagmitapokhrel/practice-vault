@@ -1,0 +1,757 @@
+{% extends "adminpage/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Add Tour | ExploreWorld Admin
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    body {
+        background: #f5f7fa;
+    }
+
+    .main-content {
+        padding: 35px;
+    }
+
+    /* ===============================
+       PAGE HEADER
+    =============================== */
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .breadcrumb-text {
+        color: #8a9491;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .page-header h2 {
+        font-weight: 800;
+        color: #17211f;
+        margin-bottom: 6px;
+    }
+
+    .page-header p {
+        color: #7b8582;
+        margin: 0;
+    }
+
+    .back-btn {
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+
+
+    /* ===============================
+       FORM CARD
+    =============================== */
+
+    .tour-form-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 15px 50px rgba(20, 60, 55, .08);
+    }
+
+
+    /* ===============================
+       CARD HEADER
+    =============================== */
+
+    .tour-form-header {
+        padding: 30px 35px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #087f8c,
+                #00a896
+            );
+
+        color: white;
+    }
+
+    .tour-form-header-icon {
+        width: 52px;
+        height: 52px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 15px;
+
+        background: rgba(255,255,255,.15);
+
+        font-size: 23px;
+
+        margin-bottom: 15px;
+    }
+
+    .tour-form-header h4 {
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .tour-form-header p {
+        margin: 0;
+        opacity: .85;
+        font-size: 14px;
+    }
+
+
+    /* ===============================
+       FORM BODY
+    =============================== */
+
+    .tour-form-body {
+        padding: 40px;
+    }
+
+
+    /* ===============================
+       SECTION TITLE
+    =============================== */
+
+    .form-section {
+        margin-bottom: 35px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        font-size: 17px;
+
+        font-weight: 800;
+
+        color: #17211f;
+
+        padding-bottom: 13px;
+
+        margin-bottom: 22px;
+
+        border-bottom: 1px solid #edf1f0;
+    }
+
+    .section-title i {
+        color: #087f8c;
+        font-size: 19px;
+    }
+
+
+    /* ===============================
+       FORM FIELDS
+    =============================== */
+
+    .form-label {
+        font-weight: 700;
+        color: #37413f;
+    }
+
+    .form-control,
+    .form-select {
+
+        border-radius: 12px !important;
+
+        border: 1px solid #dfe7e5 !important;
+
+        background: #fbfcfc !important;
+
+        padding: 12px 15px !important;
+
+        transition: .25s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+
+        border-color: #00a896 !important;
+
+        background: white !important;
+
+        box-shadow:
+            0 0 0 4px rgba(0,168,150,.08) !important;
+    }
+
+
+    /* ===============================
+       IMAGE UPLOAD
+    =============================== */
+
+    .image-upload {
+
+        padding: 30px;
+
+        text-align: center;
+
+        background: #fafcfb;
+
+        border: 2px dashed #d7e2df;
+
+        border-radius: 18px;
+
+        transition: .25s ease;
+    }
+
+    .image-upload:hover {
+
+        border-color: #00a896;
+
+        background: #f5fbfa;
+    }
+
+    .image-upload-icon {
+
+        width: 60px;
+        height: 60px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        margin: 0 auto 15px;
+
+        border-radius: 18px;
+
+        background: #e8f8f6;
+
+        color: #087f8c;
+
+        font-size: 25px;
+    }
+
+    .image-upload h6 {
+
+        font-weight: 800;
+
+        margin-bottom: 5px;
+    }
+
+    .image-upload p {
+
+        color: #899391;
+
+        font-size: 13px;
+
+        margin-bottom: 18px;
+    }
+
+
+    /* ===============================
+       CURRENT IMAGE
+    =============================== */
+
+    .current-image {
+
+        margin-top: 20px;
+
+        padding: 15px;
+
+        background: #f7f9f8;
+
+        border-radius: 15px;
+
+        text-align: left;
+    }
+
+    .current-image img {
+
+        width: 110px;
+
+        height: 80px;
+
+        object-fit: cover;
+
+        border-radius: 12px;
+    }
+
+
+    /* ===============================
+       ACTIONS
+    =============================== */
+
+    .form-actions {
+
+        display: flex;
+
+        justify-content: flex-end;
+
+        gap: 12px;
+
+        padding-top: 30px;
+
+        margin-top: 35px;
+
+        border-top: 1px solid #edf1f0;
+    }
+
+    .cancel-btn {
+
+        border-radius: 50px;
+
+        padding: 12px 25px;
+
+        font-weight: 600;
+    }
+
+    .save-btn {
+
+        border: none;
+
+        border-radius: 50px;
+
+        padding: 12px 30px;
+
+        font-weight: 700;
+
+        color: white;
+
+        background:
+            linear-gradient(
+                135deg,
+                #087f8c,
+                #00a896
+            );
+
+        transition: .25s ease;
+    }
+
+    .save-btn:hover {
+
+        color: white;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 10px 25px rgba(0,168,150,.25);
+    }
+
+
+    /* ===============================
+       ALERT
+    =============================== */
+
+    .alert {
+        border: none;
+        border-radius: 12px;
+    }
+
+
+    /* ===============================
+       RESPONSIVE
+    =============================== */
+
+    @media (max-width: 768px) {
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .tour-form-body {
+            padding: 25px 20px;
+        }
+
+        .tour-form-header {
+            padding: 25px 20px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .cancel-btn,
+        .save-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="main-content">
+
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="page-header">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+            <div>
+
+                <div class="breadcrumb-text">
+
+                    Admin Dashboard
+                    <span class="mx-1">/</span>
+                    Tours
+                    <span class="mx-1">/</span>
+                    Add Tour
+
+                </div>
+
+                <h2>
+                    Add New Tour
+                </h2>
+
+                <p>
+                    Create a new tour experience for your travelers.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'tour_list' %}"
+                class="btn btn-outline-secondary back-btn"
+            >
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Back to Tours
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         MESSAGES
+    =========================================== -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4"
+                role="alert"
+            >
+
+                <i class="bi bi-info-circle me-2"></i>
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <!-- ==========================================
+         FORM
+    =========================================== -->
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10">
+
+            <div class="tour-form-card">
+
+
+                <!-- HEADER -->
+
+                <div class="tour-form-header">
+
+                    <div class="tour-form-header-icon">
+
+                        <i class="bi bi-compass"></i>
+
+                    </div>
+
+                    <h4>
+                        Tour Information
+                    </h4>
+
+                    <p>
+                        Add the essential details for your new tour.
+                    </p>
+
+                </div>
+
+
+
+                <!-- BODY -->
+
+                <div class="tour-form-body">
+
+                    <form
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+
+                        <!-- ==================================
+                             BASIC INFORMATION
+                        =================================== -->
+
+                        <div class="form-section">
+
+                            <div class="section-title">
+
+                                <i class="bi bi-info-circle"></i>
+
+                                Basic Information
+
+                            </div>
+
+
+                            <div class="row g-4">
+
+
+                                <!-- TOUR NAME -->
+
+                                <div class="col-md-6">
+
+                                    {{ form.name|as_crispy_field }}
+
+                                </div>
+
+
+                                <!-- START DATE -->
+
+                                <div class="col-md-6">
+
+                                    {{ form.start_date|as_crispy_field }}
+
+                                </div>
+
+
+                                <!-- DURATION -->
+
+                                <div class="col-md-6">
+
+                                    {{ form.duration|as_crispy_field }}
+
+                                </div>
+
+
+                                <!-- PACKAGE -->
+
+                                <div class="col-md-6">
+
+                                    {{ form.package|as_crispy_field }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- ==================================
+                             DESCRIPTION
+                        =================================== -->
+
+                        <div class="form-section">
+
+                            <div class="section-title">
+
+                                <i class="bi bi-text-paragraph"></i>
+
+                                Tour Description
+
+                            </div>
+
+
+                            {{ form.description|as_crispy_field }}
+
+                        </div>
+
+
+
+                        <!-- ==================================
+                             IMAGE
+                        =================================== -->
+
+                        <div class="form-section">
+
+                            <div class="section-title">
+
+                                <i class="bi bi-image"></i>
+
+                                Tour Image
+
+                            </div>
+
+
+                            <div class="image-upload">
+
+                                <div class="image-upload-icon">
+
+                                    <i class="bi bi-cloud-arrow-up"></i>
+
+                                </div>
+
+                                <h6>
+                                    Upload Tour Image
+                                </h6>
+
+                                <p>
+                                    Choose a high-quality image that represents this tour.
+                                </p>
+
+
+                                {{ form.image }}
+
+                                {% if form.image.errors %}
+
+                                    <div class="text-danger small mt-2">
+
+                                        {{ form.image.errors }}
+
+                                    </div>
+
+                                {% endif %}
+
+
+
+                                <!-- CURRENT IMAGE FOR EDIT -->
+
+                                {% if object and object.image %}
+
+                                    <div class="current-image">
+
+                                        <div class="d-flex align-items-center gap-3">
+
+                                            <img
+                                                src="{{ object.image.url }}"
+                                                alt="{{ object.name }}"
+                                            >
+
+                                            <div>
+
+                                                <small class="text-muted d-block">
+
+                                                    Current Image
+
+                                                </small>
+
+                                                <strong>
+
+                                                    {{ object.name }}
+
+                                                </strong>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- ==================================
+                             FORM ERRORS
+                        =================================== -->
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- ==================================
+                             ACTIONS
+                        =================================== -->
+
+                        <div class="form-actions">
+
+
+                            <a
+                                href="{% url 'tour_list' %}"
+                                class="btn btn-outline-secondary cancel-btn"
+                            >
+
+                                <i class="bi bi-x-circle me-1"></i>
+
+                                Cancel
+
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="save-btn"
+                            >
+
+                                <i class="bi bi-check-circle me-1"></i>
+
+                                Save Tour
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{{ form.media }}
+
+{% endblock %}
