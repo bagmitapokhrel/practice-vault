@@ -163,6 +163,9 @@ def bookings(request):
     status__iexact="Confirmed"
 ).count()
 
+
+    
+
     context = {
         "bookings": bookings,
         "cancelled_count": cancelled_count,
@@ -211,5 +214,16 @@ def booking_edit(request, booking_id):
     return render(
         request,
         "adminpage/booking_edit.html",
+        context
+    )
+@staff_member_required(login_url="/adminpage/login/")
+def destination_list(request):
+    destinations = Destination.objects.all()
+    context = {
+        "destinations": destinations
+    }
+    return render(
+        request,
+        "adminpage/destination_list.html",
         context
     )

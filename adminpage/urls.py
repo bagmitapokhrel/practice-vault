@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PackageCreateView, DestinationCreateView, travel_plan,admin_dashboard,admin_login,admin_logout, bookings, booking_edit
+from .views import PackageCreateView, DestinationCreateView, travel_plan,admin_dashboard,admin_login,admin_logout, bookings, booking_edit, destination_list
 
 urlpatterns = [
     path("login/",admin_login,name="admin_login"),
@@ -10,5 +10,6 @@ urlpatterns = [
     path('travel-plans/', travel_plan, name='travel_plan'),
     path('bookings/', bookings, name='bookings'),
     path('bookings/edit/<int:booking_id>', booking_edit, name='booking_edit'),
+    path('destination_list/', destination_list, name='destination_list'),
    
 ]
