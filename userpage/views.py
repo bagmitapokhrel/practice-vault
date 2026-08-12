@@ -17,6 +17,35 @@ def index(request):
     }
     return render(request, 'userpage/index.html', context)
 
+
+def search(request):
+
+    query = request.GET.get("q", "").strip()
+
+    packages = Package.objects.none()
+    destinations = Destination.objects.none()
+
+    if query:
+        packages = Package.objects.filter(
+            title__icontains=query
+        )
+
+        destinations = Destination.objects.filter(
+            name__icontains=query
+        )
+
+    context = {
+        "query": query,
+        "packages": packages,
+        "destinations": destinations,
+    }
+
+    return render(
+        request,
+        "userpage/search.html",
+        context
+    )
+
 def package(request):
     packages = Package.objects.all()
     context = {
@@ -85,6 +114,34 @@ def gallery(request):
         'galleries': galleries,
     }
     return render(request, 'userpage/gallery.html', context)
+
+def booking(request, package_id):
+    package = get_object_or_404(Package, id=package_id)
+
+    if request.method == "POST":
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.package = package
+            booking.save()
+            messages.success(
+                request,
+                "Your booking has been successfully submitted! We will contact you shortly."
+            )
+            return redirect("package_detail", package_id=package.id)
+    else:
+        form = BookingForm()
+
+    context = {
+        "package": package,
+        "form": form,
+    }
+
+    return render(
+        request,
+        "userpage/package_detail.html",
+        context
+    )
 
 
 def payment(request, booking_id):

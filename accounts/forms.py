@@ -5,9 +5,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 class RegisterForm(UserCreationForm):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    email = forms.EmailField()
+
+    first_name = forms.CharField(
+        max_length=100,
+        required=True
+    )
+
+    last_name = forms.CharField(
+        max_length=100,
+        required=True
+    )
+
+    email = forms.EmailField(
+        required=True
+    )
 
     class Meta:
         model = User
@@ -20,14 +31,14 @@ class RegisterForm(UserCreationForm):
             "password2",
         ]
 
-def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
 
-        self.helper = FormHelper()
-        self.helper.form_method = "post"
+            self.helper = FormHelper()
+            self.helper.form_method = "post"
 
-        for field in self.fields.values():
-            field.widget.attrs.update({
-                "class": "form-control rounded-3",
-                "placeholder": field.label,
-            })
+            for field in self.fields.values():
+                field.widget.attrs.update({
+                    "class": "form-control rounded-3",
+                    "placeholder": field.label,
+                })

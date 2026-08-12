@@ -148,3 +148,68 @@ def admin_logout(request):
     logout(request)
 
     return redirect("admin_login")
+
+@staff_member_required(login_url="/adminpage/login/")
+def bookings(request):
+
+    bookings = Booking.objects.all()
+    cancelled_count = Booking.objects.filter(
+    status__iexact="Cancelled"
+).count()
+    pending_count = Booking.objects.filter(
+    status__iexact="Pending"
+).count()
+    confirmed_count = Booking.objects.filter(
+    status__iexact="Confirmed"
+).count()
+
+    context = {
+        "bookings": bookings,
+        "cancelled_count": cancelled_count,
+        "pending_count": pending_count,
+        "confirmed_count": confirmed_count
+    }
+
+    return render(
+        request,
+        "adminpage/booking.html",
+        context
+    )
+
+@staff_member_required(login_url="/adminpage/login/")
+def booking_edit(request, booking_id):
+
+    booking = Booking.objects.get(id=booking_id)
+
+    if request.method == "POST":
+
+        status = request.POST.get("status")
+
+        if status in ["pending", "confirmed", "cancelled"]:
+
+            booking.status = status
+            booking.save()
+
+            messages.success(
+                request,
+                "Booking status updated successfully."
+            )
+
+        else:
+
+            messages.error(
+                request,
+                "Invalid status value."
+            )
+
+        return redirect("bookings")
+
+    context = {
+        "booking": booking
+    }
+
+    return render(
+        request,
+        "adminpage/booking_edit.html",
+        context
+    )

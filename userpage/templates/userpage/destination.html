@@ -1,40 +1,690 @@
 {% extends "userpage/base.html" %}
+
 {% block title %}Destinations{% endblock %}
+
 {% block content %}
- <section id="destinations" class="py-5 my-5">
-        <div class="container py-4">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="display-5 fw-bold text-dark mt-1">Destinations</h2>
+
+<section class="destinations-section">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="destinations-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    EXPLORE THE WORLD
+                </span>
+
+                <h1>
+                    Places worth<br>
+                    <span>going places for.</span>
+                </h1>
+
             </div>
-            <div class="row g-4">
-                {% for dest in destinations %}
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="luxury-card h-100">
-                        <div class="card-img-zoom position-relative" style="height: 260px;">
-                            {% if dest.image %}
-                                <img src="{{ dest.image.url }}" alt="{{ dest.name }}" class="w-100 h-100 object-fit-cover">
-                            {% else %}
-                                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" alt="Destination Default" class="w-100 h-100 object-fit-cover">
-                            {% endif %}
-                            <span class="position-absolute top-0 end-0 badge bg-accent m-3 px-3 py-2 rounded-pill">{{ dest.location }}</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="text-gold mb-2">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                            </div>
-                            <h3 class="h4 fw-bold text-white mb-2">{{ dest.name }}</h3>
-                            <p class="text-gray small mb-3">{{ dest.description|truncatechars:90 }}</p>
-                            <a href="{% url 'destination_detail' dest.id %}" class="text-accent text-decoration-none fw-semibold small">Explore Destination <i class="bi bi-arrow-right ms-1"></i></a>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-12 text-center text-gray">
-                    <p>No destinations found in the database. Add some via the Django Admin!</p>
-                </div>
-                {% endfor %}
-            </div>
+
+            <p>
+                From timeless cities to breathtaking landscapes,
+                discover destinations that turn ordinary trips
+                into unforgettable experiences.
+            </p>
+
         </div>
-    </section>
-    
+
+
+        <!-- DESTINATION GRID -->
+        <div class="destination-grid">
+
+            {% for dest in destinations %}
+
+            <article
+                class="destination-card"
+                data-aos="fade-up"
+                data-aos-delay="{{ forloop.counter0 }}00"
+            >
+
+                <!-- IMAGE -->
+                <a
+                    href="{% url 'destination_detail' dest.id %}"
+                    class="destination-image"
+                >
+
+                    {% if dest.image %}
+
+                        <img
+                            src="{{ dest.image.url }}"
+                            alt="{{ dest.name }}"
+                            loading="lazy"
+                        >
+
+                    {% else %}
+
+                        <div class="destination-placeholder">
+                            <i class="bi bi-image"></i>
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- IMAGE OVERLAY -->
+                    <div class="destination-overlay"></div>
+
+
+                    <!-- LOCATION -->
+                    {% if dest.location %}
+
+                    <div class="destination-location">
+
+                        <i class="bi bi-geo-alt-fill"></i>
+
+                        {{ dest.location }}
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- ARROW -->
+                    <div class="destination-arrow">
+
+                        <i class="bi bi-arrow-up-right"></i>
+
+                    </div>
+
+                </a>
+
+
+                <!-- CONTENT -->
+                <div class="destination-content">
+
+                    <div>
+
+                        <span class="destination-label">
+                            DESTINATION
+                        </span>
+
+                        <h2>
+                            {{ dest.name }}
+                        </h2>
+
+                    </div>
+
+
+                    {% if dest.description %}
+
+                    <p>
+                        {{ dest.description|truncatechars:125 }}
+                    </p>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{% url 'destination_detail' dest.id %}"
+                        class="destination-link"
+                    >
+
+                        Explore destination
+
+                        <span>
+                            <i class="bi bi-arrow-right"></i>
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% empty %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="destination-empty">
+
+                <div class="empty-icon">
+                    <i class="bi bi-globe-americas"></i>
+                </div>
+
+                <h3>
+                    No destinations yet
+                </h3>
+
+                <p>
+                    Add destinations from the Django Admin
+                    to start building your travel collection.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+/* =========================================
+   DESTINATIONS SECTION
+========================================= */
+
+.destinations-section {
+    background: #ffffff;
+
+    padding: 110px 0 120px;
+
+    color: #111111;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.destinations-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 60px;
+
+    margin-bottom: 55px;
+}
+
+
+.eyebrow {
+    display: inline-block;
+
+    margin-bottom: 18px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    color: #737373;
+}
+
+
+.destinations-header h1 {
+    margin: 0;
+
+    font-size: clamp(42px, 5vw, 68px);
+
+    line-height: 0.98;
+
+    letter-spacing: -3px;
+
+    font-weight: 700;
+
+    color: #111111;
+}
+
+
+.destinations-header h1 span {
+    color: #777777;
+}
+
+
+.destinations-header > p {
+    max-width: 360px;
+
+    margin: 0;
+
+    color: #6f6f6f;
+
+    font-size: 15px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================
+   GRID
+========================================= */
+
+.destination-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 28px;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.destination-card {
+    background: #ffffff;
+
+    border: 1px solid #e9e9e9;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+}
+
+
+.destination-card:hover {
+    transform: translateY(-7px);
+
+    border-color: #dddddd;
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.destination-image {
+    display: block;
+
+    position: relative !important;
+
+    height: 330px;
+
+    overflow: hidden;
+
+    color: white;
+
+    text-decoration: none;
+}
+
+
+.destination-image img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.7s cubic-bezier(.2,.8,.2,1);
+}
+
+
+.destination-card:hover
+.destination-image img {
+
+    transform: scale(1.055);
+
+}
+
+
+/* =========================================
+   OVERLAY
+========================================= */
+
+.destination-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,0.02) 35%,
+            rgba(0,0,0,0.58) 100%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   LOCATION
+========================================= */
+
+.destination-location {
+
+    position: absolute;
+
+    left: 20px;
+
+    bottom: 20px;
+
+    z-index: 3;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.2px;
+}
+
+
+.destination-location i {
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================
+   ARROW
+========================================= */
+
+.destination-arrow {
+
+    position: absolute;
+
+    right: 20px;
+
+    bottom: 18px;
+
+    z-index: 3;
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255,255,255,0.95);
+
+    color: #111111;
+
+    font-size: 15px;
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease;
+}
+
+
+.destination-card:hover
+.destination-arrow {
+
+    transform: translate(3px,-3px);
+
+    background: #ffffff;
+
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.destination-content {
+
+    padding: 24px;
+
+}
+
+
+.destination-label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    color: #999999;
+}
+
+
+.destination-content h2 {
+
+    margin: 0 0 13px;
+
+    font-size: 23px;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.6px;
+
+    font-weight: 650;
+
+    color: #111111;
+}
+
+
+.destination-content p {
+
+    margin: 0 0 22px;
+
+    color: #707070;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   LINK
+========================================= */
+
+.destination-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #111111;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    transition: color 0.2s ease;
+}
+
+
+.destination-link span {
+
+    width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid #dddddd;
+
+    border-radius: 50%;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.destination-link:hover {
+
+    color: #111111;
+
+}
+
+
+.destination-link:hover span {
+
+    background: #111111;
+
+    color: #ffffff;
+
+    transform: translateX(4px);
+
+}
+
+
+/* =========================================
+   PLACEHOLDER
+========================================= */
+
+.destination-placeholder {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #f3f3f3;
+
+    color: #aaaaaa;
+
+    font-size: 42px;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.destination-empty {
+
+    grid-column: 1 / -1;
+
+    padding: 100px 25px;
+
+    text-align: center;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 20px;
+}
+
+
+.empty-icon {
+
+    font-size: 45px;
+
+    color: #888888;
+
+    margin-bottom: 15px;
+}
+
+
+.destination-empty h3 {
+
+    margin-bottom: 8px;
+
+    font-size: 22px;
+}
+
+
+.destination-empty p {
+
+    max-width: 450px;
+
+    margin: auto;
+
+    color: #777777;
+
+    line-height: 1.7;
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 991px) {
+
+    .destination-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+    .destinations-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .destinations-section {
+
+        padding: 75px 0;
+
+    }
+
+    .destinations-header h1 {
+
+        letter-spacing: -2px;
+
+    }
+
+    .destination-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .destination-image {
+
+        height: 290px;
+
+    }
+
+}
+
+</style>
+
 {% endblock %}

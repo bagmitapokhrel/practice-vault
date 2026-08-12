@@ -1,147 +1,256 @@
-{% extends 'userpage/base.html' %}
-
-{% block title %}Register | Aetheria Journeys{% endblock %}
-
-{% block extra_css %}
+{% extends 'userpage/base.html' %} {% block title %}Register | Aetheria
+Journeys{% endblock %} {% block extra_css %}
 <style>
-    .auth-section {
-        padding-top: 5rem;
-        padding-bottom: 6rem;
-    }
+  .auth-section {
+    padding-top: 5rem;
+    padding-bottom: 6rem;
+  }
 
-    .auth-card {
-        background: #FFFFFF;
-        border: 1px solid var(--lux-border);
-        border-radius: 24px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
-    }
+  .auth-card {
+    background: #ffffff;
+    border: 1px solid var(--lux-border);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+  }
 
-    .form-control-lux {
-        background-color: #FAFAFA !important;
-        border: 1px solid var(--lux-border) !important;
-        color: var(--lux-primary) !important;
-        border-radius: 12px;
-        padding: 0.8rem 1rem;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-    }
+  .form-control-lux {
+    background-color: #fafafa !important;
+    border: 1px solid var(--lux-border) !important;
+    color: var(--lux-primary) !important;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
 
-    .form-control-lux:focus {
-        background-color: #FFFFFF !important;
-        border-color: var(--lux-primary) !important;
-        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
-    }
+  .form-control-lux:focus {
+    background-color: #ffffff !important;
+    border-color: var(--lux-primary) !important;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
+  }
 
-    .input-group-text-lux {
-        background-color: #FAFAFA !important;
-        border: 1px solid var(--lux-border) !important;
-        border-right: none !important;
-        border-top-left-radius: 12px;
-        border-bottom-left-radius: 12px;
-        color: var(--lux-text-muted);
-    }
+  .input-group-text-lux {
+    background-color: #fafafa !important;
+    border: 1px solid var(--lux-border) !important;
+    border-right: none !important;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    color: var(--lux-text-muted);
+  }
 
-    .input-group .form-control-lux {
-        border-left: none !important;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-    }
+  .input-group .form-control-lux {
+    border-left: none !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <section class="auth-section min-vh-100 d-flex align-items-center">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-8" data-aos="fade-up" data-aos-duration="800">
-                
-                <div class="auth-card p-4 p-sm-5">
-                    <!-- Header -->
-                    <div class="text-center mb-4">
-                        <span class="text-uppercase text-muted tracking-widest-xl small d-block mb-1">Begin Your Journey</span>
-                        <h2 class="display-6 font-serif fw-bold text-dark mb-2">Create an Account</h2>
-                        <p class="text-muted small">Register to unlock exclusive itineraries and tailored luxury concierges.</p>
-                    </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8" data-aos="fade-up" data-aos-duration="800">
+        <div class="auth-card p-4 p-sm-5">
+          <!-- Header -->
+          <div class="text-center mb-4">
+            <span
+              class="text-uppercase text-muted tracking-widest-xl small d-block mb-1"
+              >Begin Your Journey</span
+            >
+            <h2 class="display-6 font-serif fw-bold text-dark mb-2">
+              Create an Account
+            </h2>
+            <p class="text-muted small">
+              Register to unlock exclusive itineraries and tailored luxury
+              concierges.
+            </p>
+          </div>
 
-                    <!-- Form -->
-                    <form method="POST" action="">
-                        {% csrf_token %}
+          <!-- Form -->
+          <form method="POST" action="">
+            {% csrf_token %} 
+            {% if form.errors %}
+            <div class="alert alert-danger border-0 rounded-3 mb-4">
+              <div class="fw-semibold mb-2">Please fix the following:</div>
 
-                        <!-- Full Name / Split Inputs -->
-                        <div class="row g-3 mb-3">
-                            <div class="col-sm-6">
-                                <label for="first_name" class="form-label text-dark small fw-semibold">First Name</label>
-                                <input type="text" name="first_name" id="first_name" class="form-control form-control-lux" placeholder="e.g. Eleanor" required>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="last_name" class="form-label text-dark small fw-semibold">Last Name</label>
-                                <input type="text" name="last_name" id="last_name" class="form-control form-control-lux" placeholder="e.g. Vance" required>
-                            </div>
-                        </div>
-
-                        <!-- Username Field -->
-                        <div class="mb-3">
-                            <label for="id_username" class="form-label text-dark small fw-semibold">Username</label>
-                            <div class="input-group">
-                                <span class="input-group-text input-group-text-lux"><i class="bi bi-person"></i></span>
-                                <input type="text" name="username" id="id_username" class="form-control form-control-lux" placeholder="Choose a unique username" required>
-                            </div>
-                        </div>
-
-                        <!-- Email Field -->
-                        <div class="mb-3">
-                            <label for="id_email" class="form-label text-dark small fw-semibold">Email Address</label>
-                            <div class="input-group">
-                                <span class="input-group-text input-group-text-lux"><i class="bi bi-envelope"></i></span>
-                                <input type="email" name="email" id="id_email" class="form-control form-control-lux" placeholder="name@example.com" required>
-                            </div>
-                        </div>
-
-                        <!-- Password Field -->
-                        <div class="row g-3 mb-4">
-                            <div class="col-sm-6">
-                                <label for="id_password1" class="form-label text-dark small fw-semibold">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text input-group-text-lux"><i class="bi bi-lock"></i></span>
-                                    <input type="password" name="password1" id="id_password1" class="form-control form-control-lux" placeholder="••••••••" required>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="id_password2" class="form-label text-dark small fw-semibold">Confirm Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text input-group-text-lux"><i class="bi bi-shield-check"></i></span>
-                                    <input type="password" name="password2" id="id_password2" class="form-control form-control-lux" placeholder="••••••••" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Terms & Conditions Checkbox -->
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" value="" id="termsCheck" required>
-                            <label class="form-check-label small text-muted" for="termsCheck">
-                                I agree to the <a href="#" class="text-dark text-decoration-underline">Terms of Service</a> and <a href="#" class="text-dark text-decoration-underline">Privacy Policy</a>.
-                            </label>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="d-grid mb-4">
-                            <button type="submit" class="btn btn-primary-lux py-3 rounded-pill fw-semibold">
-                                Complete Registration <i class="bi bi-arrow-right ms-2"></i>
-                            </button>
-                        </div>
-
-                        <!-- Footer Link -->
-                        <div class="text-center">
-                            <p class="small text-muted mb-0">
-                                Already have an account? 
-                                <a href="{% url 'login' %}" class="text-dark fw-semibold text-decoration-none">Sign In</a>
-                            </p>
-                        </div>
-                    </form>
-                </div>
-
+              {{ form.non_field_errors }} 
+              {% for field in form %} 
+              {% for error in field.errors %}
+              <div class="small">
+                <strong>{{ field.label }}:</strong>
+                {{ error }}
+              </div>
+              {% endfor %} {% endfor %}
             </div>
+            {% endif %}
+
+            <!-- Full Name / Split Inputs -->
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <label
+                  for="first_name"
+                  class="form-label text-dark small fw-semibold"
+                  >First Name</label
+                >
+                <input
+                  type="text"
+                  name="first_name"
+                  id="first_name"
+                  class="form-control form-control-lux"
+                  placeholder="e.g. Eleanor"
+                  required
+                />
+              </div>
+              <div class="col-sm-6">
+                <label
+                  for="last_name"
+                  class="form-label text-dark small fw-semibold"
+                  >Last Name</label
+                >
+                <input
+                  type="text"
+                  name="last_name"
+                  id="last_name"
+                  class="form-control form-control-lux"
+                  placeholder="e.g. Vance"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Username Field -->
+            <div class="mb-3">
+              <label
+                for="id_username"
+                class="form-label text-dark small fw-semibold"
+                >Username</label
+              >
+              <div class="input-group">
+                <span class="input-group-text input-group-text-lux"
+                  ><i class="bi bi-person"></i
+                ></span>
+                <input
+                  type="text"
+                  name="username"
+                  id="id_username"
+                  class="form-control form-control-lux"
+                  placeholder="Choose a unique username"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="mb-3">
+              <label
+                for="id_email"
+                class="form-label text-dark small fw-semibold"
+                >Email Address</label
+              >
+              <div class="input-group">
+                <span class="input-group-text input-group-text-lux"
+                  ><i class="bi bi-envelope"></i
+                ></span>
+                <input
+                  type="email"
+                  name="email"
+                  id="id_email"
+                  class="form-control form-control-lux"
+                  placeholder="name@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="row g-3 mb-4">
+              <div class="col-sm-6">
+                <label
+                  for="id_password1"
+                  class="form-label text-dark small fw-semibold"
+                  >Password</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text input-group-text-lux"
+                    ><i class="bi bi-lock"></i
+                  ></span>
+                  <input
+                    type="password"
+                    name="password1"
+                    id="id_password1"
+                    class="form-control form-control-lux"
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <label
+                  for="id_password2"
+                  class="form-label text-dark small fw-semibold"
+                  >Confirm Password</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text input-group-text-lux"
+                    ><i class="bi bi-shield-check"></i
+                  ></span>
+                  <input
+                    type="password"
+                    name="password2"
+                    id="id_password2"
+                    class="form-control form-control-lux"
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Terms & Conditions Checkbox -->
+            <div class="form-check mb-4">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="termsCheck"
+                required
+              />
+              <label class="form-check-label small text-muted" for="termsCheck">
+                I agree to the
+                <a href="#" class="text-dark text-decoration-underline"
+                  >Terms of Service</a
+                >
+                and
+                <a href="#" class="text-dark text-decoration-underline"
+                  >Privacy Policy</a
+                >.
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mb-4">
+              <button
+                type="submit"
+                class="btn btn-primary-lux py-3 rounded-pill fw-semibold"
+              >
+                Complete Registration <i class="bi bi-arrow-right ms-2"></i>
+              </button>
+            </div>
+
+            <!-- Footer Link -->
+            <div class="text-center">
+              <p class="small text-muted mb-0">
+                Already have an account?
+                <a
+                  href="{% url 'login' %}"
+                  class="text-dark fw-semibold text-decoration-none"
+                  >Sign In</a
+                >
+              </p>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}

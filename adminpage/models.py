@@ -42,14 +42,46 @@ class Package(models.Model):
        return self.title
 
 class Booking(models.Model):
-    package = models.ForeignKey(Package, on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=150)
+
+    package = models.ForeignKey(
+        Package,
+        on_delete=models.CASCADE
+    )
+
+    full_name = models.CharField(
+        max_length=150
+    )
+
     email = models.EmailField()
-    phone = models.CharField(max_length=30)
+
+    phone = models.CharField(
+        max_length=30
+    )
+
     number_of_people = models.PositiveIntegerField()
+
     travel_date = models.DateField()
-    special_requests = models.TextField(blank=True, null=True)
-    booked_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    special_requests = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    booked_at = models.DateTimeField(
+        auto_now_add=True,
+        blank=True,
+        null=True
+    )
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True
+    )
+    status = models.CharField(
+        max_length=20,blank=True, null=True, default="pending"
+    )
 
     def __str__(self):
         return f"{self.full_name} - {self.package.title}"

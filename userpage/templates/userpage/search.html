@@ -1,0 +1,190 @@
+{% extends "userpage/base.html" %}
+
+{% block content %}
+
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="mb-5">
+
+            <h2 class="fw-bold">
+                Search Results
+            </h2>
+
+            {% if query %}
+
+                <p class="text-muted">
+                    Results for "<strong>{{ query }}</strong>"
+                </p>
+
+            {% else %}
+
+                <p class="text-muted">
+                    Search for your next adventure.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- DESTINATIONS -->
+
+        {% if destinations %}
+
+            <h4 class="fw-bold mb-4">
+                <i class="bi bi-geo-alt me-2"></i>
+                Destinations
+            </h4>
+
+            <div class="row g-4 mb-5">
+
+                {% for destination in destinations %}
+
+                    <div class="col-md-4">
+
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                            {% if destination.image %}
+
+                                <img
+                                    src="{{ destination.image.url }}"
+                                    class="card-img-top"
+                                    style="height:220px; object-fit:cover;"
+                                >
+
+                            {% endif %}
+
+                            <div class="card-body">
+
+                                <h5 class="fw-bold">
+                                    {{ destination.name }}
+                                </h5>
+
+                                <p class="text-muted">
+                                    {{ destination.description|truncatewords:20 }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- PACKAGES -->
+
+        {% if packages %}
+
+            <h4 class="fw-bold mb-4">
+
+                <i class="bi bi-map me-2"></i>
+
+                Travel Packages
+
+            </h4>
+
+
+            <div class="row g-4">
+
+                {% for package in packages %}
+
+                    <div class="col-md-4">
+
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                            {% if package.featured_image %}
+
+                                <img
+                                    src="{{ package.featured_image.url }}"
+                                    class="card-img-top"
+                                    style="height:220px; object-fit:cover;"
+                                >
+
+                            {% endif %}
+
+
+                            <div class="card-body">
+
+                                <h5 class="fw-bold">
+                                    {{ package.title }}
+                                </h5>
+
+                                <p class="text-muted">
+
+                                    {{ package.duration }}
+
+                                    ·
+
+                                    {{ package.difficulty }}
+
+                                </p>
+
+                                <h5 class="text-success fw-bold">
+
+                                    Rs. {{ package.price }}
+
+                                </h5>
+
+
+                                <a
+                                    href="{% url 'tour_detail' package.id %}"
+                                    class="btn btn-success rounded-pill px-4"
+                                >
+
+                                    View Package
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- NO RESULTS -->
+
+        {% if query and not destinations and not packages %}
+
+            <div class="text-center py-5">
+
+                <i class="bi bi-search display-1 text-muted"></i>
+
+                <h4 class="fw-bold mt-4">
+                    No results found
+                </h4>
+
+                <p class="text-muted">
+                    Try searching for another destination or package.
+                </p>
+
+                <a
+                    href="/"
+                    class="btn btn-success rounded-pill px-4"
+                >
+                    Explore Destinations
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

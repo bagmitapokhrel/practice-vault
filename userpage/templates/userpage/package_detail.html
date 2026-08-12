@@ -1,278 +1,1203 @@
 {% extends 'userpage/base.html' %}
+
 {% load static %}
 
-{% block title %}{{ package.title }} | Aetheria Journeys{% endblock %}
+{% block title %}
+    {{ package.title }} | Aetheria Journeys
+{% endblock %}
+
 
 {% block content %}
-<!-- ==========================================================================
-     HERO & QUICK OVERVIEW SECTION
-     ========================================================================== -->
+
+
+<!-- =========================================================
+     HERO & PACKAGE OVERVIEW
+========================================================= -->
+
 <section class="section-spacing pt-4 pb-5">
+
     <div class="container py-4">
 
-        <!-- Breadcrumb Navigation -->
-        <nav aria-label="breadcrumb" class="mb-4" data-aos="fade-up">
+
+        <!-- Breadcrumb -->
+
+        <nav
+            aria-label="breadcrumb"
+            class="mb-4"
+            data-aos="fade-up"
+        >
+
             <ol class="breadcrumb small">
-                <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-muted text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'package_view' %}" class="text-muted text-decoration-none">Packages</a></li>
-                <li class="breadcrumb-item active text-emerald fw-semibold" aria-current="page">{{ package.title }}</li>
+
+                <li class="breadcrumb-item">
+
+                    <a
+                        href="{% url 'index' %}"
+                        class="text-muted text-decoration-none"
+                    >
+                        Home
+                    </a>
+
+                </li>
+
+
+                <li class="breadcrumb-item">
+
+                    <a
+                        href="{% url 'package' %}"
+                        class="text-muted text-decoration-none"
+                    >
+                        Packages
+                    </a>
+
+                </li>
+
+
+                <li
+                    class="breadcrumb-item active text-emerald fw-semibold"
+                    aria-current="page"
+                >
+                    {{ package.title }}
+                </li>
+
             </ol>
+
         </nav>
 
+
+        <!-- Main Hero -->
+
         <div class="row align-items-center g-5">
-            <!-- Left: Featured Image Gallery Frame -->
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="luxury-card border-0 overflow-hidden shadow-sm position-relative">
-                    <div class="img-zoom-container" style="height: 480px;">
+
+
+            <!-- IMAGE -->
+
+            <div
+                class="col-lg-6"
+                data-aos="fade-up"
+                data-aos-delay="100"
+            >
+
+                <div
+                    class="luxury-card border-0 overflow-hidden shadow-sm position-relative"
+                >
+
+                    <div
+                        class="img-zoom-container"
+                        style="height: 480px;"
+                    >
+
                         {% if package.featured_image %}
-                            <img src="{{ package.featured_image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ package.title }}">
+
+                            <img
+                                src="{{ package.featured_image.url }}"
+                                class="w-100 h-100 object-fit-cover"
+                                alt="{{ package.title }}"
+                            >
+
                         {% elif package.image %}
-                            <img src="{{ package.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ package.title }}">
+
+                            <img
+                                src="{{ package.image.url }}"
+                                class="w-100 h-100 object-fit-cover"
+                                alt="{{ package.title }}"
+                            >
+
                         {% else %}
-                            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80" class="w-100 h-100 object-fit-cover" alt="Package Default">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80"
+                                class="w-100 h-100 object-fit-cover"
+                                alt="Package Default"
+                            >
+
                         {% endif %}
+
                     </div>
 
-                    <!-- Category Badge -->
+
+                    <!-- Category -->
+
                     {% if package.destination.category.name %}
-                    <span class="badge badge-luxury-light position-absolute top-0 end-0 m-4 px-3 py-2 rounded-pill shadow-sm">
-                        <i class="bi bi-tag-fill me-1 text-emerald"></i>{{ package.destination.category.name }}
+
+                    <span
+                        class="badge badge-luxury-light position-absolute top-0 end-0 m-4 px-3 py-2 rounded-pill shadow-sm"
+                    >
+
+                        <i class="bi bi-tag-fill me-1 text-emerald"></i>
+
+                        {{ package.destination.category.name }}
+
                     </span>
+
                     {% endif %}
+
                 </div>
+
             </div>
 
-            <!-- Right: Details & Key Attributes -->
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+
+
+            <!-- DETAILS -->
+
+            <div
+                class="col-lg-6"
+                data-aos="fade-up"
+                data-aos-delay="200"
+            >
+
+
+                <!-- Rating -->
+
                 <div class="d-flex align-items-center gap-2 mb-2">
+
                     <div class="text-emerald fs-7">
+
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
+
                     </div>
-                    <span class="small text-muted fw-medium">(All-Inclusive Package)</span>
+
+                    <span class="small text-muted fw-medium">
+                        All-Inclusive Package
+                    </span>
+
                 </div>
 
-                <h1 class="display-5 font-serif fw-bold text-emerald mb-3">
+
+                <!-- Title -->
+
+                <h1
+                    class="display-5 font-serif fw-bold text-emerald mb-3"
+                >
                     {{ package.title }}
                 </h1>
 
+
+                <!-- Description -->
+
                 <p class="text-muted leading-relaxed mb-4">
+
                     {{ package.destination.description|truncatechars:200 }}
+
                 </p>
 
-                <!-- Key Attributes Table/Grid -->
-                <div class="p-4 rounded-4 glass-panel-light border mb-4">
+
+
+                <!-- Attributes -->
+
+                <div
+                    class="p-4 rounded-4 glass-panel-light border mb-4"
+                >
+
                     <div class="row g-3">
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-geo-alt text-emerald fs-5"></i>
-                                <div>
-                                    <small class="text-muted d-block fs-8">Destination</small>
-                                    <span class="fw-semibold text-emerald small">
-                                        {{ package.destination.name|default:"Nepal Sanctuary" }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+
+
+                        <!-- Destination -->
 
                         <div class="col-6">
+
                             <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-clock-history text-emerald fs-5"></i>
+
+                                <i
+                                    class="bi bi-geo-alt text-emerald fs-5"
+                                ></i>
+
                                 <div>
-                                    <small class="text-muted d-block fs-8">Duration</small>
-                                    <span class="fw-semibold text-emerald small">
-                                        {{ package.duration|default:"7 Days / 6 Nights" }}
+
+                                    <small class="text-muted d-block fs-8">
+                                        Destination
+                                    </small>
+
+                                    <span
+                                        class="fw-semibold text-emerald small"
+                                    >
+                                        {{ package.destination.name }}
                                     </span>
+
                                 </div>
+
                             </div>
+
                         </div>
 
-                        <div class="col-6">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-activity text-emerald fs-5"></i>
-                                <div>
-                                    <small class="text-muted d-block fs-8">Difficulty</small>
-                                    <span class="fw-semibold text-emerald small">
-                                        {{ package.difficulty|default:"Moderate" }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+
+
+                        <!-- Duration -->
 
                         <div class="col-6">
+
                             <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-people text-emerald fs-5"></i>
+
+                                <i
+                                    class="bi bi-clock-history text-emerald fs-5"
+                                ></i>
+
                                 <div>
-                                    <small class="text-muted d-block fs-8">Max Capacity</small>
-                                    <span class="fw-semibold text-emerald small">
-                                        {% if package.max_people %}{{ package.max_people }} Guests{% else %}Private Party{% endif %}
+
+                                    <small class="text-muted d-block fs-8">
+                                        Duration
+                                    </small>
+
+                                    <span
+                                        class="fw-semibold text-emerald small"
+                                    >
+                                        {{ package.duration }}
                                     </span>
+
                                 </div>
+
                             </div>
+
                         </div>
+
+
+
+                        <!-- Difficulty -->
+
+                        <div class="col-6">
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <i
+                                    class="bi bi-activity text-emerald fs-5"
+                                ></i>
+
+                                <div>
+
+                                    <small class="text-muted d-block fs-8">
+                                        Difficulty
+                                    </small>
+
+                                    <span
+                                        class="fw-semibold text-emerald small"
+                                    >
+                                        {{ package.difficulty }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Capacity -->
+
+                        <div class="col-6">
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <i
+                                    class="bi bi-people text-emerald fs-5"
+                                ></i>
+
+                                <div>
+
+                                    <small class="text-muted d-block fs-8">
+                                        Max Capacity
+                                    </small>
+
+                                    <span
+                                        class="fw-semibold text-emerald small"
+                                    >
+
+                                        {% if package.max_people %}
+
+                                            {{ package.max_people }} Guests
+
+                                        {% else %}
+
+                                            Private Party
+
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
+
                 </div>
 
-                <!-- Price and Action CTA -->
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+
+
+                <!-- Package Price -->
+
+                <div
+                    class="d-flex align-items-center justify-content-between flex-wrap gap-3"
+                >
+
                     <div>
-                        <span class="text-muted small d-block">Package Total</span>
-                        <h2 class="display-6 font-serif fw-bold text-emerald mb-0">
-                            {% if package.price %}${{ package.price }}{% else %}On Request{% endif %}
+
+                        <span class="text-muted small d-block">
+                            Starting from
+                        </span>
+
+                        <h2
+                            class="display-6 font-serif fw-bold text-emerald mb-0"
+                        >
+
+                            {% if package.price %}
+
+                                Rs. {{ package.price }}
+
+                            {% else %}
+
+                                On Request
+
+                            {% endif %}
+
                         </h2>
+
+                        <small class="text-muted">
+                            per person
+                        </small>
+
                     </div>
 
-                    <a href="#booking-section" class="btn btn-primary-lux px-4 py-3 rounded-pill fw-semibold text-uppercase tracking-wider fs-7">
-                        <i class="bi bi-calendar-check me-2"></i>Reserve Package
+
+                    <a
+                        href="#booking-section"
+                        class="btn btn-primary-lux px-4 py-3 rounded-pill fw-semibold text-uppercase tracking-wider fs-7"
+                    >
+
+                        <i class="bi bi-calendar-check me-2"></i>
+
+                        Reserve Package
+
                     </a>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </section>
 
-<!-- ==========================================================================
-     MAIN CONTENT: ITINERARY, INCLUDES/EXCLUDES, DESTINATION DETAILS
-     ========================================================================== -->
-<section class="py-5 border-top" style="border-color: var(--lux-border) !important;">
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<section
+    class="py-5 border-top"
+    style="border-color: var(--lux-border) !important;"
+>
+
     <div class="container py-2">
+
         <div class="row g-5">
-            
-            <!-- Left Main Column -->
-            <div class="col-lg-8" data-aos="fade-up">
-                
-                <!-- Package Itinerary -->
+
+
+            <!-- =================================================
+                 LEFT CONTENT
+            ================================================== -->
+
+            <div
+                class="col-lg-8"
+                data-aos="fade-up"
+            >
+
+
+                <!-- ITINERARY -->
+
                 {% if package.itinerary %}
+
                 <div class="mb-5">
-                    <h3 class="font-serif fw-bold text-emerald mb-4">
-                        <i class="bi bi-journal-text me-2"></i>Package Itinerary
+
+                    <h3
+                        class="font-serif fw-bold text-emerald mb-4"
+                    >
+
+                        <i class="bi bi-journal-text me-2"></i>
+
+                        Package Itinerary
+
                     </h3>
-                    <div class="p-4 p-md-5 rounded-4 glass-panel-light border leading-relaxed text-muted">
+
+
+                    <div
+                        class="p-4 p-md-5 rounded-4 glass-panel-light border leading-relaxed text-muted"
+                    >
+
                         {{ package.itinerary|safe }}
+
                     </div>
+
                 </div>
+
                 {% endif %}
 
-                <!-- Includes & Excludes Side-by-Side -->
+
+
+                <!-- INCLUDES / EXCLUDES -->
+
                 <div class="mb-5">
-                    <h3 class="font-serif fw-bold text-emerald mb-4">Services & Inclusions</h3>
+
+                    <h3
+                        class="font-serif fw-bold text-emerald mb-4"
+                    >
+                        Services & Inclusions
+                    </h3>
+
+
                     <div class="row g-4">
-                        
-                        <!-- Included -->
+
+
+                        <!-- INCLUDED -->
+
                         <div class="col-md-6">
-                            <div class="p-4 rounded-4 bg-white border h-100 shadow-sm">
-                                <div class="d-flex align-items-center gap-2 mb-3 text-emerald fw-bold border-bottom pb-2">
-                                    <i class="bi bi-check-circle-fill fs-5"></i>
-                                    <span>What's Included</span>
+
+                            <div
+                                class="p-4 rounded-4 bg-white border h-100 shadow-sm"
+                            >
+
+                                <div
+                                    class="d-flex align-items-center gap-2 mb-3 text-emerald fw-bold border-bottom pb-2"
+                                >
+
+                                    <i
+                                        class="bi bi-check-circle-fill fs-5"
+                                    ></i>
+
+                                    <span>
+                                        What's Included
+                                    </span>
+
                                 </div>
-                                <div class="text-muted small leading-relaxed">
+
+
+                                <div
+                                    class="text-muted small leading-relaxed"
+                                >
+
                                     {% if package.includes %}
+
                                         {{ package.includes|safe }}
+
                                     {% else %}
-                                        <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
-                                            <li><i class="bi bi-check2 text-emerald me-2"></i>5-Star Luxury Stays</li>
-                                            <li><i class="bi bi-check2 text-emerald me-2"></i>Private Airport Transfers</li>
-                                            <li><i class="bi bi-check2 text-emerald me-2"></i>Daily Gourmet Breakfast & Meals</li>
-                                            <li><i class="bi bi-check2 text-emerald me-2"></i>Private Tour Guide & Entry Permits</li>
+
+                                        <ul
+                                            class="list-unstyled mb-0 d-flex flex-column gap-2"
+                                        >
+
+                                            <li>
+                                                <i class="bi bi-check2 text-emerald me-2"></i>
+                                                5-Star Luxury Stays
+                                            </li>
+
+                                            <li>
+                                                <i class="bi bi-check2 text-emerald me-2"></i>
+                                                Private Airport Transfers
+                                            </li>
+
+                                            <li>
+                                                <i class="bi bi-check2 text-emerald me-2"></i>
+                                                Daily Gourmet Breakfast & Meals
+                                            </li>
+
+                                            <li>
+                                                <i class="bi bi-check2 text-emerald me-2"></i>
+                                                Private Tour Guide & Entry Permits
+                                            </li>
+
                                         </ul>
+
                                     {% endif %}
+
                                 </div>
+
                             </div>
+
                         </div>
 
-                        <!-- Excluded -->
+
+
+                        <!-- EXCLUDED -->
+
                         <div class="col-md-6">
-                            <div class="p-4 rounded-4 bg-white border h-100 shadow-sm">
-                                <div class="d-flex align-items-center gap-2 mb-3 text-danger fw-bold border-bottom pb-2">
-                                    <i class="bi bi-x-circle-fill fs-5"></i>
-                                    <span>What's Excluded</span>
+
+                            <div
+                                class="p-4 rounded-4 bg-white border h-100 shadow-sm"
+                            >
+
+                                <div
+                                    class="d-flex align-items-center gap-2 mb-3 text-danger fw-bold border-bottom pb-2"
+                                >
+
+                                    <i
+                                        class="bi bi-x-circle-fill fs-5"
+                                    ></i>
+
+                                    <span>
+                                        What's Excluded
+                                    </span>
+
                                 </div>
-                                <div class="text-muted small leading-relaxed">
+
+
+                                <div
+                                    class="text-muted small leading-relaxed"
+                                >
+
                                     {% if package.excludes %}
+
                                         {{ package.excludes|safe }}
+
                                     {% else %}
-                                        <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
-                                            <li><i class="bi bi-x text-muted me-2"></i>International Flights & Visa Fees</li>
-                                            <li><i class="bi bi-x text-muted me-2"></i>Personal Travel Insurance</li>
-                                            <li><i class="bi bi-x text-muted me-2"></i>Personal Expenses & Tips</li>
+
+                                        <ul
+                                            class="list-unstyled mb-0 d-flex flex-column gap-2"
+                                        >
+
+                                            <li>
+                                                <i class="bi bi-x text-muted me-2"></i>
+                                                International Flights & Visa Fees
+                                            </li>
+
+                                            <li>
+                                                <i class="bi bi-x text-muted me-2"></i>
+                                                Personal Travel Insurance
+                                            </li>
+
+                                            <li>
+                                                <i class="bi bi-x text-muted me-2"></i>
+                                                Personal Expenses & Tips
+                                            </li>
+
                                         </ul>
+
                                     {% endif %}
+
                                 </div>
+
                             </div>
+
                         </div>
 
                     </div>
+
                 </div>
 
-                <!-- About Destination Section -->
+
+
+                <!-- DESTINATION -->
+
                 {% if package.destination %}
-                <div class="p-4 p-md-5 rounded-4 glass-panel-light border">
-                    <h3 class="font-serif fw-bold text-emerald mb-3">About {{ package.destination.name }}</h3>
-                    <p class="text-muted leading-relaxed mb-4">
+
+                <div
+                    class="p-4 p-md-5 rounded-4 glass-panel-light border"
+                >
+
+                    <h3
+                        class="font-serif fw-bold text-emerald mb-3"
+                    >
+
+                        About {{ package.destination.name }}
+
+                    </h3>
+
+
+                    <p
+                        class="text-muted leading-relaxed mb-4"
+                    >
+
                         {{ package.destination.description }}
+
                     </p>
 
-                    <div class="row g-3 pt-3 border-top" style="border-color: var(--lux-border) !important;">
+
+                    <div
+                        class="row g-3 pt-3 border-top"
+                        style="border-color: var(--lux-border) !important;"
+                    >
+
                         <div class="col-md-4">
-                            <span class="text-muted fs-8 d-block">Location</span>
-                            <span class="fw-semibold text-emerald small">{{ package.destination.location }}</span>
+
+                            <span class="text-muted fs-8 d-block">
+                                Location
+                            </span>
+
+                            <span class="fw-semibold text-emerald small">
+                                {{ package.destination.location }}
+                            </span>
+
                         </div>
+
+
                         <div class="col-md-4">
-                            <span class="text-muted fs-8 d-block">Best Time to Visit</span>
-                            <span class="fw-semibold text-emerald small">{{ package.destination.best_time_to_visit|default:"Autumn & Spring" }}</span>
+
+                            <span class="text-muted fs-8 d-block">
+                                Best Time to Visit
+                            </span>
+
+                            <span class="fw-semibold text-emerald small">
+
+                                {{ package.destination.best_time_to_visit|default:"Autumn & Spring" }}
+
+                            </span>
+
                         </div>
+
+
                         <div class="col-md-4">
-                            <span class="text-muted fs-8 d-block">Category</span>
-                            <span class="fw-semibold text-emerald small">{{ package.destination.category.name|default:"Luxury & Heritage" }}</span>
+
+                            <span class="text-muted fs-8 d-block">
+                                Category
+                            </span>
+
+                            <span class="fw-semibold text-emerald small">
+
+                                {{ package.destination.category.name|default:"Luxury & Heritage" }}
+
+                            </span>
+
                         </div>
+
                     </div>
+
                 </div>
+
                 {% endif %}
 
             </div>
 
-            <!-- Right Sticky Booking / Concierge Card -->
-            <div class="col-lg-4" id="booking-section" data-aos="fade-up" data-aos-delay="200">
-                <div class="sticky-top" style="top: 100px;">
-                    <div class="glass-panel-light p-4 rounded-4 border shadow-sm">
-                        <span class="text-uppercase tracking-wider text-muted fs-8 d-block mb-1">Direct Booking</span>
-                        <h4 class="font-serif fw-bold text-emerald mb-3">Book This Package</h4>
-                        
+
+
+            <!-- =================================================
+                 RIGHT BOOKING CARD
+            ================================================== -->
+
+            <div
+                class="col-lg-4"
+                id="booking-section"
+                data-aos="fade-up"
+                data-aos-delay="200"
+            >
+
+                <div
+                    class="sticky-top"
+                    style="top: 100px;"
+                >
+
+                    <div
+                        class="glass-panel-light p-4 rounded-4 border shadow-sm"
+                    >
+
+
+                        <!-- Heading -->
+
+                        <span
+                            class="text-uppercase tracking-wider text-muted fs-8 d-block mb-1"
+                        >
+                            Direct Booking
+                        </span>
+
+
+                        <h4
+                            class="font-serif fw-bold text-emerald mb-3"
+                        >
+                            Book This Package
+                        </h4>
+
+
                         <p class="text-muted small mb-4">
-                            Reserve your space directly or contact our concierge to customize this package itinerary.
+
+                            Reserve your space directly and
+                            secure your preferred travel date.
+
                         </p>
 
-                        <form class="d-flex flex-column gap-3 mb-3">
-                            <div>
-                                <label class="form-label text-muted fs-8 fw-semibold mb-1">Travel Date</label>
-                                <input type="date" class="form-bg-light form-control-lux rounded-3 small py-2 px-3 w-100">
+
+
+                        <!-- PRICE PER PERSON -->
+
+                        <div
+                            class="bg-light rounded-4 p-3 mb-4"
+                        >
+
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+
+                                <div>
+
+                                    <span
+                                        class="text-muted small"
+                                    >
+                                        Price per person
+                                    </span>
+
+
+                                    <h3
+                                        class="fw-bold text-emerald mb-0"
+                                    >
+
+                                        Rs. {{ package.price }}
+
+                                    </h3>
+
+                                </div>
+
+
+                                <i
+                                    class="bi bi-person-check fs-2 text-emerald"
+                                ></i>
+
                             </div>
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             BOOKING FORM
+                        ================================================== -->
+
+                        <form
+                            method="POST"
+                            action="{% url 'booking' package.id %}"
+                            class="d-flex flex-column gap-3 mb-3"
+                        >
+
+                            {% csrf_token %}
+
+
+                            <!-- FULL NAME -->
+
                             <div>
-                                <label class="form-label text-muted fs-8 fw-semibold mb-1">Number of Guests</label>
-                                <select class="form-bg-light form-control-lux rounded-3 small py-2 px-3 w-100">
-                                    <option>1 Guest</option>
-                                    <option selected>2 Guests</option>
-                                    <option>3 - 5 Guests</option>
-                                    <option>6+ Guests</option>
-                                </select>
+
+                                <label
+                                    class="form-label text-muted fs-8 fw-semibold mb-1"
+                                >
+                                    Full Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="full_name"
+                                    class="form-control form-control-lux"
+                                    placeholder="Your full name"
+                                    required
+                                >
+
                             </div>
-                            
-                            <button type="submit" class="btn btn-primary-lux py-3 rounded-pill fw-semibold text-uppercase tracking-wider fs-7 mt-2">
-                                <i class="bi bi-shield-lock me-1"></i>Proceed to Checkout
+
+
+
+                            <!-- EMAIL -->
+
+                            <div>
+
+                                <label
+                                    class="form-label text-muted fs-8 fw-semibold mb-1"
+                                >
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    name="email"
+                                    class="form-control form-control-lux"
+                                    placeholder="you@example.com"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- PHONE -->
+
+                            <div>
+
+                                <label
+                                    class="form-label text-muted fs-8 fw-semibold mb-1"
+                                >
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    class="form-control form-control-lux"
+                                    placeholder="+977 98XXXXXXXX"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- TRAVEL DATE -->
+
+                            <div>
+
+                                <label
+                                    for="travel_date"
+                                    class="form-label text-muted fs-8 fw-semibold mb-1"
+                                >
+                                    Travel Date
+                                </label>
+
+
+                                <input
+                                    type="date"
+                                    id="travel_date"
+                                    name="travel_date"
+                                    class="form-control form-control-lux"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- NUMBER OF PEOPLE -->
+
+                            <div>
+
+                                <label
+                                    for="guestCount"
+                                    class="form-label text-muted fs-8 fw-semibold mb-1"
+                                >
+                                    Number of Guests
+                                </label>
+
+
+                                <input
+                                    type="number"
+                                    name="number_of_people"
+                                    id="guestCount"
+                                    class="form-control form-control-lux"
+                                    min="1"
+                                    max="{{ package.max_people }}"
+                                    value="1"
+                                    required
+                                >
+
+
+                                <small class="text-muted">
+
+                                    Maximum
+                                    {{ package.max_people }}
+                                    guests
+
+                                </small>
+
+                            </div>
+
+
+
+                            <!-- SPECIAL REQUESTS -->
+
+                            <div>
+
+                                <label
+                                    for="special_requests"
+                                    class="form-label text-muted fs-8 fw-semibold mb-1"
+                                >
+                                    Special Requests
+                                </label>
+
+
+                                <textarea
+                                    id="special_requests"
+                                    name="special_requests"
+                                    rows="3"
+                                    class="form-control form-control-lux"
+                                    placeholder="Any special requests?"
+                                ></textarea>
+
+                            </div>
+
+
+
+                            <!-- PRICE CALCULATION -->
+
+                            <div
+                                class="border-top pt-3 mt-2"
+                            >
+
+
+                                <!-- PER PERSON -->
+
+                                <div
+                                    class="d-flex justify-content-between mb-2"
+                                >
+
+                                    <span class="text-muted">
+                                        Price per person
+                                    </span>
+
+
+                                    <span class="fw-semibold">
+
+                                        Rs.
+                                        {{ package.price }}
+
+                                    </span>
+
+                                </div>
+
+
+
+                                <!-- GUESTS -->
+
+                                <div
+                                    class="d-flex justify-content-between mb-2"
+                                >
+
+                                    <span class="text-muted">
+                                        Guests
+                                    </span>
+
+
+                                    <span
+                                        id="guest-display"
+                                        class="fw-semibold"
+                                    >
+                                        1
+                                    </span>
+
+                                </div>
+
+
+
+                                <!-- TOTAL -->
+
+                                <div
+                                    class="booking-total d-flex justify-content-between align-items-center pt-2"
+                                >
+
+                                    <span class="fw-semibold">
+                                        Total
+                                    </span>
+
+
+                                    <strong
+                                        class="fs-4 text-emerald"
+                                    >
+
+                                        Rs.
+
+                                        <span id="totalPrice">
+                                            {{ package.price }}
+                                        </span>
+
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- SUBMIT -->
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary-lux py-3 rounded-pill fw-semibold text-uppercase tracking-wider fs-7 mt-2"
+                            >
+
+                                <i
+                                    class="bi bi-shield-lock me-1"
+                                ></i>
+
+                                Proceed to Checkout
+
                             </button>
+
+
                         </form>
 
+
+
+                        <!-- CONCIERGE -->
+
                         <div class="text-center">
-                            <span class="text-muted fs-8"><i class="bi bi-telephone-outbound me-1"></i> Need help? Call Concierge 24/7</span>
+
+                            <span
+                                class="text-muted fs-8"
+                            >
+
+                                <i
+                                    class="bi bi-telephone-outbound me-1"
+                                ></i>
+
+                                Need help? Call Concierge 24/7
+
+                            </span>
+
                         </div>
+
+
                     </div>
+
                 </div>
+
             </div>
 
         </div>
+
     </div>
+
 </section>
+
+
+
+<!-- =========================================================
+     PRICE CALCULATION JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const guestInput =
+            document.getElementById("guestCount");
+
+
+        const guestDisplay =
+            document.getElementById("guest-display");
+
+
+        const totalPrice =
+            document.getElementById("totalPrice");
+
+
+        const pricePerPerson =
+            Number("{{ package.price }}");
+
+
+        const maxGuests =
+            Number("{{ package.max_people }}");
+
+
+
+        function updateTotal() {
+
+
+            let guests =
+                parseInt(guestInput.value) || 1;
+
+
+
+            /*
+             * Minimum guests
+             */
+
+            if (guests < 1) {
+
+                guests = 1;
+
+                guestInput.value = 1;
+
+            }
+
+
+
+            /*
+             * Maximum guests
+             */
+
+            if (
+                maxGuests > 0 &&
+                guests > maxGuests
+            ) {
+
+                guests = maxGuests;
+
+                guestInput.value =
+                    maxGuests;
+
+            }
+
+
+
+            /*
+             * Update guest display
+             */
+
+            guestDisplay.textContent =
+                guests;
+
+
+
+            /*
+             * Calculate total
+             */
+
+            const total =
+                pricePerPerson * guests;
+
+
+
+            /*
+             * Update total price
+             */
+
+            totalPrice.textContent =
+                total.toLocaleString(
+                    "en-IN",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                );
+
+        }
+
+
+
+        /*
+         * Update when typing
+         */
+
+        guestInput.addEventListener(
+            "input",
+            updateTotal
+        );
+
+
+        /*
+         * Update when spinner changes
+         */
+
+        guestInput.addEventListener(
+            "change",
+            updateTotal
+        );
+
+
+
+        /*
+         * Initial calculation
+         */
+
+        updateTotal();
+
+    }
+
+);
+
+</script>
+
+
 {% endblock %}

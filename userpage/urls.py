@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import index, gallery, package_detail_view,destination, destination_detail, tour, tour_detail, review, about, package
+from .views import search
+from .views import index, gallery, package_detail_view,destination, destination_detail, tour, tour_detail, review, about, package, booking
 
 urlpatterns = [
     path('',index, name='index'),
@@ -11,5 +12,8 @@ urlpatterns = [
     path('tour_detail/<int:tour_id>/', tour_detail, name='tour_detail'),
     path('review/', review, name='review'),
     path('about/', about, name='about'),
-    path('gallery/', gallery, name='gallery')
+    path('gallery/', gallery, name='gallery'),
+    path('search/', search, name='search'),
+    path('booking/<int:package_id>', booking, name='booking')
+    
 ]
