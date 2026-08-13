@@ -60,3 +60,56 @@ class BookingForm(forms.ModelForm):
                 }
             ),
         }
+
+from django import forms
+
+
+class GearChecklistForm(forms.Form):
+
+    SEASON_CHOICES = [
+        ("spring", "Spring"),
+        ("summer", "Summer"),
+        ("autumn", "Autumn"),
+        ("winter", "Winter"),
+    ]
+
+    DIFFICULTY_CHOICES = [
+        ("easy", "Easy"),
+        ("moderate", "Moderate"),
+        ("difficult", "Difficult"),
+    ]
+
+    ALTITUDE_CHOICES = [
+        (2000, "Below 2,000 m"),
+        (4000, "2,000 – 4,000 m"),
+        (5500, "4,000 – 5,500 m"),
+        (6000, "Above 5,500 m"),
+    ]
+
+    season = forms.ChoiceField(
+        choices=SEASON_CHOICES,
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )
+
+    altitude = forms.IntegerField(
+        label="Maximum Altitude",
+        widget=forms.Select(
+            choices=ALTITUDE_CHOICES,
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )
+
+    difficulty = forms.ChoiceField(
+        choices=DIFFICULTY_CHOICES,
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )

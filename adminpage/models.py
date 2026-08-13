@@ -244,3 +244,52 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.booking} - {self.amount}"
+
+class GearItem(models.Model):
+
+    DIFFICULTY_CHOICES = [
+        ("easy", "Easy"),
+        ("moderate", "Moderate"),
+        ("difficult", "Difficult"),
+    ]
+
+    SEASON_CHOICES = [
+        ("all", "All Seasons"),
+        ("spring", "Spring"),
+        ("summer", "Summer"),
+        ("autumn", "Autumn"),
+        ("winter", "Winter"),
+    ]
+
+    name = models.CharField(max_length=150)
+
+    category = models.CharField(
+        max_length=100
+    )
+
+    season = models.CharField(
+        max_length=20,
+        choices=SEASON_CHOICES,
+        default="all"
+    )
+
+    min_altitude = models.PositiveIntegerField(
+        default=0
+    )
+
+    difficulty = models.CharField(
+        max_length=20,
+        choices=DIFFICULTY_CHOICES,
+        default="easy"
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    essential = models.BooleanField(
+        default=False
+    )
+
+    def __str__(self):
+        return self.name

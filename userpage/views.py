@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review
-from .forms import BookingForm
+from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review, Payment, GearItem
+from .forms import BookingForm, GearChecklistForm
 # Create your views here.
 def index(request):
     packages = Package.objects.all()
@@ -275,6 +275,48 @@ def payment(request, booking_id):
         "userpage/payment.html",
         {
             "booking": booking
+        }
+    )
+
+
+def gear_checklist(request):
+
+    gear_items = []
+
+    if request.method == "POST":
+
+        form = GearChecklistForm(request.POST)
+
+        if form.is_valid():
+
+            season = form.cleaned_data["season"]
+            altitude = form.cleaned_data["altitude"]
+            difficulty = form.cleaned_data["difficulty"]
+
+            gear_items = GearItem.objects.filter(
+                min_altitude__lte=altitude
+            ).filter(
+                difficulty__in=[
+                    "easy",
+                    difficulty
+                ]
+            )
+
+            gear_items = [
+                item for item in gear_items
+                if item.season in ["all", season]
+            ]
+
+    else:
+
+        form = GearChecklistForm()
+
+    return render(
+        request,
+        "userpage/gear_checklist.html",
+        {
+            "form": form,
+            "gear_items": gear_items,
         }
     )
 
