@@ -111,14 +111,7 @@
                     </div>
 
 
-                    {% if dest.description %}
-
-                    <p>
-                        {{ dest.description|truncatechars:125 }}
-                    </p>
-
-                    {% endif %}
-
+                 
 
                     <a
                         href="{% url 'destination_detail' dest.id %}"

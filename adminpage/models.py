@@ -124,24 +124,18 @@ class Gallery(models.Model):
 
 class TravelPlan(models.Model):
 
-    HOTEL_CHOICES = [
-        ("Budget", "Budget"),
-        ("Standard", "Standard"),
-        ("Luxury", "Luxury"),
+    FITNESS_CHOICES = [
+        ("easy", "Easy"),
+        ("moderate", "Moderate"),
+        ("challenging", "Challenging"),
+        ("extreme", "Extreme"),
     ]
 
-    TRANSPORT_CHOICES = [
-        ("Flight", "Flight"),
-        ("Train", "Train"),
-        ("Bus", "Bus"),
-        ("Cruise", "Cruise"),
-    ]
-
-    MEAL_CHOICES = [
-        ("Breakfast Only", "Breakfast Only"),
-        ("Half Board", "Half Board"),
-        ("Full Board", "Full Board"),
-        ("All Inclusive", "All Inclusive"),
+    BUDGET_CHOICES = [
+        ("budget", "Budget"),
+        ("standard", "Standard"),
+        ("premium", "Premium"),
+        ("luxury", "Luxury"),
     ]
 
     user = models.ForeignKey(
@@ -158,26 +152,31 @@ class TravelPlan(models.Model):
 
     travel_date = models.DateField()
 
-    travelers = models.PositiveIntegerField()
+    travelers = models.PositiveIntegerField(default=1)
 
-    budget = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
+    budget = models.CharField(
+        max_length=20,
+        choices=BUDGET_CHOICES
+    )
+
+    fitness_level = models.CharField(
+        max_length=20,
+        choices=FITNESS_CHOICES,blank=True, null=True
     )
 
     hotel = models.CharField(
-        max_length=30,
-        choices=HOTEL_CHOICES
+        max_length=100,
+        blank=True
     )
 
     transport = models.CharField(
-        max_length=30,
-        choices=TRANSPORT_CHOICES
+        max_length=100,
+        blank=True
     )
 
     meals = models.CharField(
-        max_length=30,
-        choices=MEAL_CHOICES
+        max_length=100,
+        blank=True
     )
 
     special_requests = models.TextField(
@@ -189,8 +188,7 @@ class TravelPlan(models.Model):
     )
 
     def __str__(self):
-        return f"{self.destination.name} - {self.travelers} Travelers"
-
+        return f"{self.destination.name} - {self.travelers} travelers"
 
 
 
