@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import search
-from .views import index, gallery, package_detail_view,destination,gear_checklist, destination_detail, tour, tour_detail, review, about, contact, package, booking
+from .views import index, gallery, travel_map, package_detail_view, wishlist,add_to_wishlist,remove_from_wishlist, destination,gear_checklist, destination_detail, tour, tour_detail, review, about, contact, package, booking
 
 urlpatterns = [
     path('',index, name='index'),
@@ -18,4 +18,8 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
     path('review/', review, name='review'),
     path('gear_checklist/', gear_checklist, name='gear_checklist'),
+    path('travel_map/', travel_map, name='travel_map'),
+    path('wishlist/', wishlist, name='wishlist'),
+    path('wishlist/add/<int:package_id>/', add_to_wishlist, name='add_to_wishlist'),
+    path('wishlist/remove/<int:package_id>/', remove_from_wishlist, name='remove_from_wishlist'),
 ]

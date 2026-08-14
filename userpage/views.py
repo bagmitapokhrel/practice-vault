@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review, Payment, GearItem
+from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review, Payment, GearItem, Wishlist
 from .forms import BookingForm, GearChecklistForm
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 def index(request):
     packages = Package.objects.all()
@@ -317,6 +319,73 @@ def gear_checklist(request):
         {
             "form": form,
             "gear_items": gear_items,
+        }
+    )
+
+def travel_map(request):
+    destinations = Destination.objects.exclude(
+        latitude__isnull=True,
+    ).exclude(
+        longitude__isnull=True
+    )
+
+    return render(
+        request,
+        "userpage/travel_map.html",
+        {
+            "destinations": destinations
+        }
+    )
+
+@login_required
+def add_to_wishlist(request, package_id):
+
+    package = get_object_or_404(
+        Package,
+        id=package_id
+    )
+
+    Wishlist.objects.get_or_create(
+        user=request.user,
+        package=package
+    )
+
+    return redirect(
+        request.META.get(
+            "HTTP_REFERER",
+            "package"
+        )
+    )
+
+
+@login_required
+def remove_from_wishlist(request, package_id):
+
+    Wishlist.objects.filter(
+        user=request.user,
+        package_id=package_id
+    ).delete()
+
+    return redirect(
+        request.META.get(
+            "HTTP_REFERER",
+            "wishlist"
+        )
+    )
+
+
+@login_required
+def wishlist(request):
+
+    wishlists = Wishlist.objects.filter(
+        user=request.user
+    ).select_related("package", "package__destination")
+
+    return render(
+        request,
+        "userpage/wishlist.html",
+        {
+            "wishlists": wishlists
         }
     )
 

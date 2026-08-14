@@ -1,0 +1,746 @@
+{% extends "userpage/base.html" %}
+{% load static %}
+
+{% block title %}Explore Map | ExploreWorld{% endblock %}
+
+{% block extra_css %}
+
+<!-- Leaflet CSS -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+
+    body {
+        background: #f6f8f7;
+    }
+
+    .map-page {
+        padding: 50px 0 70px;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .map-hero {
+        background:
+            linear-gradient(
+                135deg,
+                rgba(4, 70, 70, .96),
+                rgba(0, 128, 128, .88)
+            ),
+            url("{% static 'images/map-bg.jpg' %}");
+
+        background-size: cover;
+        background-position: center;
+
+        border-radius: 28px;
+        padding: 55px 50px;
+        color: white;
+        margin-bottom: 30px;
+
+        box-shadow: 0 20px 50px rgba(0,0,0,.12);
+    }
+
+    .map-hero h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .map-hero p {
+        max-width: 650px;
+        opacity: .9;
+        font-size: 1.05rem;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255,255,255,.15);
+        border: 1px solid rgba(255,255,255,.2);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    .search-box {
+        background: white;
+        padding: 10px;
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        margin-bottom: 25px;
+    }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        box-shadow: none !important;
+        padding: 12px 15px;
+    }
+
+    .search-icon {
+        width: 45px;
+        height: 45px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 13px;
+        background: #e8f7f4;
+        color: #008f83;
+
+        font-size: 20px;
+    }
+
+    /* =========================
+       MAP
+    ========================= */
+
+    .map-container {
+        background: white;
+        padding: 10px;
+        border-radius: 24px;
+
+        box-shadow: 0 15px 45px rgba(0,0,0,.08);
+
+        position: relative;
+        overflow: hidden;
+    }
+
+    #travelMap {
+        height: 650px;
+        width: 100%;
+        border-radius: 18px;
+        z-index: 1;
+    }
+
+    /* =========================
+       MAP OVERLAY
+    ========================= */
+
+    .map-counter {
+        position: absolute;
+        top: 25px;
+        left: 25px;
+
+        background: white;
+        padding: 12px 18px;
+
+        border-radius: 50px;
+
+        box-shadow: 0 8px 25px rgba(0,0,0,.15);
+
+        z-index: 500;
+
+        font-weight: 600;
+    }
+
+    /* =========================
+       DESTINATION PANEL
+    ========================= */
+
+    .destination-panel {
+        margin-top: 35px;
+    }
+
+    .destination-card {
+        background: white;
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+
+        box-shadow: 0 8px 30px rgba(0,0,0,.06);
+
+        transition: .3s;
+        height: 100%;
+    }
+
+    .destination-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+    }
+
+    .destination-image {
+        height: 190px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .destination-placeholder {
+        height: 190px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: linear-gradient(
+            135deg,
+            #dff5f0,
+            #edf8f6
+        );
+
+        color: #008f83;
+
+        font-size: 45px;
+    }
+
+    .destination-content {
+        padding: 22px;
+    }
+
+    .destination-content h5 {
+        font-weight: 750;
+    }
+
+    .location-text {
+        color: #718096;
+        font-size: 14px;
+    }
+
+    .view-btn {
+        border-radius: 50px;
+        padding: 9px 18px;
+
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    /* =========================
+       LEAFLET POPUP
+    ========================= */
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 18px;
+        padding: 5px;
+    }
+
+    .leaflet-popup-content {
+        margin: 14px;
+        min-width: 220px;
+    }
+
+    .popup-title {
+        font-weight: 750;
+        font-size: 17px;
+        margin-bottom: 6px;
+    }
+
+    .popup-description {
+        color: #6c757d;
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+
+    .popup-btn {
+        display: inline-block;
+        background: #008f83;
+        color: white;
+
+        text-decoration: none;
+
+        padding: 7px 14px;
+        border-radius: 50px;
+
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .popup-btn:hover {
+        color: white;
+        background: #006f67;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 768px) {
+
+        .map-page {
+            padding: 25px 10px 50px;
+        }
+
+        .map-hero {
+            padding: 35px 25px;
+            border-radius: 22px;
+        }
+
+        #travelMap {
+            height: 500px;
+        }
+
+        .map-counter {
+            top: 20px;
+            left: 20px;
+            font-size: 13px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="map-page">
+
+    <div class="container">
+
+        <!-- =========================
+             HERO
+        ========================= -->
+
+        <div class="map-hero">
+
+            <span class="hero-badge">
+                <i class="bi bi-globe2"></i>
+                Explore the World
+            </span>
+
+            <h1>
+                Discover Your Next Destination
+            </h1>
+
+            <p class="mt-3 mb-0">
+                Explore destinations around the world using our
+                interactive travel map. Discover new places,
+                explore experiences and start planning your next adventure.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             SEARCH
+        ========================= -->
+
+        <div class="search-box">
+
+            <div class="d-flex align-items-center">
+
+                <div class="search-icon me-2">
+
+                    <i class="bi bi-search"></i>
+
+                </div>
+
+                <input
+                    type="text"
+                    id="destinationSearch"
+                    class="form-control"
+                    placeholder="Search destination..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             MAP
+        ========================= -->
+
+        <div class="map-container">
+
+            <div class="map-counter">
+
+                <i class="bi bi-geo-alt-fill text-success me-1"></i>
+
+                <span id="destinationCount">
+                    {{ destinations|length }}
+                </span>
+
+                Destinations
+
+            </div>
+
+
+            <div id="travelMap"></div>
+
+        </div>
+
+
+        <!-- =========================
+             DESTINATION CARDS
+        ========================= -->
+
+        <div class="destination-panel">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <small class="text-success fw-semibold">
+                        EXPLORE
+                    </small>
+
+                    <h3 class="fw-bold mb-1">
+                        Popular Destinations
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Discover places worth adding to your journey.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-4" id="destinationCards">
+
+                {% for destination in destinations %}
+
+                <div
+                    class="col-md-6 col-lg-4 destination-item"
+                    data-name="{{ destination.name|lower }}"
+                >
+
+                    <div class="destination-card">
+
+                        {% if destination.image %}
+
+                            <img
+                                src="{{ destination.image.url }}"
+                                class="destination-image"
+                                alt="{{ destination.name }}"
+                            >
+
+                        {% else %}
+
+                            <div class="destination-placeholder">
+
+                                <i class="bi bi-image"></i>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="destination-content">
+
+                            <h5>
+                                {{ destination.name }}
+                            </h5>
+
+
+                            <div class="location-text mb-3">
+
+                                <i class="bi bi-geo-alt me-1"></i>
+
+                                {{ destination.location|default:"Explore this destination" }}
+
+                            </div>
+
+
+                            {% if destination.description %}
+
+                                <p class="text-muted small">
+
+                                    {{ destination.description|truncatewords:18 }}
+
+                                </p>
+
+                            {% endif %}
+
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+
+                                <span class="badge bg-light text-success rounded-pill px-3 py-2">
+
+                                    <i class="bi bi-pin-map me-1"></i>
+                                    Explore
+
+                                </span>
+
+
+                                <a
+                                    href="{% url 'destination_detail' destination.id %}"
+                                    class="btn btn-outline-success view-btn"
+                                >
+
+                                    View Destination
+
+                                    <i class="bi bi-arrow-right ms-1"></i>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="col-12">
+
+                    <div class="text-center py-5">
+
+                        <i class="bi bi-map display-3 text-muted"></i>
+
+                        <h4 class="fw-bold mt-3">
+                            No destinations available
+                        </h4>
+
+                        <p class="text-muted">
+                            Add destinations with latitude and longitude
+                            from the admin panel.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     LEAFLET JS
+========================= -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================
+       CREATE MAP
+    ========================= */
+
+    const map = L.map("travelMap").setView(
+        [20, 0],
+        2
+    );
+
+
+    /* =========================
+       OPENSTREETMAP
+    ========================= */
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            attribution:
+                '&copy; OpenStreetMap contributors',
+
+            maxZoom: 19
+        }
+    ).addTo(map);
+
+
+    /* =========================
+       DESTINATIONS
+    ========================= */
+
+    const destinations = [
+
+        {% for destination in destinations %}
+
+        {
+
+            id: {{ destination.id }},
+
+            name: "{{ destination.name|escapejs }}",
+
+            latitude: {{ destination.latitude }},
+
+            longitude: {{ destination.longitude }},
+
+            description:
+                "{{ destination.description|default:''|truncatewords:20|escapejs }}",
+
+            url:
+                "{% url 'destination_detail' destination.id %}"
+
+        },
+
+        {% endfor %}
+
+    ];
+
+
+    /* =========================
+       MARKERS
+    ========================= */
+
+    const markers = [];
+
+
+    destinations.forEach(function(destination) {
+
+        const marker = L.marker([
+
+            destination.latitude,
+
+            destination.longitude
+
+        ]).addTo(map);
+
+
+        marker.bindPopup(`
+
+            <div>
+
+                <div class="popup-title">
+
+                    ${destination.name}
+
+                </div>
+
+
+                <div class="popup-description">
+
+                    ${destination.description}
+
+                </div>
+
+
+                <a
+                    href="${destination.url}"
+                    class="popup-btn"
+                >
+
+                    Explore Destination
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        `);
+
+
+        markers.push({
+
+            marker: marker,
+
+            name: destination.name.toLowerCase()
+
+        });
+
+    });
+
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    const searchInput =
+        document.getElementById(
+            "destinationSearch"
+        );
+
+
+    const destinationItems =
+        document.querySelectorAll(
+            ".destination-item"
+        );
+
+
+    const countElement =
+        document.getElementById(
+            "destinationCount"
+        );
+
+
+    searchInput.addEventListener(
+        "input",
+        function () {
+
+            const query =
+                this.value.toLowerCase().trim();
+
+
+            let visibleCount = 0;
+
+
+            /* Filter cards */
+
+            destinationItems.forEach(
+                function(item) {
+
+                    const name =
+                        item.dataset.name;
+
+
+                    if (
+                        name.includes(query)
+                    ) {
+
+                        item.style.display = "";
+
+                        visibleCount++;
+
+                    } else {
+
+                        item.style.display = "none";
+
+                    }
+
+                }
+            );
+
+
+            /* Filter markers */
+
+            markers.forEach(
+                function(item) {
+
+                    if (
+                        item.name.includes(query)
+                    ) {
+
+                        item.marker.addTo(map);
+
+                    } else {
+
+                        map.removeLayer(
+                            item.marker
+                        );
+
+                    }
+
+                }
+            );
+
+
+            countElement.innerText =
+                visibleCount;
+
+        }
+    );
+
+});
+
+</script>
+
+{% endblock %}

@@ -8,91 +8,657 @@ Smart Gear Checklist | ExploreWorld
 
 <style>
 
+/* =========================================================
+   GEAR CHECKLIST PAGE
+========================================================= */
+
 .gear-page {
-    background: #f5f7f6;
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(0, 168, 150, .08),
+            transparent 35%
+        ),
+        #f6f8f7;
+
     min-height: 100vh;
-    padding: 70px 0;
+    padding: 70px 0 100px;
 }
 
+
+/* =========================================================
+   HERO
+========================================================= */
+
 .gear-hero {
-    background: linear-gradient(
-        135deg,
-        #087f8c,
-        #00a896
-    );
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 32px;
+
+    padding: 65px 60px;
+
     color: white;
-    border-radius: 30px;
-    padding: 55px;
-    margin-bottom: 35px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #063f46 0%,
+            #087f8c 48%,
+            #00a896 100%
+        );
+
+    box-shadow:
+        0 25px 60px rgba(0, 90, 90, .18);
+}
+
+.gear-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 320px;
+    height: 320px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.07);
+
+    right: -100px;
+    top: -140px;
+}
+
+.gear-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.05);
+
+    right: 180px;
+    bottom: -130px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    background: rgba(255,255,255,.14);
+
+    border: 1px solid rgba(255,255,255,.18);
+
+    padding: 9px 16px;
+
+    border-radius: 50px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 22px;
+
+    backdrop-filter: blur(10px);
 }
 
 .gear-hero h1 {
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+
     font-weight: 800;
+
+    letter-spacing: -1.5px;
+
+    line-height: 1.05;
+
+    margin-bottom: 20px;
 }
 
-.gear-card {
-    background: white;
-    border: none;
-    border-radius: 24px;
-    box-shadow: 0 12px 40px rgba(0,0,0,.07);
+.gear-hero p {
+    max-width: 650px;
+
+    font-size: 17px;
+
+    line-height: 1.7;
+
+    color: rgba(255,255,255,.82);
 }
 
-.gear-icon {
-    width: 60px;
-    height: 60px;
-    background: #e5f7f4;
-    color: #087f8c;
-    border-radius: 16px;
+
+/* HERO ICON */
+
+.hero-visual {
+    position: relative;
+
+    z-index: 2;
 
     display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.hero-backpack {
+    width: 180px;
+    height: 180px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 45px;
+
+    background: rgba(255,255,255,.10);
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        inset 0 0 30px rgba(255,255,255,.05),
+        0 25px 50px rgba(0,0,0,.15);
+}
+
+.hero-backpack i {
+    font-size: 90px;
+
+    color: white;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.gear-main-card {
+    margin-top: -20px;
+
+    position: relative;
+
+    z-index: 5;
+
+    background: white;
+
+    border: 1px solid rgba(0,0,0,.04);
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.08);
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.section-heading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 32px;
+}
+
+.section-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+
     align-items: center;
     justify-content: center;
 
-    font-size: 26px;
+    border-radius: 15px;
+
+    background: #e8f8f5;
+
+    color: #087f8c;
+
+    font-size: 22px;
 }
 
-.gear-item {
-    border: 1px solid #edf0f2;
-    border-radius: 16px;
-    padding: 18px;
+.section-heading h4 {
+    font-weight: 800;
+
+    margin: 0;
+}
+
+.section-heading p {
+    margin: 4px 0 0;
+
+    color: #7b858c;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-label {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #344047;
+
+    margin-bottom: 9px;
+}
+
+.form-label i {
+    color: #087f8c;
+}
+
+.form-select {
+    min-height: 52px;
+
+    border-radius: 14px;
+
+    border: 1px solid #e3e8ea;
+
+    padding: 12px 16px;
+
+    font-size: 14px;
+
+    background-color: #fafcfc;
 
     transition: .25s;
 }
 
-.gear-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,.06);
+.form-select:hover {
+    border-color: #b7dcd7;
 }
 
-.check-icon {
-    width: 42px;
-    height: 42px;
+.form-select:focus {
+    border-color: #00a896;
 
-    background: #e8f8f5;
-    color: #087f8c;
-
-    border-radius: 12px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-shadow:
+        0 0 0 4px rgba(0,168,150,.10);
 }
+
+
+/* =========================================================
+   GENERATE BUTTON
+========================================================= */
 
 .generate-btn {
-    background: linear-gradient(
-        135deg,
-        #087f8c,
-        #00a896
-    );
-
     border: none;
-    color: white;
 
-    padding: 14px 35px;
+    min-height: 54px;
+
+    padding: 0 32px;
 
     border-radius: 50px;
 
+    color: white;
+
+    font-size: 14px;
+
     font-weight: 700;
+
+    letter-spacing: .3px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+
+    box-shadow:
+        0 12px 25px rgba(0,168,150,.22);
+
+    transition: all .25s ease;
+}
+
+.generate-btn:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 18px 32px rgba(0,168,150,.28);
+
+    color: white;
+}
+
+.generate-btn:active {
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   QUICK BENEFITS
+========================================================= */
+
+.benefit-strip {
+    border-top: 1px solid #edf0f1;
+
+    margin-top: 35px;
+
+    padding-top: 28px;
+}
+
+.benefit {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.benefit-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f0f8f7;
+
+    color: #087f8c;
+}
+
+.benefit strong {
+    display: block;
+
+    font-size: 13px;
+}
+
+.benefit span {
+    color: #899298;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   RESULT SECTION
+========================================================= */
+
+.result-wrapper {
+    margin-top: 45px;
+}
+
+.result-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.result-header h3 {
+    font-weight: 800;
+
+    margin-bottom: 5px;
+}
+
+.result-header p {
+    color: #7c858a;
+
+    margin: 0;
+
+    font-size: 14px;
+}
+
+.item-count {
+    background: #e8f8f5;
+
+    color: #087f8c;
+
+    padding: 8px 15px;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   GEAR ITEMS
+========================================================= */
+
+.gear-item {
+    height: 100%;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    border: 1px solid #edf0f1;
+
+    background: white;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.gear-item:hover {
+    transform: translateY(-4px);
+
+    border-color: #cce9e5;
+
+    box-shadow:
+        0 14px 30px rgba(0,0,0,.07);
+}
+
+.gear-check {
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #e8f8f5;
+
+    color: #00a896;
+
+    font-size: 18px;
+}
+
+.gear-item h6 {
+    font-weight: 700;
+
+    color: #273238;
+
+    margin-bottom: 5px;
+}
+
+.gear-category {
+    display: inline-block;
+
+    color: #8a9499;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: .7px;
+}
+
+.essential-badge {
+    display: inline-block;
+
+    margin-top: 7px;
+
+    padding: 4px 9px;
+
+    border-radius: 50px;
+
+    background: #fff4df;
+
+    color: #a56a00;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    text-align: center;
+
+    padding: 65px 20px;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 24px;
+
+    background: #f0f4f4;
+
+    color: #8a9699;
+
+    font-size: 32px;
+}
+
+
+/* =========================================================
+   INFO BOX
+========================================================= */
+
+.safety-box {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 14px;
+
+    margin-top: 30px;
+
+    padding: 18px 20px;
+
+    border-radius: 17px;
+
+    background: #f2f8fa;
+
+    border: 1px solid #dcecef;
+
+    color: #53636a;
+}
+
+.safety-box i {
+    color: #087f8c;
+
+    font-size: 19px;
+}
+
+.safety-box strong {
+    display: block;
+
+    color: #35464c;
+
+    font-size: 13px;
+
+    margin-bottom: 3px;
+}
+
+.safety-box span {
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .gear-hero {
+        padding: 45px 30px;
+    }
+
+    .hero-visual {
+        margin-top: 35px;
+    }
+
+    .hero-backpack {
+        width: 130px;
+        height: 130px;
+    }
+
+    .hero-backpack i {
+        font-size: 65px;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .gear-page {
+        padding: 30px 12px 70px;
+    }
+
+    .gear-hero {
+        border-radius: 24px;
+
+        padding: 40px 25px;
+    }
+
+    .gear-main-card {
+        border-radius: 22px;
+    }
+
+    .gear-main-card .card-body {
+        padding: 28px 20px !important;
+    }
+
+    .result-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
 }
 
 </style>
@@ -103,7 +669,9 @@ Smart Gear Checklist | ExploreWorld
 <div class="container">
 
 
-    <!-- HERO -->
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
 
     <div class="gear-hero">
 
@@ -111,30 +679,45 @@ Smart Gear Checklist | ExploreWorld
 
             <div class="col-lg-8">
 
-                <span class="badge bg-light text-dark rounded-pill px-3 py-2 mb-3">
+                <div class="hero-content">
 
-                    <i class="bi bi-backpack me-1"></i>
+                    <span class="hero-badge">
 
-                    Smart Trekking Tool
+                        <i class="bi bi-stars"></i>
 
-                </span>
+                        Smart Trekking Assistant
 
-                <h1>
-                    Build Your Perfect Trekking Checklist 🎒
-                </h1>
+                    </span>
 
-                <p class="lead mb-0">
+                    <h1>
+                        Pack Smarter.<br>
+                        Trek Better.
+                    </h1>
 
-                    Tell us about your trek and we'll recommend
-                    the essential equipment for your adventure.
+                    <p class="mb-0">
 
-                </p>
+                        Build a personalized trekking checklist based
+                        on your season, altitude and adventure level.
+                        Never forget the essentials again.
+
+                    </p>
+
+                </div>
 
             </div>
 
-            <div class="col-lg-4 text-center">
 
-                <i class="bi bi-backpack display-1"></i>
+            <div class="col-lg-4">
+
+                <div class="hero-visual">
+
+                    <div class="hero-backpack">
+
+                        <i class="bi bi-backpack"></i>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -143,32 +726,33 @@ Smart Gear Checklist | ExploreWorld
     </div>
 
 
-    <!-- FORM -->
 
-    <div class="card gear-card mb-5">
+    <!-- =====================================================
+         CHECKLIST BUILDER
+    ====================================================== -->
+
+    <div class="gear-main-card">
 
         <div class="card-body p-5">
 
-            <div class="d-flex align-items-center mb-4">
 
-                <div class="gear-icon me-3">
+            <div class="section-heading">
 
-                    <i class="bi bi-sliders"></i>
+                <div class="section-icon">
+
+                    <i class="bi bi-sliders2"></i>
 
                 </div>
 
                 <div>
 
-                    <h4 class="fw-bold mb-1">
-
+                    <h4>
                         Customize Your Checklist
-
                     </h4>
 
-                    <p class="text-muted mb-0">
-
-                        Choose your trekking conditions.
-
+                    <p>
+                        Tell us about your trek and we'll handle
+                        the packing recommendations.
                     </p>
 
                 </div>
@@ -180,16 +764,19 @@ Smart Gear Checklist | ExploreWorld
 
                 {% csrf_token %}
 
+
                 <div class="row g-4">
 
 
-                    <div class="col-md-4">
+                    <!-- SEASON -->
 
-                        <label class="form-label fw-semibold">
+                    <div class="col-lg-4">
+
+                        <label class="form-label">
 
                             <i class="bi bi-cloud-sun me-1"></i>
 
-                            Season
+                            Trekking Season
 
                         </label>
 
@@ -198,11 +785,13 @@ Smart Gear Checklist | ExploreWorld
                     </div>
 
 
-                    <div class="col-md-4">
+                    <!-- ALTITUDE -->
 
-                        <label class="form-label fw-semibold">
+                    <div class="col-lg-4">
 
-                            <i class="bi bi-mountains me-1"></i>
+                        <label class="form-label">
+
+                            <i class="bi bi-bar-chart-steps me-1"></i>
 
                             Maximum Altitude
 
@@ -213,9 +802,11 @@ Smart Gear Checklist | ExploreWorld
                     </div>
 
 
-                    <div class="col-md-4">
+                    <!-- DIFFICULTY -->
 
-                        <label class="form-label fw-semibold">
+                    <div class="col-lg-4">
+
+                        <label class="form-label">
 
                             <i class="bi bi-person-walking me-1"></i>
 
@@ -231,6 +822,8 @@ Smart Gear Checklist | ExploreWorld
                 </div>
 
 
+                <!-- SUBMIT -->
+
                 <div class="text-center mt-5">
 
                     <button
@@ -242,7 +835,102 @@ Smart Gear Checklist | ExploreWorld
 
                         Generate My Checklist
 
+                        <i class="bi bi-arrow-right ms-2"></i>
+
                     </button>
+
+                </div>
+
+
+                <!-- BENEFITS -->
+
+                <div class="benefit-strip">
+
+                    <div class="row g-4">
+
+
+                        <div class="col-md-4">
+
+                            <div class="benefit">
+
+                                <div class="benefit-icon">
+
+                                    <i class="bi bi-check2-circle"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Personalized
+                                    </strong>
+
+                                    <span>
+                                        Based on your trek
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="benefit">
+
+                                <div class="benefit-icon">
+
+                                    <i class="bi bi-mountains"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Altitude Aware
+                                    </strong>
+
+                                    <span>
+                                        High-altitude essentials
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="benefit">
+
+                                <div class="benefit-icon">
+
+                                    <i class="bi bi-lightning-charge"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Instant Results
+                                    </strong>
+
+                                    <span>
+                                        Ready in seconds
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
 
                 </div>
 
@@ -253,33 +941,36 @@ Smart Gear Checklist | ExploreWorld
     </div>
 
 
+
+    <!-- =====================================================
+         RESULTS
+    ====================================================== -->
+
     {% if gear_items %}
 
-    <!-- RESULTS -->
+    <div class="result-wrapper">
 
-    <div class="card gear-card">
 
-        <div class="card-body p-5">
+        <div class="result-header">
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
 
-                <div>
+                <h3>
+                    Your Trekking Checklist
+                </h3>
 
-                    <h3 class="fw-bold mb-1">
+                <p>
+                    Everything we recommend for your adventure.
+                </p>
 
-                        Your Trekking Checklist
+            </div>
 
-                    </h3>
 
-                    <p class="text-muted mb-0">
+            <div>
 
-                        Recommended equipment for your adventure.
+                <span class="item-count">
 
-                    </p>
-
-                </div>
-
-                <span class="badge bg-success rounded-pill px-3 py-2">
+                    <i class="bi bi-check2-circle me-1"></i>
 
                     {{ gear_items|length }} Items
 
@@ -287,34 +978,73 @@ Smart Gear Checklist | ExploreWorld
 
             </div>
 
+        </div>
 
-            <div class="row g-3">
 
-                {% for item in gear_items %}
+        <div class="row g-3">
 
-                <div class="col-md-6">
 
-                    <div class="gear-item d-flex align-items-center">
+            {% for item in gear_items %}
 
-                        <div class="check-icon me-3">
+            <div class="col-md-6 col-xl-4">
+
+
+                <div class="gear-item">
+
+                    <div class="d-flex align-items-start">
+
+
+                        <div class="gear-check me-3">
 
                             <i class="bi bi-check-lg"></i>
 
                         </div>
 
-                        <div>
 
-                            <h6 class="fw-bold mb-1">
+                        <div class="flex-grow-1">
+
+
+                            <h6>
 
                                 {{ item.name }}
 
                             </h6>
 
-                            <small class="text-muted">
+
+                            <span class="gear-category">
 
                                 {{ item.category }}
 
-                            </small>
+                            </span>
+
+
+                            {% if item.essential %}
+
+                            <div>
+
+                                <span class="essential-badge">
+
+                                    <i class="bi bi-star-fill me-1"></i>
+
+                                    Essential
+
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            {% if item.description %}
+
+                            <p class="text-muted small mt-2 mb-0">
+
+                                {{ item.description }}
+
+                            </p>
+
+                            {% endif %}
+
 
                         </div>
 
@@ -322,20 +1052,72 @@ Smart Gear Checklist | ExploreWorld
 
                 </div>
 
-                {% endfor %}
 
             </div>
 
+            {% endfor %}
 
-            <div class="alert alert-info mt-4 rounded-4">
 
-                <i class="bi bi-info-circle me-2"></i>
+        </div>
 
-                Equipment recommendations are general guidance.
-                Always consider current weather, route conditions,
-                and advice from qualified trekking professionals.
+
+        <!-- SAFETY NOTICE -->
+
+        <div class="safety-box">
+
+            <i class="bi bi-info-circle-fill"></i>
+
+            <div>
+
+                <strong>
+                    A quick reminder before you go
+                </strong>
+
+                <span>
+
+                    This checklist provides general packing guidance.
+                    Actual requirements can vary with weather,
+                    route conditions, season and individual needs.
+                    Check current local conditions before departure.
+
+                </span>
 
             </div>
+
+        </div>
+
+
+    </div>
+
+    {% else %}
+
+
+    <!-- =====================================================
+         EMPTY STATE
+    ====================================================== -->
+
+    <div class="gear-main-card mt-5">
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+
+                <i class="bi bi-backpack"></i>
+
+            </div>
+
+            <h4 class="fw-bold">
+
+                Your checklist is waiting
+
+            </h4>
+
+            <p class="text-muted mb-0">
+
+                Select your season, altitude and trek difficulty
+                above to generate your personalized packing list.
+
+            </p>
 
         </div>
 

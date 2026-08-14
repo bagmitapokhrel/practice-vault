@@ -91,6 +91,7 @@
                         <h2>
                             {{ package.title }}
                         </h2>
+                        
 
                         <div class="price">
 
@@ -101,6 +102,13 @@
                             </strong>
 
                         </div>
+                        <a
+    href="{% url 'add_to_wishlist' package.id %}"
+    class="btn btn-light rounded-circle shadow-sm"
+    title="Add to wishlist"
+>
+    <i class="bi bi-heart"></i>
+</a>
 
                     </div>
 
