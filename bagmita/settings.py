@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_ckeditor_5',
-    'accounts',
     'feature',
+    "accounts.apps.AccountsConfig",
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

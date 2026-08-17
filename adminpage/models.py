@@ -296,6 +296,7 @@ class GearItem(models.Model):
         return self.name
 
 class Wishlist(models.Model):
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -308,11 +309,98 @@ class Wishlist(models.Model):
         related_name="wishlisted_by"
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     class Meta:
-        unique_together = ("user", "package")
-        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "package"],
+                name="unique_user_package_wishlist"
+            )
+        ]
 
     def __str__(self):
         return f"{self.user.username} - {self.package.title}"
+
+class TripInquiry(models.Model):
+
+    FITNESS_CHOICES = [
+        ("Easy", "Easy"),
+        ("Moderate", "Moderate"),
+        ("Hard", "Hard"),
+    ]
+
+    STATUS_CHOICES = [
+        ("New", "New"),
+        ("Contacted", "Contacted"),
+        ("Quoted", "Quoted"),
+        ("Converted", "Converted"),
+        ("Closed", "Closed"),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="trip_inquiries",
+        null=True,
+        blank=True
+    )
+
+    destination = models.ForeignKey(
+        Destination,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="trip_inquiries"
+    )
+
+    travel_date = models.DateField()
+
+    travelers = models.PositiveIntegerField(
+        default=1
+    )
+
+    duration = models.PositiveIntegerField(
+        help_text="Number of days"
+    )
+
+    fitness_level = models.CharField(
+        max_length=20,
+        choices=FITNESS_CHOICES,
+        default="Moderate"
+    )
+
+    budget = models.DecimalField(
+        max_digits=12,
+        decimal_places=2
+    )
+
+    preferred_region = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    special_requests = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="New"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.user} - {self.destination}"

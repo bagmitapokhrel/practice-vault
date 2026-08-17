@@ -1,0 +1,567 @@
+{% extends "userpage/base.html" %}
+{% load static %}
+
+{% block title %}My Wishlist | AetheriaJourney{% endblock %}
+
+{% block content %}
+
+<style>
+    .wishlist-page {
+        background: #f6f8f7;
+        min-height: 100vh;
+        padding: 60px 0 90px;
+    }
+
+    .wishlist-header {
+        margin-bottom: 40px;
+    }
+
+    .wishlist-header .eyebrow {
+        color: #00a896;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .wishlist-header h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 800;
+        color: #17211f;
+        margin-top: 8px;
+        margin-bottom: 10px;
+    }
+
+    .wishlist-header p {
+        color: #6c757d;
+        max-width: 650px;
+        font-size: 16px;
+    }
+
+    .wishlist-count {
+        background: #e6f7f4;
+        color: #087f8c;
+        padding: 9px 18px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    /* Wishlist Card */
+
+    .wishlist-card {
+        background: #fff;
+        border: none;
+        border-radius: 22px;
+        overflow: hidden;
+        height: 100%;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, .06);
+        transition: all .3s ease;
+    }
+
+    .wishlist-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, .11);
+    }
+
+    .wishlist-image-wrapper {
+        height: 250px;
+        position: relative;
+        overflow: hidden;
+        background: #e9ecef;
+    }
+
+    .wishlist-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .5s ease;
+    }
+
+    .wishlist-card:hover .wishlist-image {
+        transform: scale(1.06);
+    }
+
+    .image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, .15),
+            transparent 45%,
+            rgba(0, 0, 0, .35)
+        );
+    }
+
+    .wishlist-heart {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 43px;
+        height: 43px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #dc3545;
+        font-size: 19px;
+        text-decoration: none;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, .15);
+        transition: .25s;
+        z-index: 2;
+    }
+
+    .wishlist-heart:hover {
+        background: #dc3545;
+        color: white;
+        transform: scale(1.08);
+    }
+
+    .destination-badge {
+        position: absolute;
+        left: 15px;
+        bottom: 15px;
+        background: rgba(0, 0, 0, .65);
+        color: white;
+        padding: 7px 13px;
+        border-radius: 50px;
+        font-size: 12px;
+        backdrop-filter: blur(8px);
+    }
+
+    .wishlist-body {
+        padding: 25px;
+    }
+
+    .package-title {
+        font-size: 20px;
+        font-weight: 750;
+        color: #17211f;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 7px;
+    }
+
+    .package-title:hover {
+        color: #00a896;
+    }
+
+    .package-location {
+        color: #7a8583;
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .package-location i {
+        color: #00a896;
+    }
+
+    .package-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+
+    .meta-item {
+        background: #f5f7f7;
+        border-radius: 50px;
+        padding: 7px 11px;
+        color: #66716f;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .meta-item i {
+        color: #00a896;
+        margin-right: 4px;
+    }
+
+    .package-footer {
+        border-top: 1px solid #edf0ef;
+        padding-top: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .price-label {
+        display: block;
+        color: #89918f;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .8px;
+    }
+
+    .package-price {
+        color: #087f8c;
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+    .book-btn {
+        background: #087f8c;
+        color: white;
+        border: none;
+        padding: 10px 19px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: .25s;
+    }
+
+    .book-btn:hover {
+        background: #006f79;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Empty Wishlist */
+
+    .empty-wishlist {
+        background: white;
+        border-radius: 28px;
+        padding: 80px 30px;
+        text-align: center;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, .05);
+    }
+
+    .empty-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #fff0f1;
+        color: #dc3545;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 42px;
+    }
+
+    .empty-wishlist h3 {
+        font-weight: 800;
+        color: #17211f;
+    }
+
+    .empty-wishlist p {
+        max-width: 500px;
+        margin: 10px auto 25px;
+        color: #747d7b;
+    }
+
+    .explore-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #087f8c, #00a896);
+        color: white;
+        text-decoration: none;
+        padding: 13px 25px;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: .25s;
+    }
+
+    .explore-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 168, 150, .25);
+    }
+
+    /* Responsive */
+
+    @media (max-width: 768px) {
+
+        .wishlist-page {
+            padding: 40px 0 60px;
+        }
+
+        .wishlist-header {
+            margin-bottom: 28px;
+        }
+
+        .wishlist-image-wrapper {
+            height: 220px;
+        }
+
+        .wishlist-body {
+            padding: 20px;
+        }
+
+        .package-footer {
+            align-items: flex-end;
+        }
+    }
+</style>
+
+
+<section class="wishlist-page">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="wishlist-header">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
+
+                <div>
+
+                    <span class="eyebrow">
+                        Your saved journeys
+                    </span>
+
+                    <h1>
+                        My Wishlist ❤️
+                    </h1>
+
+                    <p class="mb-0">
+                        Keep track of the destinations and experiences
+                        you want to explore next.
+                    </p>
+
+                </div>
+
+                {% if wishlists %}
+                    <span class="wishlist-count">
+                        <i class="bi bi-heart-fill me-1"></i>
+                        {{ wishlists|length }} Saved
+                    </span>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        {% if wishlists %}
+
+            <!-- WISHLIST GRID -->
+
+            <div class="row g-4">
+
+                {% for item in wishlists %}
+
+                    <div class="col-md-6 col-xl-4">
+
+                        <div class="wishlist-card">
+
+                            <!-- IMAGE -->
+
+                            <div class="wishlist-image-wrapper">
+
+                                {% if item.package.featured_image %}
+
+                                    <img
+                                        src="{{ item.package.featured_image.url }}"
+                                        class="wishlist-image"
+                                        alt="{{ item.package.title }}"
+                                    >
+
+                                {% elif item.package.destination.image %}
+
+                                    <img
+                                        src="{{ item.package.destination.image.url }}"
+                                        class="wishlist-image"
+                                        alt="{{ item.package.title }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="d-flex align-items-center justify-content-center h-100">
+                                        <i class="bi bi-image text-secondary display-4"></i>
+                                    </div>
+
+                                {% endif %}
+
+
+                                <div class="image-overlay"></div>
+
+
+                                <!-- REMOVE -->
+
+                                <a
+                                    href="{% url 'remove_from_wishlist' item.package.id %}"
+                                    class="wishlist-heart"
+                                    title="Remove from wishlist"
+                                    onclick="return confirm('Remove this package from your wishlist?');"
+                                >
+                                    <i class="bi bi-heart-fill"></i>
+                                </a>
+
+
+                                <!-- DESTINATION -->
+
+                                {% if item.package.destination %}
+
+                                    <span class="destination-badge">
+
+                                        <i class="bi bi-geo-alt-fill me-1"></i>
+
+                                        {{ item.package.destination.name }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- CONTENT -->
+
+                            <div class="wishlist-body">
+
+                                <a
+                                    href="{% url 'package_detail' item.package.id %}"
+                                    class="package-title"
+                                >
+                                    {{ item.package.title }}
+                                </a>
+
+
+                                {% if item.package.destination %}
+
+                                    <div class="package-location">
+
+                                        <i class="bi bi-geo-alt me-1"></i>
+
+                                        {{ item.package.destination.location|default:"Explore the world" }}
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <!-- META -->
+
+                                <div class="package-meta">
+
+                                    {% if item.package.duration %}
+
+                                        <span class="meta-item">
+
+                                            <i class="bi bi-clock"></i>
+
+                                            {{ item.package.duration }}
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if item.package.difficulty %}
+
+                                        <span class="meta-item">
+
+                                            <i class="bi bi-person-walking"></i>
+
+                                            {{ item.package.difficulty }}
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if item.package.max_people %}
+
+                                        <span class="meta-item">
+
+                                            <i class="bi bi-people"></i>
+
+                                            {{ item.package.max_people }} people
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- FOOTER -->
+
+                                <div class="package-footer">
+
+                                    <div>
+
+                                        <span class="price-label">
+                                            Starting from
+                                        </span>
+
+                                        <span class="package-price">
+
+                                            {% if item.package.price %}
+                                                ${{ item.package.price }}
+                                            {% else %}
+                                                Contact us
+                                            {% endif %}
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <a
+                                        href="{% url 'package_detail' item.package.id %}"
+                                        class="book-btn"
+                                    >
+                                        View Package
+                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-wishlist">
+
+                <div class="empty-icon">
+
+                    <i class="bi bi-heart"></i>
+
+                </div>
+
+
+                <h3>
+                    Your wishlist is waiting
+                </h3>
+
+
+                <p>
+                    You haven't saved any adventures yet.
+                    Discover beautiful destinations and save the
+                    experiences you'd love to explore.
+                </p>
+
+
+                <a
+                    href="{% url 'package' %}"
+                    class="explore-btn"
+                >
+                    <i class="bi bi-compass"></i>
+                    Explore Packages
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

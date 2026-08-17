@@ -72,13 +72,7 @@
 
 
                     <!-- SAVE -->
-                    <button
-                        class="save-button"
-                        type="button"
-                        aria-label="Save package"
-                    >
-                        <i class="bi bi-heart"></i>
-                    </button>
+                   
 
                 </a>
 
@@ -102,13 +96,43 @@
                             </strong>
 
                         </div>
-                        <a
-    href="{% url 'add_to_wishlist' package.id %}"
-    class="btn btn-light rounded-circle shadow-sm"
-    title="Add to wishlist"
->
-    <i class="bi bi-heart"></i>
-</a>
+
+                        {% if user.is_authenticated %}
+
+    {% if package.id in wishlist_package_ids %}
+
+        <a
+            href="{% url 'add_to_wishlist' package.id %}"
+            class="wishlist-btn wishlist-active"
+            title="Remove from wishlist"
+        >
+            <i class="bi bi-heart-fill"></i>
+        </a>
+
+    {% else %}
+
+        <a
+            href="{% url 'add_to_wishlist' package.id %}"
+            class="wishlist-btn"
+            title="Add to wishlist"
+        >
+            <i class="bi bi-heart"></i>
+        </a>
+
+    {% endif %}
+
+{% else %}
+
+    <a
+        href="{% url 'login' %}?next={{ request.path }}"
+        class="wishlist-btn"
+        title="Login to add to wishlist"
+    >
+        <i class="bi bi-heart"></i>
+    </a>
+
+{% endif %}
+   
 
                     </div>
 
@@ -689,6 +713,46 @@
         height: 280px;
     }
 
+}
+.wishlist-btn {
+    width: 44px;
+    height: 44px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+    color: #68736f;
+
+    text-decoration: none;
+
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.10);
+
+    transition: all 0.25s ease;
+}
+
+.wishlist-btn i {
+    font-size: 18px;
+}
+
+.wishlist-btn:hover {
+    color: #dc3545;
+    background: #fff5f6;
+    transform: scale(1.08);
+}
+
+.wishlist-active {
+    background: #fff0f1;
+    color: #dc3545;
+}
+
+.wishlist-active:hover {
+    background: #ffe3e6;
+    color: #dc3545;
+    transform: scale(1.08);
 }
 
 </style>

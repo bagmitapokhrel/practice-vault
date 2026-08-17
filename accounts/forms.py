@@ -4,6 +4,8 @@ from crispy_forms.layout import Submit
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+from .models import Profile
+
 class RegisterForm(UserCreationForm):
 
     first_name = forms.CharField(
@@ -42,3 +44,37 @@ class RegisterForm(UserCreationForm):
                     "class": "form-control rounded-3",
                     "placeholder": field.label,
                 })
+
+
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+
+        fields = [
+            "profile_picture",
+            "phone",
+            "location",
+        ]
+
+        widgets = {
+            "profile_picture": forms.ClearableFileInput(
+                attrs={
+                    "class": "form-control"
+                }
+            ),
+            "phone": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "+977 98XXXXXXXX"
+                }
+            ),
+
+            "location": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Kathmandu, Nepal"
+                }
+            ),
+        }

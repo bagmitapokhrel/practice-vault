@@ -181,7 +181,7 @@
 
                 <p class="text-muted leading-relaxed mb-4">
 
-                    {{ package.destination.description|truncatechars:200 }}
+                    {{ package.destination.description|truncatechars:200|safe }}
 
                 </p>
 
@@ -348,7 +348,7 @@
 
                             {% if package.price %}
 
-                                Rs. {{ package.price }}
+                                $ {{ package.price }}
 
                             {% else %}
 
@@ -615,7 +615,7 @@
                         class="text-muted leading-relaxed mb-4"
                     >
 
-                        {{ package.destination.description }}
+                        {{ package.destination.description|safe }}
 
                     </p>
 
@@ -746,7 +746,7 @@
                                         class="fw-bold text-emerald mb-0"
                                     >
 
-                                        Rs. {{ package.price }}
+                                        $ {{ package.price }}
 
                                     </h3>
 
@@ -946,7 +946,7 @@
 
                                     <span class="fw-semibold">
 
-                                        Rs.
+                                        $
                                         {{ package.price }}
 
                                     </span>
@@ -992,7 +992,7 @@
                                         class="fs-4 text-emerald"
                                     >
 
-                                        Rs.
+                                        $
 
                                         <span id="totalPrice">
                                             {{ package.price }}
@@ -1017,7 +1017,7 @@
                                     class="bi bi-shield-lock me-1"
                                 ></i>
 
-                                Proceed to Checkout
+                                Secure Booking
 
                             </button>
 

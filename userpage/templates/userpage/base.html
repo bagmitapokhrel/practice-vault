@@ -172,18 +172,217 @@
 
     </div>
 </form>
-                <ul class="navbar-nav align-items-lg-center gap-lg-4 mb-3 mb-lg-0 me-lg-4">
-                    <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'destination' %}">Destination</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'package' %}">Packages</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'tour' %}">Tours</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'review' %}">Reviews</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'gear_checklist' %}">Gear Checklist</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'travel_map' %}">Travel Map</a></li>
-                </ul>
+               <ul class="navbar-nav align-items-lg-center gap-lg-2 mb-3 mb-lg-0 me-lg-3">
+
+    <!-- HOME -->
+    <li class="nav-item">
+        <a class="nav-link nav-link-lux active" href="{% url 'index' %}">
+            <i class="bi bi-house-door me-1"></i>
+            Home
+        </a>
+    </li>
+
+
+    <!-- ABOUT -->
+    <li class="nav-item">
+        <a class="nav-link nav-link-lux" href="{% url 'about' %}">
+            About
+        </a>
+    </li>
+
+
+    <!-- EXPLORE DROPDOWN -->
+    <li class="nav-item dropdown">
+
+        <a
+            class="nav-link nav-link-lux dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            <i class="bi bi-compass me-1"></i>
+            Explore
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end explore-menu">
+
+            <li>
+                <h6 class="dropdown-header">
+                    Explore the World
+                </h6>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'destination' %}">
+                    <span class="menu-icon destination-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </span>
+
+                    <span>
+                        <strong>Destinations</strong>
+                        <small>Discover amazing places</small>
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'package' %}">
+                    <span class="menu-icon package-icon">
+                        <i class="bi bi-map"></i>
+                    </span>
+
+                    <span>
+                        <strong>Travel Packages</strong>
+                        <small>Find your perfect trip</small>
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'tour' %}">
+                    <span class="menu-icon tour-icon">
+                        <i class="bi bi-signpost-2"></i>
+                    </span>
+
+                    <span>
+                        <strong>Tours</strong>
+                        <small>Guided travel experiences</small>
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'gallery' %}">
+                    <span class="menu-icon gallery-icon">
+                        <i class="bi bi-images"></i>
+                    </span>
+
+                    <span>
+                        <strong>Gallery</strong>
+                        <small>Travel inspiration</small>
+                    </span>
+                </a>
+            </li>
+
+        </ul>
+
+    </li>
+
+
+    <!-- PLAN YOUR TRIP -->
+    <li class="nav-item dropdown">
+
+        <a
+            class="nav-link nav-link-lux dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            <i class="bi bi-backpack me-1"></i>
+            Plan
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end explore-menu">
+
+            <li>
+                <h6 class="dropdown-header">
+                    Plan Your Adventure
+                </h6>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'gear_checklist' %}">
+
+                    <span class="menu-icon gear-icon">
+                        <i class="bi bi-backpack"></i>
+                    </span>
+
+                    <span>
+                        <strong>Gear Checklist</strong>
+                        <small>Prepare for your adventure</small>
+                    </span>
+
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'travel_map' %}">
+
+                    <span class="menu-icon map-icon">
+                        <i class="bi bi-map"></i>
+                    </span>
+
+                    <span>
+                        <strong>Travel Map</strong>
+                        <small>Explore destinations on the map</small>
+                    </span>
+
+                </a>
+            </li>
+
+        </ul>
+
+    </li>
+
+
+    <!-- COMMUNITY -->
+    <li class="nav-item dropdown">
+
+        <a
+            class="nav-link nav-link-lux dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            Community
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end explore-menu">
+
+            <li>
+                <h6 class="dropdown-header">
+                    Travel Community
+                </h6>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'review' %}">
+
+                    <span class="menu-icon review-icon">
+                        <i class="bi bi-star"></i>
+                    </span>
+
+                    <span>
+                        <strong>Reviews</strong>
+                        <small>Read traveler experiences</small>
+                    </span>
+
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="{% url 'contact' %}">
+
+                    <span class="menu-icon contact-icon">
+                        <i class="bi bi-chat-dots"></i>
+                    </span>
+
+                    <span>
+                        <strong>Contact Us</strong>
+                        <small>Talk with our travel team</small>
+                    </span>
+
+                </a>
+            </li>
+
+        </ul>
+
+    </li>
+
+</ul>
                 
                 <div class="d-flex gap-2 ms-lg-2">
                     {% if user.is_authenticated %}
@@ -202,7 +401,7 @@
     {% if messages %}
         <div class="container position-fixed top-0 start-50 translate-middle-x z-3 mt-5 pt-4" style="max-width: 600px;">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show bg-white border text-dark shadow-sm rounded-4" role="alert">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show bg-white border text-dark shadow-sm rounded-4 mt-5" role="alert">
                     <i class="bi bi-info-circle me-2 text-emerald"></i>{{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>

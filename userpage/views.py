@@ -49,11 +49,30 @@ def search(request):
     )
 
 def package(request):
+
     packages = Package.objects.all()
-    context = {
-        'packages': packages,
-    }
-    return render(request, 'userpage/packages.html', context)
+
+    wishlist_package_ids = set()
+
+    if request.user.is_authenticated:
+
+        wishlist_package_ids = set(
+            Wishlist.objects.filter(
+                user=request.user
+            ).values_list(
+                "package_id",
+                flat=True
+            )
+        )
+
+    return render(
+        request,
+        "userpage/packages.html",
+        {
+            "packages": packages,
+            "wishlist_package_ids": wishlist_package_ids
+        }
+    )
 
 def package_detail_view(request, package_id):
     package = get_object_or_404(Package, id=package_id)
@@ -337,6 +356,8 @@ def travel_map(request):
         }
     )
 
+
+
 @login_required
 def add_to_wishlist(request, package_id):
 
@@ -345,10 +366,21 @@ def add_to_wishlist(request, package_id):
         id=package_id
     )
 
-    Wishlist.objects.get_or_create(
+    wishlist_item = Wishlist.objects.filter(
         user=request.user,
         package=package
-    )
+    ).first()
+
+    if wishlist_item:
+        # Already in wishlist → remove it
+        wishlist_item.delete()
+
+    else:
+        # Not in wishlist → add it
+        Wishlist.objects.create(
+            user=request.user,
+            package=package
+        )
 
     return redirect(
         request.META.get(
@@ -356,7 +388,6 @@ def add_to_wishlist(request, package_id):
             "package"
         )
     )
-
 
 @login_required
 def remove_from_wishlist(request, package_id):
