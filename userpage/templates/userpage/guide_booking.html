@@ -1,0 +1,325 @@
+{% extends "userpage/base.html" %}
+
+{% block title %}
+Book {{ guide.name }} | Aetheria Journey
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    .booking-page {
+        background: #f5f8f7;
+        min-height: 100vh;
+        padding: 70px 0;
+    }
+
+    .booking-wrapper {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .booking-card {
+        background: #ffffff;
+        border: 1px solid #e4ece9;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 20px 55px rgba(20,50,45,.08);
+    }
+
+    .booking-header {
+        padding: 30px;
+        background: linear-gradient(
+            135deg,
+            #075f69,
+            #00a896
+        );
+        color: white;
+    }
+
+    .booking-header h2 {
+        font-weight: 800;
+    }
+
+    .booking-body {
+        padding: 35px;
+    }
+
+    .form-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #52605b;
+    }
+
+    .form-control {
+        border: 1px solid #dfe7e4;
+        border-radius: 13px;
+        padding: 12px 14px;
+    }
+
+    .form-control:focus {
+        border-color: #087f8c;
+        box-shadow: 0 0 0 3px rgba(8,127,140,.08);
+    }
+
+    .summary {
+        background: #f8faf9;
+        border-radius: 20px;
+        padding: 25px;
+    }
+
+    .guide-name {
+        font-weight: 800;
+        color: #26322f;
+    }
+
+    .rate {
+        font-size: 25px;
+        font-weight: 800;
+        color: #087f8c;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(135deg,#087f8c,#00a896);
+        color: white;
+        font-weight: 700;
+    }
+
+</style>
+
+
+<section class="booking-page">
+
+    <div class="container">
+
+        <div class="booking-wrapper">
+
+            <div class="booking-card">
+
+                <div class="booking-header">
+
+                    <small class="text-white-50">
+                        GUIDE BOOKING
+                    </small>
+
+                    <h2 class="mt-2 mb-0">
+                        Plan Your Guided Journey
+                    </h2>
+
+                    <p class="mb-0 mt-2 text-white-50">
+                        Reserve your local expert for your adventure.
+                    </p>
+
+                </div>
+
+
+                <div class="booking-body">
+
+                    <div class="row g-5">
+
+                        <!-- FORM -->
+
+                        <div class="col-lg-7">
+
+                            <form method="POST">
+
+                                {% csrf_token %}
+
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            Start Date
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            name="start_date"
+                                            class="form-control"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            End Date
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            name="end_date"
+                                            class="form-control"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-12">
+
+                                        <label class="form-label">
+                                            Number of Travelers
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="number_of_people"
+                                            class="form-control"
+                                            min="1"
+                                            value="1"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-12">
+
+                                        <label class="form-label">
+                                            Message / Special Requirements
+                                        </label>
+
+                                        <textarea
+                                            name="message"
+                                            rows="5"
+                                            class="form-control"
+                                            placeholder="Tell your guide about your plans..."
+                                        ></textarea>
+
+                                    </div>
+
+
+                                    <div class="col-12 mt-3">
+
+                                        <button
+                                            type="submit"
+                                            class="submit-btn"
+                                        >
+
+                                            <i class="bi bi-shield-check me-2"></i>
+
+                                            Send Booking Request
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+
+                        <!-- SUMMARY -->
+
+                        <div class="col-lg-5">
+
+                            <div class="summary">
+
+                                <small class="text-muted">
+                                    YOUR GUIDE
+                                </small>
+
+
+                                <h4 class="guide-name mt-2">
+
+                                    {{ guide.name }}
+
+                                </h4>
+
+
+                                <p class="text-muted small">
+
+                                    <i class="bi bi-geo-alt me-1"></i>
+
+                                    {{ guide.location }}
+
+                                </p>
+
+
+                                <hr>
+
+
+                                <div class="d-flex justify-content-between">
+
+                                    <span class="text-muted">
+                                        Daily rate
+                                    </span>
+
+                                    <strong class="rate">
+
+                                        ${{ guide.daily_rate }}
+
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-between mt-3">
+
+                                    <span class="text-muted">
+                                        Experience
+                                    </span>
+
+                                    <strong>
+                                        {{ guide.get_experience_display }}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-between mt-3">
+
+                                    <span class="text-muted">
+                                        Rating
+                                    </span>
+
+                                    <strong class="text-warning">
+
+                                        <i class="bi bi-star-fill"></i>
+
+                                        {{ guide.rating }}
+
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="alert alert-light border mt-4 small">
+
+                                    <i class="bi bi-info-circle me-1"></i>
+
+                                    Your booking will remain
+                                    <strong>Pending</strong> until
+                                    confirmed by our travel team.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

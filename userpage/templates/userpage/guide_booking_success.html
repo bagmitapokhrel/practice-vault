@@ -1,0 +1,182 @@
+{% extends "userpage/base.html" %}
+
+{% block title %}
+Booking Request Sent | Aetheria Journey
+{% endblock %}
+
+
+{% block content %}
+
+<section
+    style="
+        min-height:80vh;
+        background:#f5f8f7;
+        display:flex;
+        align-items:center;
+        padding:60px 0;
+    "
+>
+
+    <div class="container">
+
+        <div
+            class="text-center bg-white mx-auto p-5 rounded-5 shadow-sm"
+            style="max-width:700px;"
+        >
+
+            <div
+                class="mx-auto mb-4 rounded-circle d-flex align-items-center justify-content-center"
+                style="
+                    width:85px;
+                    height:85px;
+                    background:#e8f8f4;
+                    color:#087f8c;
+                    font-size:40px;
+                "
+            >
+
+                <i class="bi bi-check-lg"></i>
+
+            </div>
+
+
+            <span
+                class="badge rounded-pill px-3 py-2"
+                style="
+                    background:#eef8f6;
+                    color:#087f8c;
+                "
+            >
+
+                Booking Request Received
+
+            </span>
+
+
+            <h1 class="fw-bold mt-4">
+
+                You're Almost Ready to Go!
+
+            </h1>
+
+
+            <p class="text-muted mt-3">
+
+                Your request to book
+
+                <strong>
+                    {{ booking.guide.name }}
+                </strong>
+
+                has been successfully submitted.
+
+            </p>
+
+
+            <div class="bg-light rounded-4 p-4 mt-4 text-start">
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span class="text-muted">
+                        Guide
+                    </span>
+
+                    <strong>
+                        {{ booking.guide.name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span class="text-muted">
+                        Dates
+                    </span>
+
+                    <strong>
+
+                        {{ booking.start_date }}
+
+                        →
+
+                        {{ booking.end_date }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span class="text-muted">
+                        Travelers
+                    </span>
+
+                    <strong>
+                        {{ booking.number_of_people }}
+                    </strong>
+
+                </div>
+
+
+                <div class="d-flex justify-content-between">
+
+                    <span class="text-muted">
+                        Estimated Total
+                    </span>
+
+                    <strong class="text-success">
+
+                        ${{ booking.total_amount }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="mt-4">
+
+                <span class="badge bg-warning-subtle text-warning-emphasis">
+
+                    <i class="bi bi-hourglass-split me-1"></i>
+
+                    Pending Confirmation
+
+                </span>
+
+            </div>
+
+
+            <div class="mt-4">
+
+                <a
+                    href="{% url 'dashboard' %}"
+                    class="btn btn-success rounded-pill px-4"
+                >
+
+                    Go to Dashboard
+
+                </a>
+
+
+                <a
+                    href="{% url 'guides' %}"
+                    class="btn btn-outline-secondary rounded-pill px-4 ms-2"
+                >
+
+                    Browse Guides
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

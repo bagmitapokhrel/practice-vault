@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review, Payment, GearItem, Wishlist
+from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review, Payment, GearItem, Wishlist, Guide, GuideBooking
 from .forms import BookingForm, GearChecklistForm
 from django.contrib.auth.decorators import login_required
 
@@ -419,4 +419,201 @@ def wishlist(request):
             "wishlists": wishlists
         }
     )
+
+
+def trip_builder_success(request):
+
+    return render(
+        request,
+        "userpage/trip_builder_success.html"
+    )
+
+def guides(request):
+
+    guides = Guide.objects.filter(
+        available=True
+    ).order_by(
+        "-verified",
+        "-rating"
+    )
+
+    context = {
+        "guides": guides,
+    }
+
+    return render(
+        request,
+        "userpage/guides.html",
+        context
+    )
+
+def guide_detail(request, guide_id):
+
+    guide = get_object_or_404(
+        Guide,
+        id=guide_id
+    )
+
+    context = {
+        "guide": guide,
+    }
+
+    return render(
+        request,
+        "userpage/guide_detail.html",
+        context
+    )
+
+@login_required
+def guide_booking(request, guide_id):
+
+    guide = get_object_or_404(
+        Guide,
+        id=guide_id,
+        available=True
+    )
+
+    if request.method == "POST":
+
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+        number_of_people = request.POST.get(
+            "number_of_people"
+        )
+        message = request.POST.get("message")
+
+        if not start_date or not end_date:
+
+            messages.error(
+                request,
+                "Please select both start and end dates."
+            )
+
+            return redirect(
+                "guide_booking",
+                guide_id=guide.id
+            )
+
+        try:
+
+            start = datetime.strptime(
+                start_date,
+                "%Y-%m-%d"
+            ).date()
+
+            end = datetime.strptime(
+                end_date,
+                "%Y-%m-%d"
+            ).date()
+
+        except ValueError:
+
+            messages.error(
+                request,
+                "Invalid date selected."
+            )
+
+            return redirect(
+                "guide_booking",
+                guide_id=guide.id
+            )
+
+        if start < timezone.localdate():
+
+            messages.error(
+                request,
+                "Start date cannot be in the past."
+            )
+
+            return redirect(
+                "guide_booking",
+                guide_id=guide.id
+            )
+
+        if end < start:
+
+            messages.error(
+                request,
+                "End date cannot be before the start date."
+            )
+
+            return redirect(
+                "guide_booking",
+                guide_id=guide.id
+            )
+
+        try:
+            people = int(number_of_people)
+        except (TypeError, ValueError):
+
+            people = 1
+
+        if people < 1:
+            people = 1
+
+        number_of_days = (
+            end - start
+        ).days + 1
+
+        total_amount = (
+            guide.daily_rate *
+            number_of_days
+        )
+
+        booking = GuideBooking.objects.create(
+
+            user=request.user,
+
+            guide=guide,
+
+            start_date=start,
+
+            end_date=end,
+
+            number_of_people=people,
+
+            message=message,
+
+            total_amount=total_amount,
+
+            status="Pending"
+        )
+
+        messages.success(
+            request,
+            "Your guide booking request has been submitted."
+        )
+
+        return redirect(
+            "guide_booking_success",
+            booking_id=booking.id
+        )
+
+    context = {
+        "guide": guide,
+    }
+
+    return render(
+        request,
+        "userpage/guide_booking.html",
+        context
+    )
+
+@login_required
+def guide_booking_success(request, booking_id):
+
+    booking = get_object_or_404(
+        GuideBooking,
+        id=booking_id,
+        user=request.user
+    )
+
+    return render(
+        request,
+        "userpage/guide_booking_success.html",
+        {
+            "booking": booking
+        }
+    )
+
 

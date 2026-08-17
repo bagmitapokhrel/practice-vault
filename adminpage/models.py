@@ -324,6 +324,8 @@ class Wishlist(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.package.title}"
 
+
+
 class TripInquiry(models.Model):
 
     FITNESS_CHOICES = [
@@ -404,3 +406,153 @@ class TripInquiry(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.destination}"
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+
+class Guide(models.Model):
+
+    SPECIALIZATION_CHOICES = [
+        ("trekking", "Trekking"),
+        ("mountaineering", "Mountaineering"),
+        ("cultural", "Cultural Tours"),
+        ("adventure", "Adventure"),
+        ("wildlife", "Wildlife"),
+        ("city", "City Tours"),
+    ]
+
+    EXPERIENCE_CHOICES = [
+        ("1-3", "1–3 Years"),
+        ("4-7", "4–7 Years"),
+        ("8-12", "8–12 Years"),
+        ("13+", "13+ Years"),
+    ]
+
+    name = models.CharField(max_length=150)
+
+    profile_image = models.ImageField(
+        upload_to="guides/",
+        blank=True,
+        null=True
+    )
+
+    location = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    bio = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    experience = models.CharField(
+        max_length=20,
+        choices=EXPERIENCE_CHOICES,
+        default="1-3"
+    )
+
+    specialization = models.CharField(
+        max_length=50,
+        choices=SPECIALIZATION_CHOICES,
+        default="trekking"
+    )
+
+    languages = models.CharField(
+        max_length=300,
+        help_text="Example: Nepali, English, Hindi"
+    )
+
+    daily_rate = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        default=5.0
+    )
+
+    total_reviews = models.PositiveIntegerField(
+        default=0
+    )
+
+    verified = models.BooleanField(
+        default=False
+    )
+
+    available = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return self.name
+
+class GuideBooking(models.Model):
+
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Confirmed", "Confirmed"),
+        ("Cancelled", "Cancelled"),
+        ("Completed", "Completed"),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="guide_bookings"
+    )
+
+    guide = models.ForeignKey(
+        Guide,
+        on_delete=models.CASCADE,
+        related_name="bookings"
+    )
+
+    start_date = models.DateField()
+
+    end_date = models.DateField()
+
+    number_of_people = models.PositiveIntegerField(
+        default=1
+    )
+
+    message = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    total_amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="Pending"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.user.username} - {self.guide.name}"

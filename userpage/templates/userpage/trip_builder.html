@@ -1,0 +1,788 @@
+{% extends "userpage/base.html" %}
+
+{% block title %}Build Your Journey | Aetheria Journey{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .trip-builder-page {
+        background: #f5f8f7;
+        min-height: 100vh;
+        padding: 60px 0 80px;
+    }
+
+    .trip-container {
+        max-width: 1100px;
+    }
+
+    /* HERO */
+
+    .trip-hero {
+        background: linear-gradient(
+            135deg,
+            #075f69,
+            #087f8c 50%,
+            #00a896
+        );
+        border-radius: 28px;
+        padding: 55px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 50px rgba(0, 120, 110, .18);
+    }
+
+    .trip-hero::before {
+        content: "";
+        position: absolute;
+        width: 330px;
+        height: 330px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.07);
+        right: -100px;
+        top: -150px;
+    }
+
+    .trip-hero::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.06);
+        left: 45%;
+        bottom: -160px;
+    }
+
+    .trip-hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+    }
+
+    .trip-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255,255,255,.14);
+        border: 1px solid rgba(255,255,255,.18);
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+
+    .trip-hero h1 {
+        font-size: 40px;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    .trip-hero p {
+        color: rgba(255,255,255,.82);
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .trip-hero-icon {
+        position: absolute;
+        right: 55px;
+        bottom: 25px;
+        font-size: 110px;
+        opacity: .12;
+        transform: rotate(-12deg);
+    }
+
+    /* MAIN CARD */
+
+    .builder-card {
+        background: white;
+        border: 1px solid #e5ece9;
+        border-radius: 25px;
+        box-shadow: 0 12px 40px rgba(20,50,45,.06);
+        overflow: hidden;
+    }
+
+    .builder-header {
+        padding: 25px 30px;
+        border-bottom: 1px solid #edf1ef;
+    }
+
+    .builder-header h4 {
+        font-weight: 800;
+        color: #17211f;
+        margin-bottom: 4px;
+    }
+
+    .builder-header p {
+        color: #899490;
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .builder-body {
+        padding: 35px;
+    }
+
+    /* SECTION */
+
+    .form-section {
+        margin-bottom: 35px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .section-number {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 11px;
+        background: #e8f7f4;
+        color: #087f8c;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .section-heading h5 {
+        font-weight: 800;
+        color: #26322f;
+        margin: 0;
+    }
+
+    .section-heading small {
+        display: block;
+        color: #8b9692;
+        font-size: 12px;
+        margin-top: 2px;
+    }
+
+    /* FORM */
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #44514d;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        border: 1px solid #dfe7e4;
+        border-radius: 13px;
+        padding: 12px 15px;
+        min-height: 48px;
+        font-size: 14px;
+        color: #34413d;
+        background: #fff;
+        transition: .2s;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #00a896;
+        box-shadow: 0 0 0 4px rgba(0,168,150,.10);
+    }
+
+    textarea.form-control {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .field-help {
+        color: #929d99;
+        font-size: 11px;
+        margin-top: 6px;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    /* INFO BOX */
+
+    .planner-info {
+        background: #f0f9f7;
+        border: 1px solid #d9efeb;
+        border-radius: 17px;
+        padding: 18px;
+        display: flex;
+        gap: 13px;
+        margin-bottom: 30px;
+    }
+
+    .planner-info-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: white;
+        color: #087f8c;
+        box-shadow: 0 4px 12px rgba(0,0,0,.04);
+    }
+
+    .planner-info strong {
+        display: block;
+        color: #26322f;
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
+
+    .planner-info p {
+        color: #75817d;
+        font-size: 12px;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* SUBMIT */
+
+    .submit-area {
+        border-top: 1px solid #edf1ef;
+        margin-top: 35px;
+        padding-top: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .submit-note {
+        color: #899490;
+        font-size: 12px;
+    }
+
+    .submit-note i {
+        color: #00a896;
+    }
+
+    .build-btn {
+        border: none;
+        border-radius: 50px;
+        padding: 14px 30px;
+        background: linear-gradient(
+            135deg,
+            #087f8c,
+            #00a896
+        );
+        color: white;
+        font-weight: 800;
+        font-size: 13px;
+        box-shadow: 0 10px 25px rgba(0,168,150,.18);
+        transition: .25s;
+    }
+
+    .build-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(0,168,150,.25);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 768px) {
+
+        .trip-builder-page {
+            padding: 30px 0 50px;
+        }
+
+        .trip-hero {
+            padding: 35px 25px;
+            border-radius: 20px;
+        }
+
+        .trip-hero h1 {
+            font-size: 29px;
+        }
+
+        .trip-hero-icon {
+            display: none;
+        }
+
+        .builder-body {
+            padding: 25px 20px;
+        }
+
+        .submit-area {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .build-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<section class="trip-builder-page">
+
+    <div class="container trip-container">
+
+        <!-- HERO -->
+
+        <div class="trip-hero">
+
+            <div class="trip-hero-content">
+
+                <div class="trip-badge">
+
+                    <i class="bi bi-stars"></i>
+
+                    Personalized Journey Planner
+
+                </div>
+
+                <h1>
+                    Build Your Perfect Journey
+                </h1>
+
+                <p>
+                    Tell us what kind of adventure you're looking for.
+                    Share your destination, dates, group size, budget,
+                    and travel preferences — we'll help turn your ideas
+                    into a personalized travel experience.
+                </p>
+
+            </div>
+
+            <i class="bi bi-map trip-hero-icon"></i>
+
+        </div>
+
+
+        <!-- BUILDER -->
+
+        <div class="builder-card">
+
+            <div class="builder-header">
+
+                <h4>
+                    <i class="bi bi-compass me-2 text-success"></i>
+                    Customize Your Trip
+                </h4>
+
+                <p>
+                    Complete the details below to send us your travel inquiry.
+                </p>
+
+            </div>
+
+
+            <div class="builder-body">
+
+                <!-- INFO -->
+
+                <div class="planner-info">
+
+                    <div class="planner-info-icon">
+
+                        <i class="bi bi-lightbulb"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Not sure what to choose?
+                        </strong>
+
+                        <p>
+                            Don't worry. Give us your preferences and our
+                            travel team can help recommend a suitable route,
+                            package, and experience.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+
+                    <!-- SECTION 01 -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                01
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Destination & Region
+                                </h5>
+
+                                <small>
+                                    Where would you like to go?
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <div class="col-md-7">
+
+                                <label class="form-label">
+                                    Destination
+                                </label>
+
+                                {{ form.destination }}
+
+                                {% if form.destination.errors %}
+
+                                    <div class="error-message">
+                                        {{ form.destination.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="col-md-5">
+
+                                <label class="form-label">
+                                    Preferred Region
+                                </label>
+
+                                {{ form.preferred_region }}
+
+                                <div class="field-help">
+                                    Example: Everest, Annapurna, Pokhara
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SECTION 02 -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                02
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Dates & Duration
+                                </h5>
+
+                                <small>
+                                    When are you planning your adventure?
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Travel Date
+                                </label>
+
+                                {{ form.travel_date }}
+
+                                {% if form.travel_date.errors %}
+
+                                    <div class="error-message">
+                                        {{ form.travel_date.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Trip Duration
+                                </label>
+
+                                <div class="input-group">
+
+                                    {{ form.duration }}
+
+                                    <span class="input-group-text">
+                                        Days
+                                    </span>
+
+                                </div>
+
+                                {% if form.duration.errors %}
+
+                                    <div class="error-message">
+                                        {{ form.duration.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SECTION 03 -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                03
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Travelers & Fitness
+                                </h5>
+
+                                <small>
+                                    Help us understand your group.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Number of Travelers
+                                </label>
+
+                                {{ form.travelers }}
+
+                                {% if form.travelers.errors %}
+
+                                    <div class="error-message">
+                                        {{ form.travelers.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Fitness Level
+                                </label>
+
+                                {{ form.fitness_level }}
+
+                                {% if form.fitness_level.errors %}
+
+                                    <div class="error-message">
+                                        {{ form.fitness_level.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SECTION 04 -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                04
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Budget
+                                </h5>
+
+                                <small>
+                                    What's your approximate travel budget?
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Estimated Budget
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        $
+                                    </span>
+
+                                    {{ form.budget }}
+
+                                </div>
+
+                                {% if form.budget.errors %}
+
+                                    <div class="error-message">
+                                        {{ form.budget.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                                <div class="field-help">
+                                    Enter the approximate total budget for your group.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SECTION 05 -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                05
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    Special Requirements
+                                </h5>
+
+                                <small>
+                                    Tell us anything else we should know.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <label class="form-label">
+                                Special Requests
+                            </label>
+
+                            {{ form.special_requests }}
+
+                            {% if form.special_requests.errors %}
+
+                                <div class="error-message">
+                                    {{ form.special_requests.errors }}
+                                </div>
+
+                            {% endif %}
+
+                            <div class="field-help">
+                                Accommodation preferences, dietary requirements,
+                                accessibility needs, activities, or anything else.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+
+                    <div class="submit-area">
+
+                        <div class="submit-note">
+
+                            <i class="bi bi-shield-check me-1"></i>
+
+                            Your information is securely submitted to our travel team.
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="build-btn"
+                        >
+
+                            <i class="bi bi-magic me-2"></i>
+
+                            Create My Travel Plan
+
+                            <i class="bi bi-arrow-right ms-2"></i>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

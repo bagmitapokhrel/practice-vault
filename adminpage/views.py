@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import PackageForm, DestinationForm, TourForm, TravelPlanForm
+from .forms import PackageForm, DestinationForm, TourForm, TravelPlanForm, TripInquiryForm
 from django.contrib import messages
 from .models import Destination, Package, Booking, Tour
 from django.contrib.auth.models import User
@@ -314,6 +314,39 @@ def tour_list(request):
     return render(
         request,
         "adminpage/tour_list.html",
+        context
+    )
+
+
+
+@login_required
+def trip_builder(request):
+
+    if request.method == "POST":
+
+        form = TripInquiryForm(request.POST)
+
+        if form.is_valid():
+
+            trip = form.save(commit=False)
+
+            trip.user = request.user
+
+            trip.save()
+
+            return redirect("trip_builder_success")
+
+    else:
+
+        form = TripInquiryForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "userpage/trip_builder.html",
         context
     )
 
