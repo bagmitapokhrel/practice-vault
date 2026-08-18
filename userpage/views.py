@@ -3,21 +3,20 @@ from django.contrib import messages
 from adminpage.models import Gallery, Category, Destination, Package, Booking, Tour, Review, Payment, GearItem, Wishlist, Guide, GuideBooking
 from .forms import BookingForm, GearChecklistForm
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from datetime import datetime
 
 # Create your views here.
 def index(request):
-    packages = Package.objects.all()
-    categories = Category.objects.all()
     destinations = Destination.objects.all()
-    bookings = Booking.objects.all()
+    packages = Package.objects.all()
 
     context = {
-        'packages' : packages,
-        'categories': categories,
-        'destinations': destinations,
-        'bookings' : bookings,
+        "destinations": destinations,
+        "packages": packages,
     }
-    return render(request, 'userpage/index.html', context)
+
+    return render(request, "userpage/index.html", context)
 
 
 def search(request):
@@ -614,6 +613,13 @@ def guide_booking_success(request, booking_id):
         {
             "booking": booking
         }
+    )
+
+def travel_quiz(request):
+
+    return render(
+        request,
+        "userpage/travel_quiz.html"
     )
 
 

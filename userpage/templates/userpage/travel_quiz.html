@@ -1,0 +1,1547 @@
+{% extends "userpage/base.html" %}
+
+{% block title %}
+Discover Your Travel Soul | Aetheria Journey
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .quiz-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(
+                circle at 10% 10%,
+                rgba(0,168,150,.10),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 80%,
+                rgba(8,127,140,.10),
+                transparent 30%
+            ),
+            #f7faf9;
+
+        padding: 80px 0;
+    }
+
+    .quiz-wrapper {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .quiz-intro {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .quiz-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 8px 15px;
+        border-radius: 50px;
+
+        background: #e7f8f4;
+        color: #087f8c;
+
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .7px;
+        text-transform: uppercase;
+    }
+
+    .quiz-title {
+        font-size: clamp(38px, 6vw, 64px);
+        font-weight: 900;
+        color: #16221f;
+        margin-top: 20px;
+        margin-bottom: 15px;
+        letter-spacing: -2px;
+    }
+
+    .quiz-title span {
+        color: #087f8c;
+    }
+
+    .quiz-subtitle {
+        max-width: 620px;
+        margin: auto;
+        color: #778581;
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .quiz-card {
+        background: rgba(255,255,255,.92);
+        border: 1px solid #e6eeeb;
+        border-radius: 30px;
+
+        padding: 40px;
+
+        box-shadow:
+            0 25px 70px rgba(20,50,45,.08);
+    }
+
+    .progress-wrapper {
+        margin-bottom: 35px;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+
+        color: #7b8884;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .quiz-progress {
+        height: 7px;
+        background: #edf2f0;
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .quiz-progress-bar {
+        width: 16.66%;
+        height: 100%;
+
+        background:
+            linear-gradient(
+                90deg,
+                #087f8c,
+                #00a896
+            );
+
+        border-radius: inherit;
+
+        transition: width .4s ease;
+    }
+
+    .question {
+        display: none;
+        animation: fadeIn .35s ease;
+    }
+
+    .question.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    }
+
+    .question-number {
+        color: #087f8c;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .question-title {
+        font-size: 27px;
+        font-weight: 800;
+        color: #17211f;
+        margin-bottom: 25px;
+    }
+
+    .answers {
+        display: grid;
+        gap: 12px;
+    }
+
+    .answer {
+
+        position: relative;
+
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        padding: 17px;
+
+        border: 1px solid #e4ebe8;
+        border-radius: 17px;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+    }
+
+    .answer:hover {
+        border-color: #087f8c;
+        background: #f4fbf9;
+        transform: translateX(3px);
+    }
+
+    .answer input {
+        display: none;
+    }
+
+    .answer-icon {
+
+        width: 46px;
+        height: 46px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+
+        border-radius: 13px;
+
+        background: #f1f6f4;
+
+        font-size: 21px;
+
+        transition: .2s;
+    }
+
+    .answer-content strong {
+        display: block;
+        color: #26332f;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+
+    .answer-content small {
+        color: #899591;
+        font-size: 12px;
+    }
+
+    .answer:has(input:checked) {
+        border-color: #087f8c;
+        background: #eef9f7;
+
+        box-shadow:
+            0 8px 20px rgba(8,127,140,.08);
+    }
+
+    .answer:has(input:checked) .answer-icon {
+        background: #087f8c;
+        color: white;
+    }
+
+    .quiz-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 35px;
+    }
+
+    .quiz-btn {
+        border: none;
+        border-radius: 50px;
+
+        padding: 12px 23px;
+
+        font-weight: 700;
+
+        transition: .2s;
+    }
+
+    .btn-next {
+        background: #087f8c;
+        color: white;
+    }
+
+    .btn-next:hover {
+        background: #066a73;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-back {
+        background: #f0f4f2;
+        color: #596763;
+    }
+
+    .btn-back:hover {
+        background: #e5ece9;
+    }
+
+    .quiz-result {
+        display: none;
+        text-align: center;
+        animation: fadeIn .5s ease;
+    }
+
+    .result-icon {
+
+        width: 110px;
+        height: 110px;
+
+        margin: 0 auto 25px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 35px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #087f8c,
+                #00a896
+            );
+
+        color: white;
+
+        font-size: 50px;
+
+        box-shadow:
+            0 20px 40px rgba(0,168,150,.20);
+    }
+
+    .result-label {
+        color: #087f8c;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .result-title {
+        font-size: 38px;
+        font-weight: 900;
+        color: #17211f;
+        margin: 10px 0;
+    }
+
+    .result-description {
+        max-width: 600px;
+        margin: auto;
+        color: #778581;
+        line-height: 1.8;
+    }
+
+    .result-actions {
+        margin-top: 30px;
+    }
+
+    .restart-btn {
+        border: 1px solid #dce6e2;
+        background: white;
+        color: #087f8c;
+        border-radius: 50px;
+        padding: 11px 22px;
+        font-weight: 700;
+    }
+
+    @media(max-width: 767px) {
+
+        .quiz-page {
+            padding: 50px 15px;
+        }
+
+        .quiz-card {
+            padding: 25px 20px;
+            border-radius: 23px;
+        }
+
+        .question-title {
+            font-size: 22px;
+        }
+
+        .quiz-title {
+            letter-spacing: -1px;
+        }
+
+    }
+
+</style>
+
+
+<section class="quiz-page">
+
+    <div class="container">
+
+        <div class="quiz-wrapper">
+
+            <!-- INTRO -->
+
+            <div class="quiz-intro">
+
+                <span class="quiz-badge">
+
+                    <i class="bi bi-stars"></i>
+
+                    Aetheria Discovery
+
+                </span>
+
+                <h1 class="quiz-title">
+
+                    Discover Your
+                    <span>Travel Soul.</span>
+
+                </h1>
+
+                <p class="quiz-subtitle">
+
+                    Six questions.
+                    One travel personality.
+                    Discover the kind of journey that truly belongs to you.
+
+                </p>
+
+            </div>
+
+
+            <!-- QUIZ -->
+
+            <div class="quiz-card">
+
+                <!-- PROGRESS -->
+
+                <div class="progress-wrapper">
+
+                    <div class="progress-info">
+
+                        <span id="progressText">
+                            Question 1 of 6
+                        </span>
+
+                        <span id="progressPercent">
+                            17%
+                        </span>
+
+                    </div>
+
+                    <div class="quiz-progress">
+
+                        <div
+                            class="quiz-progress-bar"
+                            id="progressBar"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUESTION 1 -->
+
+                <div class="question active" data-question="1">
+
+                    <div class="question-number">
+                        Question 01
+                    </div>
+
+                    <h2 class="question-title">
+                        Your perfect morning looks like...
+                    </h2>
+
+                    <div class="answers">
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="explorer"
+                            >
+
+                            <div class="answer-icon">
+                                🏔️
+                            </div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Sunrise above the mountains
+                                </strong>
+
+                                <small>
+                                    Wake up somewhere high and wild.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="wanderer"
+                            >
+
+                            <div class="answer-icon">
+                                🌊
+                            </div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Beach and ocean breeze
+                                </strong>
+
+                                <small>
+                                    Nothing beats the sound of waves.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="culture"
+                            >
+
+                            <div class="answer-icon">
+                                🏛️
+                            </div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Exploring an old city
+                                </strong>
+
+                                <small>
+                                    Coffee, architecture and history.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="nature"
+                            >
+
+                            <div class="answer-icon">
+                                🌿
+                            </div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Somewhere surrounded by nature
+                                </strong>
+
+                                <small>
+                                    Forests, birds and absolute peace.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUESTION 2 -->
+
+                <div class="question" data-question="2">
+
+                    <div class="question-number">
+                        Question 02
+                    </div>
+
+                    <h2 class="question-title">
+                        Choose your ideal adventure.
+                    </h2>
+
+                    <div class="answers">
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q2"
+                                value="explorer"
+                            >
+
+                            <div class="answer-icon">🥾</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Multi-day mountain trek
+                                </strong>
+
+                                <small>
+                                    Trails, altitude and incredible views.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q2"
+                                value="wanderer"
+                            >
+
+                            <div class="answer-icon">🏝️</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Island hopping
+                                </strong>
+
+                                <small>
+                                    Discover beaches one island at a time.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q2"
+                                value="culture"
+                            >
+
+                            <div class="answer-icon">🏯</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Historical exploration
+                                </strong>
+
+                                <small>
+                                    Temples, monuments and ancient streets.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q2"
+                                value="thrill"
+                            >
+
+                            <div class="answer-icon">🪂</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Something that scares me
+                                </strong>
+
+                                <small>
+                                    Skydiving, rafting or extreme adventure.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUESTION 3 -->
+
+                <div class="question" data-question="3">
+
+                    <div class="question-number">
+                        Question 03
+                    </div>
+
+                    <h2 class="question-title">
+                        Pick your travel atmosphere.
+                    </h2>
+
+                    <div class="answers">
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q3"
+                                value="nature"
+                            >
+
+                            <div class="answer-icon">🌲</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Quiet and untouched
+                                </strong>
+
+                                <small>
+                                    Far away from crowds.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q3"
+                                value="luxury"
+                            >
+
+                            <div class="answer-icon">✨</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Elegant and luxurious
+                                </strong>
+
+                                <small>
+                                    Beautiful hotels and exceptional service.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q3"
+                                value="culture"
+                            >
+
+                            <div class="answer-icon">🎭</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Full of culture
+                                </strong>
+
+                                <small>
+                                    Local food, traditions and stories.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q3"
+                                value="explorer"
+                            >
+
+                            <div class="answer-icon">🧭</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Wild and unpredictable
+                                </strong>
+
+                                <small>
+                                    I want to see what happens.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUESTION 4 -->
+
+                <div class="question" data-question="4">
+
+                    <div class="question-number">
+                        Question 04
+                    </div>
+
+                    <h2 class="question-title">
+                        What's your travel budget style?
+                    </h2>
+
+                    <div class="answers">
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q4"
+                                value="explorer"
+                            >
+
+                            <div class="answer-icon">🎒</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Keep it simple
+                                </strong>
+
+                                <small>
+                                    Spend more on experiences than hotels.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q4"
+                                value="wanderer"
+                            >
+
+                            <div class="answer-icon">🌴</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Comfortable but flexible
+                                </strong>
+
+                                <small>
+                                    A balance between comfort and adventure.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q4"
+                                value="luxury"
+                            >
+
+                            <div class="answer-icon">🥂</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Treat myself
+                                </strong>
+
+                                <small>
+                                    Premium experiences are worth it.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q4"
+                                value="thrill"
+                            >
+
+                            <div class="answer-icon">🔥</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Whatever gets me the adventure
+                                </strong>
+
+                                <small>
+                                    Budget isn't the priority.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUESTION 5 -->
+
+                <div class="question" data-question="5">
+
+                    <div class="question-number">
+                        Question 05
+                    </div>
+
+                    <h2 class="question-title">
+                        What do you want to bring home?
+                    </h2>
+
+                    <div class="answers">
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q5"
+                                value="culture"
+                            >
+
+                            <div class="answer-icon">📖</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Stories
+                                </strong>
+
+                                <small>
+                                    I want to understand the place.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q5"
+                                value="nature"
+                            >
+
+                            <div class="answer-icon">📸</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Incredible memories
+                                </strong>
+
+                                <small>
+                                    Moments I'll never forget.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q5"
+                                value="explorer"
+                            >
+
+                            <div class="answer-icon">🏆</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    A sense of achievement
+                                </strong>
+
+                                <small>
+                                    I want to say: I actually did that.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q5"
+                                value="wanderer"
+                            >
+
+                            <div class="answer-icon">🌅</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Peace
+                                </strong>
+
+                                <small>
+                                    I want to come back feeling refreshed.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUESTION 6 -->
+
+                <div class="question" data-question="6">
+
+                    <div class="question-number">
+                        Question 06
+                    </div>
+
+                    <h2 class="question-title">
+                        Choose one word for your journey.
+                    </h2>
+
+                    <div class="answers">
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q6"
+                                value="explorer"
+                            >
+
+                            <div class="answer-icon">🧭</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Discovery
+                                </strong>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q6"
+                                value="wanderer"
+                            >
+
+                            <div class="answer-icon">🌊</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Freedom
+                                </strong>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q6"
+                                value="culture"
+                            >
+
+                            <div class="answer-icon">🏛️</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Connection
+                                </strong>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="answer">
+
+                            <input
+                                type="radio"
+                                name="q6"
+                                value="thrill"
+                            >
+
+                            <div class="answer-icon">⚡</div>
+
+                            <div class="answer-content">
+
+                                <strong>
+                                    Adrenaline
+                                </strong>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div
+                    class="quiz-actions"
+                    id="quizActions"
+                >
+
+                    <button
+                        type="button"
+                        class="quiz-btn btn-back"
+                        id="backBtn"
+                        onclick="previousQuestion()"
+                        style="display:none;"
+                    >
+
+                        <i class="bi bi-arrow-left me-1"></i>
+
+                        Back
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="quiz-btn btn-next ms-auto"
+                        id="nextBtn"
+                        onclick="nextQuestion()"
+                    >
+
+                        Continue
+
+                        <i class="bi bi-arrow-right ms-1"></i>
+
+                    </button>
+
+                </div>
+
+
+                <!-- RESULT -->
+
+                <div
+                    class="quiz-result"
+                    id="quizResult"
+                >
+
+                    <div class="result-icon" id="resultIcon">
+                        🧭
+                    </div>
+
+                    <div class="result-label">
+                        Your Travel Personality
+                    </div>
+
+                    <h2
+                        class="result-title"
+                        id="resultTitle"
+                    ></h2>
+
+                    <p
+                        class="result-description"
+                        id="resultDescription"
+                    ></p>
+
+                    <div class="result-actions">
+
+                        <a
+                            href="{% url 'destination' %}"
+                            class="btn btn-success rounded-pill px-4 py-2 fw-bold"
+                        >
+
+                            Explore Destinations
+
+                            <i class="bi bi-arrow-right ms-2"></i>
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            class="restart-btn ms-2"
+                            onclick="restartQuiz()"
+                        >
+
+                            <i class="bi bi-arrow-counterclockwise me-1"></i>
+
+                            Retake Quiz
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+
+    let currentQuestion = 1;
+
+    const totalQuestions = 6;
+
+    const scores = {
+        explorer: 0,
+        wanderer: 0,
+        culture: 0,
+        nature: 0,
+        luxury: 0,
+        thrill: 0
+    };
+
+
+    function getCurrentQuestion() {
+
+        return document.querySelector(
+            `.question[data-question="${currentQuestion}"]`
+        );
+
+    }
+
+
+    function nextQuestion() {
+
+        const current = getCurrentQuestion();
+
+        const selected = current.querySelector(
+            'input[type="radio"]:checked'
+        );
+
+
+        if (!selected) {
+
+            alert("Choose an answer before continuing ✨");
+
+            return;
+
+        }
+
+
+        scores[selected.value]++;
+
+
+        if (currentQuestion < totalQuestions) {
+
+            current.classList.remove("active");
+
+            currentQuestion++;
+
+            getCurrentQuestion().classList.add("active");
+
+            updateProgress();
+
+            document.getElementById("backBtn").style.display = "block";
+
+
+            if (currentQuestion === totalQuestions) {
+
+                document.getElementById("nextBtn").innerHTML =
+                    `Reveal My Travel Soul <i class="bi bi-stars ms-1"></i>`;
+
+            }
+
+        } else {
+
+            showResult();
+
+        }
+
+    }
+
+
+    function previousQuestion() {
+
+        if (currentQuestion <= 1) return;
+
+        getCurrentQuestion().classList.remove("active");
+
+        currentQuestion--;
+
+        getCurrentQuestion().classList.add("active");
+
+        updateProgress();
+
+        if (currentQuestion === 1) {
+
+            document.getElementById("backBtn").style.display = "none";
+
+        }
+
+
+        document.getElementById("nextBtn").innerHTML =
+            `Continue <i class="bi bi-arrow-right ms-1"></i>`;
+
+    }
+
+
+    function updateProgress() {
+
+        const percent =
+            Math.round(
+                (currentQuestion / totalQuestions) * 100
+            );
+
+
+        document.getElementById("progressBar").style.width =
+            percent + "%";
+
+
+        document.getElementById("progressText").innerText =
+            `Question ${currentQuestion} of ${totalQuestions}`;
+
+
+        document.getElementById("progressPercent").innerText =
+            percent + "%";
+
+    }
+
+
+    function showResult() {
+
+        let winner = "explorer";
+
+        let highest = 0;
+
+
+        for (const type in scores) {
+
+            if (scores[type] > highest) {
+
+                highest = scores[type];
+
+                winner = type;
+
+            }
+
+        }
+
+
+        const results = {
+
+            explorer: {
+
+                icon: "🏔️",
+
+                title: "The Explorer",
+
+                description:
+                    "You don't simply travel — you explore. Mountains, remote trails and unforgettable challenges are where you feel most alive. Your ideal journey is full of discovery and achievement."
+
+            },
+
+
+            wanderer: {
+
+                icon: "🌊",
+
+                title: "The Wanderer",
+
+                description:
+                    "You travel for freedom. You love beautiful places, flexible plans and slow moments. Islands, beaches and relaxed journeys are calling your name."
+
+            },
+
+
+            culture: {
+
+                icon: "🏛️",
+
+                title: "The Culture Seeker",
+
+                description:
+                    "For you, every destination has a story. Ancient cities, local traditions, architecture and food make your journey meaningful."
+
+            },
+
+
+            nature: {
+
+                icon: "🌿",
+
+                title: "The Nature Soul",
+
+                description:
+                    "You find your best self surrounded by nature. Forests, wildlife, peaceful landscapes and authentic outdoor experiences are your perfect escape."
+
+            },
+
+
+            luxury: {
+
+                icon: "✨",
+
+                title: "The Luxury Voyager",
+
+                description:
+                    "Travel should feel extraordinary. You appreciate beautiful surroundings, exceptional service and carefully designed experiences."
+
+            },
+
+
+            thrill: {
+
+                icon: "⚡",
+
+                title: "The Thrill Chaser",
+
+                description:
+                    "Routine isn't your thing. You want adrenaline, challenges and stories that begin with 'You won't believe what happened...'"
+
+            }
+
+        };
+
+
+        const result = results[winner];
+
+
+        document.getElementById("quizActions").style.display =
+            "none";
+
+
+        document.querySelectorAll(".question").forEach(
+            q => q.style.display = "none"
+        );
+
+
+        document.querySelector(".progress-wrapper").style.display =
+            "none";
+
+
+        document.getElementById("quizResult").style.display =
+            "block";
+
+
+        document.getElementById("resultIcon").innerText =
+            result.icon;
+
+
+        document.getElementById("resultTitle").innerText =
+            result.title;
+
+
+        document.getElementById("resultDescription").innerText =
+            result.description;
+
+    }
+
+
+    function restartQuiz() {
+
+        currentQuestion = 1;
+
+
+        for (const type in scores) {
+
+            scores[type] = 0;
+
+        }
+
+
+        document.querySelectorAll(
+            'input[type="radio"]'
+        ).forEach(
+            input => input.checked = false
+        );
+
+
+        document.querySelectorAll(".question").forEach(
+            q => q.classList.remove("active")
+        );
+
+
+        getCurrentQuestion().classList.add("active");
+
+
+        document.getElementById("quizResult").style.display =
+            "none";
+
+
+        document.getElementById("quizActions").style.display =
+            "flex";
+
+
+        document.querySelector(".progress-wrapper").style.display =
+            "block";
+
+
+        document.getElementById("backBtn").style.display =
+            "none";
+
+
+        document.getElementById("nextBtn").innerHTML =
+            `Continue <i class="bi bi-arrow-right ms-1"></i>`;
+
+
+        updateProgress();
+
+    }
+
+</script>
+
+{% endblock %}

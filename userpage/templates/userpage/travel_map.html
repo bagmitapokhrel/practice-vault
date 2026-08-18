@@ -1,11 +1,10 @@
 {% extends "userpage/base.html" %}
 {% load static %}
 
-{% block title %}Explore Map | ExploreWorld{% endblock %}
+{% block title %}Travel Atlas | Aetheria Journey{% endblock %}
 
 {% block extra_css %}
 
-<!-- Leaflet CSS -->
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -13,280 +12,1041 @@
 
 <style>
 
-    body {
-        background: #f6f8f7;
+/* =========================================================
+   AETHERIA — TRAVEL ATLAS
+========================================================= */
+
+:root {
+    --aether-dark: #061e23;
+    --aether-deep: #082f35;
+    --aether-teal: #087f8c;
+    --aether-mint: #00a896;
+    --aether-soft: #eaf8f5;
+    --aether-text: #17211f;
+    --aether-muted: #7d8a86;
+    --aether-border: #e7eeec;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.atlas-page {
+    min-height: 100vh;
+    background:
+        linear-gradient(
+            180deg,
+            #f7faf9 0%,
+            #f3f7f6 100%
+        );
+    padding-bottom: 100px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.atlas-hero {
+    position: relative;
+    min-height: 430px;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(0, 198, 178, .25),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 15% 85%,
+            rgba(31, 180, 190, .16),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #041a1f,
+            #06363d 48%,
+            #087f8c
+        );
+
+    color: white;
+}
+
+
+/* decorative grid */
+
+.atlas-hero::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: .12;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.12) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.12) 1px,
+            transparent 1px
+        );
+
+    background-size: 55px 55px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent
+        );
+}
+
+
+/* giant glow */
+
+.atlas-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 520px;
+    height: 520px;
+
+    right: -180px;
+    top: -280px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(111,255,231,.18),
+            transparent 65%
+        );
+}
+
+
+.atlas-hero-content {
+    position: relative;
+
+    z-index: 3;
+
+    max-width: 1380px;
+
+    margin: auto;
+
+    padding:
+        90px 30px
+        125px;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.atlas-eyebrow {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 14px;
+
+    border-radius: 50px;
+
+    background: rgba(255,255,255,.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    backdrop-filter: blur(10px);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.6px;
+
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,.82);
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.atlas-title {
+    max-width: 900px;
+
+    margin:
+        22px 0 0;
+
+    font-size:
+        clamp(
+            3rem,
+            7vw,
+            6.5rem
+        );
+
+    line-height: .91;
+
+    letter-spacing: -5px;
+
+    font-weight: 900;
+}
+
+
+.atlas-title .accent {
+    display: block;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #75eadc
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+
+.atlas-description {
+    max-width: 620px;
+
+    margin-top: 25px;
+
+    color:
+        rgba(255,255,255,.68);
+
+    line-height: 1.8;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   HERO MINI STATS
+========================================================= */
+
+.hero-stats {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 32px;
+
+    flex-wrap: wrap;
+}
+
+
+.hero-stat {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding:
+        9px 14px;
+
+    border-radius: 50px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    backdrop-filter: blur(10px);
+
+    font-size: 11px;
+
+    color:
+        rgba(255,255,255,.75);
+}
+
+
+.hero-stat i {
+    color: #72e5d9;
+}
+
+
+/* =========================================================
+   FLOATING SEARCH
+========================================================= */
+
+.atlas-search-wrapper {
+    position: absolute;
+
+    z-index: 20;
+
+    left: 50%;
+
+    bottom: -34px;
+
+    transform:
+        translateX(-50%);
+
+    width:
+        min(
+            850px,
+            calc(100% - 40px)
+        );
+}
+
+
+.atlas-search {
+    display: flex;
+
+    align-items: center;
+
+    padding: 9px;
+
+    background: white;
+
+    border-radius: 19px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.8);
+
+    box-shadow:
+        0 25px 65px
+        rgba(4,35,40,.20);
+}
+
+
+.search-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e9f9f6,
+            #dff5f1
+        );
+
+    color: var(--aether-teal);
+
+    font-size: 19px;
+}
+
+
+.atlas-search input {
+    height: 48px;
+
+    border: none !important;
+
+    outline: none !important;
+
+    box-shadow: none !important;
+
+    font-size: 14px;
+
+    padding-left: 15px;
+}
+
+
+.atlas-search input::placeholder {
+    color: #a1aca9;
+}
+
+
+.search-count {
+    white-space: nowrap;
+
+    padding:
+        0 15px;
+
+    font-size: 11px;
+
+    color: var(--aether-muted);
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.atlas-main {
+    max-width: 1450px;
+
+    margin: auto;
+
+    padding:
+        90px 22px 0;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.atlas-label {
+    color:
+        var(--aether-teal);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.6px;
+
+    text-transform: uppercase;
+}
+
+
+.atlas-heading {
+    margin-top: 5px;
+
+    color:
+        var(--aether-text);
+
+    font-size: 30px;
+
+    font-weight: 900;
+
+    letter-spacing: -1px;
+}
+
+
+.atlas-subheading {
+    color:
+        var(--aether-muted);
+
+    font-size: 13px;
+
+    margin-top: 6px;
+}
+
+
+/* =========================================================
+   MAP SHELL
+========================================================= */
+
+.map-shell {
+    position: relative;
+
+    height: 680px;
+
+    margin-top: 22px;
+
+    padding: 7px;
+
+    background: white;
+
+    border:
+        1px solid
+        var(--aether-border);
+
+    border-radius: 29px;
+
+    box-shadow:
+        0 20px 65px
+        rgba(20,50,45,.10);
+
+    overflow: hidden;
+}
+
+
+#travelMap {
+    width: 100%;
+    height: 100%;
+
+    border-radius: 23px;
+}
+
+
+/* =========================================================
+   MAP FLOATING UI
+========================================================= */
+
+.map-info {
+    position: absolute;
+
+    z-index: 500;
+
+    top: 27px;
+    left: 27px;
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.map-pill {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding:
+        10px 14px;
+
+    background:
+        rgba(255,255,255,.94);
+
+    backdrop-filter:
+        blur(12px);
+
+    border-radius: 50px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.13);
+
+    color:
+        #47534f;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.map-pill i {
+    color:
+        var(--aether-teal);
+}
+
+
+/* =========================================================
+   MAP LEGEND
+========================================================= */
+
+.map-legend {
+    position: absolute;
+
+    z-index: 500;
+
+    right: 27px;
+    top: 27px;
+
+    padding:
+        13px 15px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,.94);
+
+    backdrop-filter:
+        blur(12px);
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.13);
+
+    font-size: 10px;
+}
+
+
+.legend-heading {
+    font-weight: 800;
+
+    color:
+        var(--aether-text);
+
+    margin-bottom: 7px;
+}
+
+
+.legend-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color:
+        var(--aether-muted);
+}
+
+
+.legend-marker {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background:
+        var(--aether-mint);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(0,168,150,.12);
+}
+
+
+/* =========================================================
+   DESTINATION SECTION
+========================================================= */
+
+.destination-section {
+    margin-top: 65px;
+}
+
+
+.destination-header {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.destination-card {
+    height: 100%;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--aether-border);
+
+    border-radius: 22px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 30px
+        rgba(20,50,45,.045);
+
+    transition:
+        transform .35s ease,
+        box-shadow .35s ease;
+}
+
+
+.destination-card:hover {
+    transform:
+        translateY(-7px);
+
+    box-shadow:
+        0 20px 50px
+        rgba(20,50,45,.12);
+}
+
+
+.destination-image {
+    width: 100%;
+
+    height: 215px;
+
+    object-fit: cover;
+
+    transition:
+        transform .6s ease;
+}
+
+
+.destination-card:hover
+.destination-image {
+    transform:
+        scale(1.045);
+}
+
+
+.destination-placeholder {
+    height: 215px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e1f5f1,
+            #f4faf9
+        );
+
+    color:
+        var(--aether-teal);
+
+    font-size: 42px;
+}
+
+
+.destination-body {
+    padding: 21px;
+}
+
+
+.destination-location {
+    font-size: 10px;
+
+    color:
+        var(--aether-teal);
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.destination-title {
+    color:
+        var(--aether-text);
+
+    font-size: 19px;
+
+    font-weight: 850;
+
+    margin:
+        7px 0;
+}
+
+
+.destination-description {
+    color:
+        var(--aether-muted);
+
+    font-size: 12px;
+
+    line-height: 1.65;
+
+    min-height: 40px;
+}
+
+
+.destination-footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 18px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid
+        #edf1ef;
+}
+
+
+.destination-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+        var(--aether-soft);
+
+    color:
+        var(--aether-teal);
+}
+
+
+.explore-link {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color:
+        var(--aether-teal);
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 850;
+}
+
+
+.explore-link:hover {
+    color:
+        var(--aether-mint);
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-atlas {
+    padding: 80px 20px;
+
+    text-align: center;
+
+    background: white;
+
+    border:
+        1px solid
+        var(--aether-border);
+
+    border-radius: 24px;
+}
+
+
+.empty-icon {
+    width: 75px;
+    height: 75px;
+
+    margin:
+        0 auto 18px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 22px;
+
+    background:
+        var(--aether-soft);
+
+    color:
+        var(--aether-teal);
+
+    font-size: 30px;
+}
+
+
+/* =========================================================
+   LEAFLET POPUP
+========================================================= */
+
+.leaflet-popup-content-wrapper {
+    border-radius: 18px !important;
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.16) !important;
+}
+
+
+.leaflet-popup-content {
+    min-width: 230px;
+
+    margin: 17px !important;
+}
+
+
+.popup-location {
+    font-size: 9px;
+
+    color:
+        var(--aether-teal);
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 5px;
+}
+
+
+.popup-title {
+    font-size: 18px;
+
+    color:
+        var(--aether-text);
+
+    font-weight: 850;
+
+    margin-bottom: 7px;
+}
+
+
+.popup-description {
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    color:
+        var(--aether-muted);
+
+    margin-bottom: 14px;
+}
+
+
+.popup-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding:
+        8px 14px;
+
+    border-radius: 50px;
+
+    background:
+        var(--aether-teal);
+
+    color: white !important;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+
+.popup-btn:hover {
+    background:
+        var(--aether-deep);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .atlas-hero {
+        min-height: 430px;
     }
 
-    .map-page {
-        padding: 50px 0 70px;
+    .atlas-hero-content {
+        padding:
+            65px 20px 120px;
     }
 
-    /* =========================
-       HERO
-    ========================= */
+    .atlas-title {
+        font-size: 45px;
 
-    .map-hero {
-        background:
-            linear-gradient(
-                135deg,
-                rgba(4, 70, 70, .96),
-                rgba(0, 128, 128, .88)
-            ),
-            url("{% static 'images/map-bg.jpg' %}");
-
-        background-size: cover;
-        background-position: center;
-
-        border-radius: 28px;
-        padding: 55px 50px;
-        color: white;
-        margin-bottom: 30px;
-
-        box-shadow: 0 20px 50px rgba(0,0,0,.12);
+        letter-spacing: -3px;
     }
 
-    .map-hero h1 {
-        font-size: clamp(2rem, 5vw, 3.5rem);
-        font-weight: 800;
-        letter-spacing: -1px;
-    }
-
-    .map-hero p {
-        max-width: 650px;
-        opacity: .9;
-        font-size: 1.05rem;
-    }
-
-    .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        background: rgba(255,255,255,.15);
-        border: 1px solid rgba(255,255,255,.2);
-        padding: 8px 16px;
-        border-radius: 50px;
+    .atlas-description {
         font-size: 13px;
-        margin-bottom: 18px;
     }
 
-    /* =========================
-       SEARCH
-    ========================= */
-
-    .search-box {
-        background: white;
-        padding: 10px;
-        border-radius: 18px;
-        box-shadow: 0 10px 30px rgba(0,0,0,.08);
-        margin-bottom: 25px;
+    .hero-stats {
+        display: none;
     }
 
-    .search-box input {
-        border: none;
-        outline: none;
-        box-shadow: none !important;
-        padding: 12px 15px;
+    .atlas-search-wrapper {
+        width:
+            calc(100% - 28px);
+
+        bottom: -30px;
     }
 
-    .search-icon {
-        width: 45px;
-        height: 45px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 13px;
-        background: #e8f7f4;
-        color: #008f83;
-
-        font-size: 20px;
+    .search-count {
+        display: none;
     }
 
-    /* =========================
-       MAP
-    ========================= */
+    .atlas-main {
+        padding:
+            75px 12px 0;
+    }
 
-    .map-container {
-        background: white;
-        padding: 10px;
-        border-radius: 24px;
+    .atlas-heading {
+        font-size: 25px;
+    }
 
-        box-shadow: 0 15px 45px rgba(0,0,0,.08);
+    .map-shell {
+        height: 500px;
 
-        position: relative;
-        overflow: hidden;
+        padding: 5px;
+
+        border-radius: 21px;
     }
 
     #travelMap {
-        height: 650px;
-        width: 100%;
-        border-radius: 18px;
-        z-index: 1;
+        border-radius: 17px;
     }
 
-    /* =========================
-       MAP OVERLAY
-    ========================= */
-
-    .map-counter {
-        position: absolute;
-        top: 25px;
-        left: 25px;
-
-        background: white;
-        padding: 12px 18px;
-
-        border-radius: 50px;
-
-        box-shadow: 0 8px 25px rgba(0,0,0,.15);
-
-        z-index: 500;
-
-        font-weight: 600;
+    .map-info {
+        top: 17px;
+        left: 17px;
     }
 
-    /* =========================
-       DESTINATION PANEL
-    ========================= */
+    .map-pill {
+        padding:
+            8px 10px;
 
-    .destination-panel {
-        margin-top: 35px;
+        font-size: 9px;
     }
 
-    .destination-card {
-        background: white;
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-
-        box-shadow: 0 8px 30px rgba(0,0,0,.06);
-
-        transition: .3s;
-        height: 100%;
+    .map-legend {
+        display: none;
     }
 
-    .destination-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+    .destination-section {
+        margin-top: 45px;
     }
 
-    .destination-image {
-        height: 190px;
-        width: 100%;
-        object-fit: cover;
-    }
-
+    .destination-image,
     .destination-placeholder {
         height: 190px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: linear-gradient(
-            135deg,
-            #dff5f0,
-            #edf8f6
-        );
-
-        color: #008f83;
-
-        font-size: 45px;
     }
 
-    .destination-content {
-        padding: 22px;
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        transition-duration:
+            .01ms !important;
     }
 
-    .destination-content h5 {
-        font-weight: 750;
-    }
-
-    .location-text {
-        color: #718096;
-        font-size: 14px;
-    }
-
-    .view-btn {
-        border-radius: 50px;
-        padding: 9px 18px;
-
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    /* =========================
-       LEAFLET POPUP
-    ========================= */
-
-    .leaflet-popup-content-wrapper {
-        border-radius: 18px;
-        padding: 5px;
-    }
-
-    .leaflet-popup-content {
-        margin: 14px;
-        min-width: 220px;
-    }
-
-    .popup-title {
-        font-weight: 750;
-        font-size: 17px;
-        margin-bottom: 6px;
-    }
-
-    .popup-description {
-        color: #6c757d;
-        font-size: 13px;
-        margin-bottom: 12px;
-    }
-
-    .popup-btn {
-        display: inline-block;
-        background: #008f83;
-        color: white;
-
-        text-decoration: none;
-
-        padding: 7px 14px;
-        border-radius: 50px;
-
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .popup-btn:hover {
-        color: white;
-        background: #006f67;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (max-width: 768px) {
-
-        .map-page {
-            padding: 25px 10px 50px;
-        }
-
-        .map-hero {
-            padding: 35px 25px;
-            border-radius: 22px;
-        }
-
-        #travelMap {
-            height: 500px;
-        }
-
-        .map-counter {
-            top: 20px;
-            left: 20px;
-            font-size: 13px;
-        }
-
-    }
+}
 
 </style>
 
@@ -295,75 +1055,196 @@
 
 {% block content %}
 
-<section class="map-page">
+<section class="atlas-page">
 
-    <div class="container">
 
-        <!-- =========================
-             HERO
-        ========================= -->
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
 
-        <div class="map-hero">
+    <header class="atlas-hero">
 
-            <span class="hero-badge">
-                <i class="bi bi-globe2"></i>
-                Explore the World
+        <div class="atlas-hero-content">
+
+            <span class="atlas-eyebrow">
+
+                <i class="bi bi-compass"></i>
+
+                Aetheria Travel Atlas
+
             </span>
 
-            <h1>
-                Discover Your Next Destination
+
+            <h1 class="atlas-title">
+
+                Find your next
+                <span class="accent">
+                    somewhere.
+                </span>
+
             </h1>
 
-            <p class="mt-3 mb-0">
-                Explore destinations around the world using our
-                interactive travel map. Discover new places,
-                explore experiences and start planning your next adventure.
+
+            <p class="atlas-description">
+
+                Wander across the world, discover remarkable
+                destinations and let curiosity decide where
+                your next journey begins.
+
             </p>
 
-        </div>
 
+            <div class="hero-stats">
 
-        <!-- =========================
-             SEARCH
-        ========================= -->
+                <div class="hero-stat">
 
-        <div class="search-box">
+                    <i class="bi bi-geo-alt-fill"></i>
 
-            <div class="d-flex align-items-center">
-
-                <div class="search-icon me-2">
-
-                    <i class="bi bi-search"></i>
+                    <span>
+                        <strong id="heroDestinationCount">
+                            {{ destinations|length }}
+                        </strong>
+                        destinations
+                    </span>
 
                 </div>
 
-                <input
-                    type="text"
-                    id="destinationSearch"
-                    class="form-control"
-                    placeholder="Search destination..."
-                >
+
+                <div class="hero-stat">
+
+                    <i class="bi bi-globe2"></i>
+
+                    Worldwide discovery
+
+                </div>
+
+
+                <div class="hero-stat">
+
+                    <i class="bi bi-signpost-2"></i>
+
+                    Plan your journey
+
+                </div>
 
             </div>
 
         </div>
 
 
-        <!-- =========================
-             MAP
-        ========================= -->
+        <!-- SEARCH -->
 
-        <div class="map-container">
+        <div class="atlas-search-wrapper mb-5">
 
-            <div class="map-counter">
+            <div class="atlas-search">
 
-                <i class="bi bi-geo-alt-fill text-success me-1"></i>
+                <div class="search-icon">
 
-                <span id="destinationCount">
-                    {{ destinations|length }}
-                </span>
+                    <i class="bi bi-search"></i>
 
-                Destinations
+                </div>
+
+
+                <input
+                    type="text"
+                    id="destinationSearch"
+                    class="form-control"
+                    placeholder="Search Kathmandu, Bali, Bangkok..."
+                    autocomplete="off"
+                >
+
+
+                <div class="search-count">
+
+                    <span id="destinationCount">
+                        {{ destinations|length }}
+                    </span>
+
+                    places
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAP
+    ====================================================== -->
+
+    <main class="atlas-main mt-5">
+
+
+        <div>
+
+            <div class="atlas-label">
+                THE WORLD, INTERACTIVE
+            </div>
+
+
+            <h2 class="atlas-heading">
+                Explore without borders.
+            </h2>
+
+
+            <p class="atlas-subheading">
+                Move around the atlas and discover places waiting to become memories.
+            </p>
+
+        </div>
+
+
+
+        <div class="map-shell">
+
+
+            <!-- FLOATING INFORMATION -->
+
+            <div class="map-info">
+
+                <div class="map-pill">
+
+                    <i class="bi bi-geo-alt-fill"></i>
+
+                    <span id="mapDestinationCount">
+                        {{ destinations|length }}
+                    </span>
+
+                    places
+
+                </div>
+
+
+                <div class="map-pill">
+
+                    <i class="bi bi-globe-americas"></i>
+
+                    Worldwide
+
+                </div>
+
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <div class="map-legend">
+
+                <div class="legend-heading">
+                    Aetheria Atlas
+                </div>
+
+                <div class="legend-row">
+
+                    <span class="legend-marker"></span>
+
+                    Destination
+
+                </div>
 
             </div>
 
@@ -373,26 +1254,28 @@
         </div>
 
 
-        <!-- =========================
-             DESTINATION CARDS
-        ========================= -->
 
-        <div class="destination-panel">
+        <!-- =================================================
+             DESTINATIONS
+        ================================================== -->
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+        <section class="destination-section">
+
+
+            <div class="destination-header">
 
                 <div>
 
-                    <small class="text-success fw-semibold">
-                        EXPLORE
-                    </small>
+                    <div class="atlas-label">
+                        CURATED DESTINATIONS
+                    </div>
 
-                    <h3 class="fw-bold mb-1">
-                        Popular Destinations
-                    </h3>
+                    <h2 class="atlas-heading mb-0">
+                        Places worth finding.
+                    </h2>
 
-                    <p class="text-muted mb-0">
-                        Discover places worth adding to your journey.
+                    <p class="atlas-subheading">
+                        Start with one. See where it takes you.
                     </p>
 
                 </div>
@@ -400,16 +1283,23 @@
             </div>
 
 
-            <div class="row g-4" id="destinationCards">
 
-                {% for destination in destinations %}
+            <div
+                class="row g-4"
+                id="destinationCards"
+            >
+
+
+                {% for destination in destinations|slice:":6" %}
 
                 <div
                     class="col-md-6 col-lg-4 destination-item"
                     data-name="{{ destination.name|lower }}"
+                    data-location="{{ destination.location|default:''|lower }}"
                 >
 
-                    <div class="destination-card">
+                    <article class="destination-card">
+
 
                         {% if destination.image %}
 
@@ -417,6 +1307,7 @@
                                 src="{{ destination.image.url }}"
                                 class="destination-image"
                                 alt="{{ destination.name }}"
+                                loading="lazy"
                             >
 
                         {% else %}
@@ -430,59 +1321,69 @@
                         {% endif %}
 
 
-                        <div class="destination-content">
-
-                            <h5>
-                                {{ destination.name }}
-                            </h5>
+                        <div class="destination-body">
 
 
-                            <div class="location-text mb-3">
+                            <div class="destination-location">
 
-                                <i class="bi bi-geo-alt me-1"></i>
+                                <i class="bi bi-geo-alt-fill me-1"></i>
 
-                                {{ destination.location|default:"Explore this destination" }}
+                                {{ destination.location|default:"Worldwide" }}
 
                             </div>
 
 
-                            {% if destination.description %}
+                            <h3 class="destination-title">
 
-                                <p class="text-muted small">
+                                {{ destination.name }}
+
+                            </h3>
+
+
+                            <p class="destination-description">
+
+                                {% if destination.description %}
 
                                     {{ destination.description|truncatewords:18 }}
 
-                                </p>
+                                {% else %}
 
-                            {% endif %}
+                                    Discover the landscapes,
+                                    culture and experiences
+                                    waiting here.
+
+                                {% endif %}
+
+                            </p>
 
 
-                            <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="destination-footer">
 
-                                <span class="badge bg-light text-success rounded-pill px-3 py-2">
 
-                                    <i class="bi bi-pin-map me-1"></i>
-                                    Explore
+                                <div class="destination-icon">
 
-                                </span>
+                                    <i class="bi bi-compass"></i>
+
+                                </div>
 
 
                                 <a
                                     href="{% url 'destination_detail' destination.id %}"
-                                    class="btn btn-outline-success view-btn"
+                                    class="explore-link"
                                 >
 
-                                    View Destination
+                                    Explore destination
 
-                                    <i class="bi bi-arrow-right ms-1"></i>
+                                    <i class="bi bi-arrow-up-right"></i>
 
                                 </a>
 
                             </div>
 
+
                         </div>
 
-                    </div>
+                    </article>
 
                 </div>
 
@@ -490,17 +1391,27 @@
 
                 <div class="col-12">
 
-                    <div class="text-center py-5">
+                    <div class="empty-atlas">
 
-                        <i class="bi bi-map display-3 text-muted"></i>
+                        <div class="empty-icon">
 
-                        <h4 class="fw-bold mt-3">
-                            No destinations available
+                            <i class="bi bi-map"></i>
+
+                        </div>
+
+
+                        <h4 class="fw-bold">
+
+                            Your atlas is empty.
+
                         </h4>
 
-                        <p class="text-muted">
-                            Add destinations with latitude and longitude
-                            from the admin panel.
+
+                        <p class="text-muted mb-0">
+
+                            Add destinations from your admin dashboard
+                            with latitude and longitude.
+
                         </p>
 
                     </div>
@@ -511,16 +1422,16 @@
 
             </div>
 
-        </div>
+        </section>
 
-    </div>
+    </main>
 
 </section>
 
 
-<!-- =========================
+<!-- =========================================================
      LEAFLET JS
-========================= -->
+========================================================= -->
 
 <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
@@ -529,21 +1440,27 @@
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    /* =========================
-       CREATE MAP
-    ========================= */
-
-    const map = L.map("travelMap").setView(
-        [20, 0],
-        2
-    );
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
 
-    /* =========================
-       OPENSTREETMAP
-    ========================= */
+    /* =====================================================
+       MAP
+    ====================================================== */
+
+    const map =
+        L.map(
+            "travelMap",
+            {
+                zoomControl: true,
+                scrollWheelZoom: true
+            }
+        ).setView(
+            [20, 0],
+            2
+        );
+
 
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -556,30 +1473,36 @@ document.addEventListener("DOMContentLoaded", function () {
     ).addTo(map);
 
 
-    /* =========================
-       DESTINATIONS
-    ========================= */
+
+    /* =====================================================
+       DESTINATION DATA
+    ====================================================== */
 
     const destinations = [
 
         {% for destination in destinations %}
 
         {
+            id:
+                {{ destination.id }},
 
-            id: {{ destination.id }},
+            name:
+                "{{ destination.name|escapejs }}",
 
-            name: "{{ destination.name|escapejs }}",
+            location:
+                "{{ destination.location|default:''|escapejs }}",
 
-            latitude: {{ destination.latitude }},
+            latitude:
+                {{ destination.latitude|default:"0" }},
 
-            longitude: {{ destination.longitude }},
+            longitude:
+                {{ destination.longitude|default:"0" }},
 
             description:
                 "{{ destination.description|default:''|truncatewords:20|escapejs }}",
 
             url:
                 "{% url 'destination_detail' destination.id %}"
-
         },
 
         {% endfor %}
@@ -587,27 +1510,111 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
 
-    /* =========================
+
+    /* =====================================================
+       CUSTOM MARKER
+    ====================================================== */
+
+    const destinationIcon =
+        L.divIcon({
+
+            className: "",
+
+            html: `
+
+                <div style="
+                    width:31px;
+                    height:31px;
+
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+
+                    background:#087f8c;
+
+                    border:
+                        3px solid white;
+
+                    border-radius:
+                        50% 50% 50% 0;
+
+                    transform:
+                        rotate(-45deg);
+
+                    box-shadow:
+                        0 7px 18px
+                        rgba(0,0,0,.28);
+                ">
+
+                    <i
+                        class="bi bi-compass"
+                        style="
+                            color:white;
+                            font-size:12px;
+                            transform:rotate(45deg);
+                        "
+                    ></i>
+
+                </div>
+
+            `,
+
+            iconSize:
+                [31,31],
+
+            iconAnchor:
+                [15,31],
+
+            popupAnchor:
+                [0,-28]
+
+        });
+
+
+
+    /* =====================================================
        MARKERS
-    ========================= */
+    ====================================================== */
 
     const markers = [];
 
 
-    destinations.forEach(function(destination) {
+    destinations.forEach(
+        function(destination) {
 
-        const marker = L.marker([
 
-            destination.latitude,
+        if (
+            !destination.latitude ||
+            !destination.longitude
+        ) {
+            return;
+        }
 
-            destination.longitude
 
-        ]).addTo(map);
+        const marker =
+            L.marker(
+                [
+                    destination.latitude,
+                    destination.longitude
+                ],
+                {
+                    icon:
+                        destinationIcon
+                }
+            )
+            .addTo(map);
 
 
         marker.bindPopup(`
 
             <div>
+
+                <div class="popup-location">
+
+                    ${destination.location || "Destination"}
+
+                </div>
+
 
                 <div class="popup-title">
 
@@ -618,7 +1625,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 <div class="popup-description">
 
-                    ${destination.description}
+                    ${
+                        destination.description ||
+                        "Discover this destination with Aetheria Journey."
+                    }
 
                 </div>
 
@@ -628,9 +1638,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     class="popup-btn"
                 >
 
-                    Explore Destination
+                    Explore destination
 
-                    <i class="bi bi-arrow-right"></i>
+                    <i class="bi bi-arrow-up-right"></i>
 
                 </a>
 
@@ -641,18 +1651,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
         markers.push({
 
-            marker: marker,
+            marker:
+                marker,
 
-            name: destination.name.toLowerCase()
+            name:
+                destination.name
+                    .toLowerCase(),
+
+            location:
+                destination.location
+                    .toLowerCase()
 
         });
 
     });
 
 
-    /* =========================
+
+    /* =====================================================
        SEARCH
-    ========================= */
+    ====================================================== */
 
     const searchInput =
         document.getElementById(
@@ -660,15 +1678,27 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-    const destinationItems =
+    const cards =
         document.querySelectorAll(
             ".destination-item"
         );
 
 
-    const countElement =
+    const count =
         document.getElementById(
             "destinationCount"
+        );
+
+
+    const mapCount =
+        document.getElementById(
+            "mapDestinationCount"
+        );
+
+
+    const heroCount =
+        document.getElementById(
+            "heroDestinationCount"
         );
 
 
@@ -676,68 +1706,116 @@ document.addEventListener("DOMContentLoaded", function () {
         "input",
         function () {
 
-            const query =
-                this.value.toLowerCase().trim();
+
+        const query =
+            this.value
+                .toLowerCase()
+                .trim();
 
 
-            let visibleCount = 0;
+        let visible =
+            0;
 
 
-            /* Filter cards */
+        /* -----------------------------------------------
+           FILTER CARDS
+        ------------------------------------------------ */
 
-            destinationItems.forEach(
-                function(item) {
-
-                    const name =
-                        item.dataset.name;
+        cards.forEach(
+            function(card) {
 
 
-                    if (
-                        name.includes(query)
-                    ) {
+            const name =
+                card.dataset.name || "";
 
-                        item.style.display = "";
 
-                        visibleCount++;
+            const location =
+                card.dataset.location || "";
 
-                    } else {
 
-                        item.style.display = "none";
+            const matches =
+                name.includes(query) ||
+                location.includes(query);
 
-                    }
+
+            if (matches) {
+
+                card.style.display =
+                    "";
+
+                visible++;
+
+            }
+
+            else {
+
+                card.style.display =
+                    "none";
+
+            }
+
+        });
+
+
+
+        /* -----------------------------------------------
+           FILTER MARKERS
+        ------------------------------------------------ */
+
+        markers.forEach(
+            function(item) {
+
+
+            const matches =
+                item.name.includes(query) ||
+                item.location.includes(query);
+
+
+            if (matches) {
+
+                if (
+                    !map.hasLayer(
+                        item.marker
+                    )
+                ) {
+
+                    item.marker.addTo(map);
 
                 }
-            );
 
+            }
 
-            /* Filter markers */
+            else {
 
-            markers.forEach(
-                function(item) {
+                if (
+                    map.hasLayer(
+                        item.marker
+                    )
+                ) {
 
-                    if (
-                        item.name.includes(query)
-                    ) {
-
-                        item.marker.addTo(map);
-
-                    } else {
-
-                        map.removeLayer(
-                            item.marker
-                        );
-
-                    }
+                    map.removeLayer(
+                        item.marker
+                    );
 
                 }
-            );
+
+            }
+
+        });
 
 
-            countElement.innerText =
-                visibleCount;
 
-        }
-    );
+        count.innerText =
+            visible;
+
+        mapCount.innerText =
+            visible;
+
+        heroCount.innerText =
+            visible;
+
+    });
+
 
 });
 

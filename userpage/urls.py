@@ -3,7 +3,7 @@ from adminpage import views as adminpage_views
 import adminpage
 from .import views
 from .views import search
-from .views import index, guides, guide_booking,guide_detail,guide_booking, gallery, travel_map, package_detail_view, wishlist, trip_builder_success, add_to_wishlist,remove_from_wishlist, destination,gear_checklist, destination_detail, tour, tour_detail, review, about, contact, package, booking
+from .views import index, guides, travel_quiz, guide_booking,guide_detail,guide_booking, guide_booking_success, gallery, travel_map, package_detail_view, wishlist, trip_builder_success, add_to_wishlist,remove_from_wishlist, destination,gear_checklist, destination_detail, tour, tour_detail, review, about, contact, package, booking
 
 urlpatterns = [
     path('',index, name='index'),
@@ -30,5 +30,7 @@ urlpatterns = [
     path('guides/',guides, name='guides'),
     path('guide_booking/<int:guide_id>/', guide_booking, name='guide_booking'),
     path('guide/<int:guide_id>/',guide_detail, name='guide_detail'),
-    path('guide/booking/<int:guide_id>/', guide_booking, name='guide_booking'),
+    path('guide/booking/success<int:guide_id>/', guide_booking_success, name='guide_booking_success'),
+    path('travel_quiz/', travel_quiz, name='travel_quiz'),
+    
 ]
