@@ -55,7 +55,10 @@ def user_login(request):
 
         if user:
             login(request, user)
-            return redirect("dashboard")
+            if user.is_superuser:
+                return redirect("admin_dashboard")
+            else:
+                return redirect("dashboard")
 
         messages.error(request, "Invalid username or password.")
 
@@ -72,11 +75,13 @@ def user_logout(request):
 @login_required
 def dashboard(request):
 
-    bookings = Booking.objects.filter(email=request.user.email).count()
+    bookings_count = Booking.objects.filter(email=request.user.email).count()
+    bookings = Booking.objects.filter(email=request.user.email)
     wishlist_count = Wishlist.objects.filter(user=request.user).count()
 
     context = {
         "bookings": bookings,
+        "bookings_count": bookings_count,
         "wishlist_count": wishlist_count,
     }
 
