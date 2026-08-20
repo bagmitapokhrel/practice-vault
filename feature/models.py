@@ -4,33 +4,6 @@ from adminpage.models import Destination
 from django_ckeditor_5.fields import CKEditor5Field
 # Create your models here.
 
-class GearItem(models.Model):
-
-    name = models.CharField(max_length=150)
-
-    category = models.CharField(
-        max_length=100
-    )
-
-    min_altitude = models.IntegerField(
-        default=0
-    )
-
-    max_altitude = models.IntegerField(
-        null=True,
-        blank=True
-    )
-
-    winter_required = models.BooleanField(
-        default=False
-    )
-
-    difficult_trek = models.BooleanField(
-        default=False
-    )
-
-    def __str__(self):
-        return self.name
 
 class TrekPermit(models.Model):
 

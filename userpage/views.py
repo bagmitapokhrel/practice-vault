@@ -19,6 +19,8 @@ def index(request):
     return render(request, "userpage/index.html", context)
 
 
+from django.db.models import Q
+
 def search(request):
 
     query = request.GET.get("q", "").strip()
@@ -27,13 +29,16 @@ def search(request):
     destinations = Destination.objects.none()
 
     if query:
+
         packages = Package.objects.filter(
-            title__icontains=query
-        )
+            Q(title__icontains=query) 
+        ).distinct()
 
         destinations = Destination.objects.filter(
-            name__icontains=query
-        )
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(location__icontains=query)
+        ).distinct()
 
     context = {
         "query": query,
