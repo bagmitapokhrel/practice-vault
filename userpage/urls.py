@@ -32,5 +32,6 @@ urlpatterns = [
     path('guide/<int:guide_id>/',guide_detail, name='guide_detail'),
     path('guide/booking/success<int:guide_id>/', guide_booking_success, name='guide_booking_success'),
     path('travel_quiz/', travel_quiz, name='travel_quiz'),
+    path("travel-assistant/", views.travel_assistant, name="travel_assistant"),
     
 ]

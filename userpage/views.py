@@ -628,3 +628,375 @@ def travel_quiz(request):
     )
 
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.db.models import Q
+
+from adminpage.models import Package, Destination
+
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.db.models import Q
+
+from adminpage.models import Package, Destination
+
+
+@require_POST
+def travel_assistant(request):
+
+    message = request.POST.get("message", "").strip()
+
+    if not message:
+        return JsonResponse({
+            "success": False,
+            "message": "Tell me where you want to go, your budget, duration, or travel style."
+        })
+
+    text = message.lower()
+
+    # =========================================================
+    # 1. DETECT DIFFICULTY
+    # =========================================================
+
+    difficulty = None
+
+    if any(word in text for word in [
+        "easy",
+        "beginner",
+        "first trek",
+        "first time",
+        "relaxed",
+        "family friendly"
+    ]):
+        difficulty = "Easy"
+
+    elif any(word in text for word in [
+        "moderate",
+        "medium",
+        "average"
+    ]):
+        difficulty = "Moderate"
+
+    elif any(word in text for word in [
+        "hard",
+        "difficult",
+        "challenging",
+        "experienced",
+        "advanced",
+        "extreme"
+    ]):
+        difficulty = "Hard"
+
+
+    # =========================================================
+    # 2. DETECT DESTINATION / REGION
+    # =========================================================
+
+    destinations = [
+        "everest",
+        "annapurna",
+        "langtang",
+        "mustang",
+        "pokhara",
+        "kathmandu",
+        "chitwan",
+        "manaslu",
+        "tilicho",
+        "mardi",
+        "upper mustang",
+        "lower mustang",
+        "bandipur",
+        "lumbini",
+        "paris",
+        "dubai",
+        "bali",
+        "thailand",
+        "bangkok",
+        "phuket",
+        "istanbul",
+        "venice",
+        "athens",
+        "maldives",
+        "santorini"
+    ]
+
+    detected_destination = None
+
+    for destination in destinations:
+
+        if destination in text:
+            detected_destination = destination
+            break
+
+
+    # =========================================================
+    # 3. DETECT TRAVEL STYLE
+    # =========================================================
+
+    travel_style = None
+
+    if any(word in text for word in [
+        "trek",
+        "trekking",
+        "hiking",
+        "mountain"
+    ]):
+        travel_style = "trekking"
+
+    elif any(word in text for word in [
+        "beach",
+        "sea",
+        "island",
+        "relax"
+    ]):
+        travel_style = "beach"
+
+    elif any(word in text for word in [
+        "culture",
+        "historical",
+        "history",
+        "temple"
+    ]):
+        travel_style = "culture"
+
+    elif any(word in text for word in [
+        "adventure",
+        "adventurous",
+        "rafting",
+        "extreme"
+    ]):
+        travel_style = "adventure"
+
+    elif any(word in text for word in [
+        "family",
+        "kids",
+        "children"
+    ]):
+        travel_style = "family"
+
+
+    # =========================================================
+    # 4. DETECT BUDGET
+    # =========================================================
+
+    budget = None
+
+    import re
+
+    numbers = re.findall(
+        r'\d+(?:,\d+)*(?:\.\d+)?',
+        text
+    )
+
+    if numbers:
+
+        try:
+            budget = float(
+                numbers[0].replace(",", "")
+            )
+        except ValueError:
+            budget = None
+
+
+    # =========================================================
+    # 5. BUILD PACKAGE QUERY
+    # =========================================================
+
+    query = Q()
+
+    has_filter = False
+
+
+    # ---------------------------------------------------------
+    # Destination filter
+    # ---------------------------------------------------------
+
+    if detected_destination:
+
+        query |= Q(
+            title__icontains=detected_destination
+        )
+
+        query |= Q(
+            destination__name__icontains=detected_destination
+        )
+
+        has_filter = True
+
+
+    # ---------------------------------------------------------
+    # Difficulty filter
+    # ---------------------------------------------------------
+
+    if difficulty:
+
+        query &= Q(
+            difficulty__iexact=difficulty
+        )
+
+        has_filter = True
+
+
+    # ---------------------------------------------------------
+    # Travel style
+    # ---------------------------------------------------------
+
+    if travel_style == "trekking":
+
+        query |= Q(
+            title__icontains="trek"
+        )
+
+        query |= Q(
+            title__icontains="hiking"
+        )
+
+        query |= Q(
+            title__icontains="mountain"
+        )
+
+        has_filter = True
+
+
+    elif travel_style == "beach":
+
+        query |= Q(
+            title__icontains="beach"
+        )
+
+        query |= Q(
+            title__icontains="island"
+        )
+
+        has_filter = True
+
+
+    elif travel_style == "culture":
+
+        query |= Q(
+            title__icontains="culture"
+        )
+
+        query |= Q(
+            title__icontains="heritage"
+        )
+
+        has_filter = True
+
+
+    elif travel_style == "adventure":
+
+        query |= Q(
+            title__icontains="adventure"
+        )
+
+        query |= Q(
+            title__icontains="rafting"
+        )
+
+        has_filter = True
+
+
+    # =========================================================
+    # 6. GET RECOMMENDATIONS
+    # =========================================================
+
+    if has_filter:
+
+        recommendations = Package.objects.filter(
+            query
+        ).distinct()[:6]
+
+    else:
+
+        recommendations = Package.objects.all()[:6]
+
+
+    # =========================================================
+    # 7. IF NOTHING FOUND
+    # =========================================================
+
+    if not recommendations:
+
+        recommendations = Package.objects.all()[:3]
+
+        response_message = (
+            "I couldn't find an exact match for that request yet. "
+            "Here are a few popular journeys you might like."
+        )
+
+    else:
+
+        first = recommendations[0]
+
+        response_message = (
+            f"✨ I found some journeys that match your preferences. "
+            f"My top suggestion is **{first.title}**."
+        )
+
+
+    # =========================================================
+    # 8. PACKAGE DATA
+    # =========================================================
+
+    package_data = []
+
+    for package in recommendations:
+
+        package_data.append({
+
+            "id": package.id,
+
+            "title": package.title,
+
+            "price": str(package.price),
+
+            "difficulty": package.difficulty,
+
+            "duration": package.duration,
+
+        })
+
+
+    # =========================================================
+    # 9. PERSONALIZED RESPONSE
+    # =========================================================
+
+    preferences = []
+
+    if detected_destination:
+        preferences.append(
+            detected_destination.title()
+        )
+
+    if difficulty:
+        preferences.append(
+            difficulty
+        )
+
+    if travel_style:
+        preferences.append(
+            travel_style
+        )
+
+
+    if preferences:
+
+        response_message += (
+            " I considered: "
+            + ", ".join(preferences)
+            + "."
+        )
+
+
+    return JsonResponse({
+
+        "success": True,
+
+        "message": response_message,
+
+        "packages": package_data,
+
+    })
+

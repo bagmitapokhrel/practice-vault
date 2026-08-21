@@ -6,6 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import Profile
 
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+
 class RegisterForm(UserCreationForm):
 
     first_name = forms.CharField(
@@ -34,16 +39,12 @@ class RegisterForm(UserCreationForm):
         ]
 
     def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
-            self.helper = FormHelper()
-            self.helper.form_method = "post"
-
-            for field in self.fields.values():
-                field.widget.attrs.update({
-                    "class": "form-control rounded-3",
-                    "placeholder": field.label,
-                })
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                "class": "form-control form-control-lux",
+            })
 
 
 

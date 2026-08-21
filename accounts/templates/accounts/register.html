@@ -1,19 +1,39 @@
-{% extends 'userpage/base.html' %} {% block title %}Register | Aetheria
-Journeys{% endblock %} {% block extra_css %}
+{% extends 'userpage/base.html' %}
+
+{% block title %}Register | Aetheria Journeys{% endblock %}
+
+{% block extra_css %}
+
 <style>
-  .auth-section {
+
+/* =========================================
+   AUTH SECTION
+========================================= */
+
+.auth-section {
     padding-top: 5rem;
     padding-bottom: 6rem;
-  }
+    background: #fafafa;
+}
 
-  .auth-card {
+
+/* =========================================
+   AUTH CARD
+========================================= */
+
+.auth-card {
     background: #ffffff;
     border: 1px solid var(--lux-border);
     border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
-  }
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+}
 
-  .form-control-lux {
+
+/* =========================================
+   FORM INPUTS
+========================================= */
+
+.form-control-lux {
     background-color: #fafafa !important;
     border: 1px solid var(--lux-border) !important;
     color: var(--lux-primary) !important;
@@ -21,236 +41,1278 @@ Journeys{% endblock %} {% block extra_css %}
     padding: 0.8rem 1rem;
     font-size: 0.95rem;
     transition: all 0.3s ease;
-  }
+}
 
-  .form-control-lux:focus {
+.form-control-lux::placeholder {
+    color: #adb5bd;
+}
+
+.form-control-lux:focus {
     background-color: #ffffff !important;
     border-color: var(--lux-primary) !important;
     box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
-  }
+}
 
-  .input-group-text-lux {
+
+/* =========================================
+   INPUT GROUP
+========================================= */
+
+.input-group-text-lux {
     background-color: #fafafa !important;
     border: 1px solid var(--lux-border) !important;
     border-right: none !important;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
     color: var(--lux-text-muted);
-  }
+    padding-left: 1rem;
+    padding-right: 0.8rem;
+}
 
-  .input-group .form-control-lux {
+.input-group .form-control-lux {
     border-left: none !important;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-  }
+}
+
+
+/* =========================================
+   VALIDATION
+========================================= */
+
+.validation-message {
+    min-height: 19px;
+    margin-top: 6px;
+    padding-left: 2px;
+    font-size: 0.78rem;
+    line-height: 1.3;
+    transition: all 0.2s ease;
+}
+
+.validation-message.error {
+    color: #dc3545;
+}
+
+.validation-message.success {
+    color: #198754;
+}
+
+
+/* =========================================
+   VALID INPUT
+========================================= */
+
+.form-control-lux.is-valid {
+    border-color: #198754 !important;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.06) !important;
+}
+
+.form-control-lux.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.06) !important;
+}
+
+
+/* Input group validation */
+
+.input-group:has(.form-control-lux.is-valid)
+.input-group-text-lux {
+    border-color: #198754 !important;
+}
+
+.input-group:has(.form-control-lux.is-invalid)
+.input-group-text-lux {
+    border-color: #dc3545 !important;
+}
+
+
+/* =========================================
+   PASSWORD STRENGTH
+========================================= */
+
+.password-strength {
+    height: 4px;
+    width: 100%;
+    background: #e9ecef;
+    border-radius: 10px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.password-strength-text {
+    font-size: 0.72rem;
+    margin-top: 4px;
+    min-height: 16px;
+}
+
+
+/* =========================================
+   TERMS
+========================================= */
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--lux-primary);
+    border-color: var(--lux-primary);
+}
+
+.form-check-label {
+    cursor: pointer;
+}
+
+
+/* =========================================
+   REGISTER BUTTON
+========================================= */
+
+.btn-register {
+    background: var(--lux-primary);
+    color: #ffffff;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-register:hover {
+    background: #1e293b;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+}
+
+.btn-register:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   SERVER ERROR
+========================================= */
+
+.server-error {
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+
+/* =========================================
+   LOGIN LINK
+========================================= */
+
+.login-link {
+    color: var(--lux-primary);
+    transition: all 0.2s ease;
+}
+
+.login-link:hover {
+    opacity: 0.7;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 576px) {
+
+    .auth-section {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .auth-card {
+        border-radius: 18px;
+    }
+
+}
+
 </style>
-{% endblock %} {% block content %}
+
+{% endblock %}
+
+
+{% block content %}
+
 <section class="auth-section min-vh-100 d-flex align-items-center">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-8" data-aos="fade-up" data-aos-duration="800">
-        <div class="auth-card p-4 p-sm-5">
-          <!-- Header -->
-          <div class="text-center mb-4">
-            <span
-              class="text-uppercase text-muted tracking-widest-xl small d-block mb-1"
-              >Begin Your Journey</span
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div
+                class="col-xl-6 col-lg-7 col-md-9"
+                data-aos="fade-up"
+                data-aos-duration="800"
             >
-            <h2 class="display-6 font-serif fw-bold text-dark mb-2">
-              Create an Account
-            </h2>
-            <p class="text-muted small">
-              Register to unlock exclusive itineraries and tailored luxury
-              concierges.
-            </p>
-          </div>
 
-          <!-- Form -->
-          <form method="POST" action="">
-            {% csrf_token %} 
-            {% if form.errors %}
-            <div class="alert alert-danger border-0 rounded-3 mb-4">
-              <div class="fw-semibold mb-2">Please fix the following:</div>
+                <div class="auth-card p-4 p-sm-5">
 
-              {{ form.non_field_errors }} 
-              {% for field in form %} 
-              {% for error in field.errors %}
-              <div class="small">
-                <strong>{{ field.label }}:</strong>
-                {{ error }}
-              </div>
-              {% endfor %} {% endfor %}
-            </div>
-            {% endif %}
 
-            <!-- Full Name / Split Inputs -->
-            <div class="row g-3 mb-3">
-              <div class="col-sm-6">
-                <label
-                  for="first_name"
-                  class="form-label text-dark small fw-semibold"
-                  >First Name</label
-                >
-                <input
-                  type="text"
-                  name="first_name"
-                  id="first_name"
-                  class="form-control form-control-lux"
-                  placeholder="e.g. Eleanor"
-                  required
-                />
-              </div>
-              <div class="col-sm-6">
-                <label
-                  for="last_name"
-                  class="form-label text-dark small fw-semibold"
-                  >Last Name</label
-                >
-                <input
-                  type="text"
-                  name="last_name"
-                  id="last_name"
-                  class="form-control form-control-lux"
-                  placeholder="e.g. Vance"
-                  required
-                />
-              </div>
-            </div>
+                    <!-- =====================================
+                         HEADER
+                    ====================================== -->
 
-            <!-- Username Field -->
-            <div class="mb-3">
-              <label
-                for="id_username"
-                class="form-label text-dark small fw-semibold"
-                >Username</label
-              >
-              <div class="input-group">
-                <span class="input-group-text input-group-text-lux"
-                  ><i class="bi bi-person"></i
-                ></span>
-                <input
-                  type="text"
-                  name="username"
-                  id="id_username"
-                  class="form-control form-control-lux"
-                  placeholder="Choose a unique username"
-                  required
-                />
-              </div>
-            </div>
+                    <div class="text-center mb-4">
 
-            <!-- Email Field -->
-            <div class="mb-3">
-              <label
-                for="id_email"
-                class="form-label text-dark small fw-semibold"
-                >Email Address</label
-              >
-              <div class="input-group">
-                <span class="input-group-text input-group-text-lux"
-                  ><i class="bi bi-envelope"></i
-                ></span>
-                <input
-                  type="email"
-                  name="email"
-                  id="id_email"
-                  class="form-control form-control-lux"
-                  placeholder="name@example.com"
-                  required
-                />
-              </div>
-            </div>
+                        <span
+                            class="text-uppercase text-muted tracking-widest-xl small d-block mb-2"
+                        >
+                            Begin Your Journey
+                        </span>
 
-            <!-- Password Field -->
-            <div class="row g-3 mb-4">
-              <div class="col-sm-6">
-                <label
-                  for="id_password1"
-                  class="form-label text-dark small fw-semibold"
-                  >Password</label
-                >
-                <div class="input-group">
-                  <span class="input-group-text input-group-text-lux"
-                    ><i class="bi bi-lock"></i
-                  ></span>
-                  <input
-                    type="password"
-                    name="password1"
-                    id="id_password1"
-                    class="form-control form-control-lux"
-                    placeholder="••••••••"
-                    required
-                  />
+                        <h2 class="display-6 font-serif fw-bold text-dark mb-2">
+                            Create an Account
+                        </h2>
+
+                        <p class="text-muted small mb-0">
+                            Register to unlock exclusive itineraries
+                            and tailored luxury experiences.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         DJANGO SERVER ERRORS
+                    ====================================== -->
+
+                    {% if form.errors %}
+
+                    <div class="alert alert-danger border-0 server-error mb-4">
+
+                        <div class="fw-semibold mb-2">
+                            Please fix the following:
+                        </div>
+
+                        {{ form.non_field_errors }}
+
+                        {% for field in form %}
+
+                            {% for error in field.errors %}
+
+                                <div class="small mb-1">
+
+                                    <strong>
+                                        {{ field.label }}:
+                                    </strong>
+
+                                    {{ error }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- =====================================
+                         REGISTRATION FORM
+                    ====================================== -->
+
+                    <form
+                        method="POST"
+                        action=""
+                        id="registerForm"
+                        novalidate
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- =================================
+                             FIRST + LAST NAME
+                        ================================== -->
+
+                        <div class="row g-3 mb-2">
+
+
+                            <!-- FIRST NAME -->
+
+                            <div class="col-sm-6">
+
+                                <label
+                                    for="first_name"
+                                    class="form-label text-dark small fw-semibold"
+                                >
+                                    First Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    id="first_name"
+                                    class="form-control form-control-lux"
+                                    placeholder="e.g. Eleanor"
+                                    autocomplete="given-name"
+                                    value="{{ form.first_name.value|default:'' }}"
+                                >
+
+                                <div
+                                    id="first_name_error"
+                                    class="validation-message"
+                                ></div>
+
+                            </div>
+
+
+                            <!-- LAST NAME -->
+
+                            <div class="col-sm-6">
+
+                                <label
+                                    for="last_name"
+                                    class="form-label text-dark small fw-semibold"
+                                >
+                                    Last Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    id="last_name"
+                                    class="form-control form-control-lux"
+                                    placeholder="e.g. Vance"
+                                    autocomplete="family-name"
+                                    value="{{ form.last_name.value|default:'' }}"
+                                >
+
+                                <div
+                                    id="last_name_error"
+                                    class="validation-message"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             USERNAME
+                        ================================== -->
+
+                        <div class="mb-2">
+
+                            <label
+                                for="id_username"
+                                class="form-label text-dark small fw-semibold"
+                            >
+                                Username
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text input-group-text-lux">
+                                    <i class="bi bi-person"></i>
+                                </span>
+
+                                <input
+                                    type="text"
+                                    name="username"
+                                    id="id_username"
+                                    class="form-control form-control-lux"
+                                    placeholder="Choose a unique username"
+                                    autocomplete="username"
+                                    value="{{ form.username.value|default:'' }}"
+                                >
+
+                            </div>
+
+                            <div
+                                id="username_error"
+                                class="validation-message"
+                            ></div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             EMAIL
+                        ================================== -->
+
+                        <div class="mb-2">
+
+                            <label
+                                for="id_email"
+                                class="form-label text-dark small fw-semibold"
+                            >
+                                Email Address
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text input-group-text-lux">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+
+                                <input
+                                    type="email"
+                                    name="email"
+                                    id="id_email"
+                                    class="form-control form-control-lux"
+                                    placeholder="name@example.com"
+                                    autocomplete="email"
+                                    value="{{ form.email.value|default:'' }}"
+                                >
+
+                            </div>
+
+                            <div
+                                id="email_error"
+                                class="validation-message"
+                            ></div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             PASSWORDS
+                        ================================== -->
+
+                        <div class="row g-3 mb-2">
+
+
+                            <!-- PASSWORD -->
+
+                            <div class="col-sm-6">
+
+                                <label
+                                    for="id_password1"
+                                    class="form-label text-dark small fw-semibold"
+                                >
+                                    Password
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text input-group-text-lux">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        name="password1"
+                                        id="id_password1"
+                                        class="form-control form-control-lux"
+                                        placeholder="••••••••"
+                                        autocomplete="new-password"
+                                    >
+
+                                </div>
+
+                                <div
+                                    id="password1_error"
+                                    class="validation-message"
+                                ></div>
+
+
+                                <!-- PASSWORD STRENGTH -->
+
+                                <div class="password-strength">
+
+                                    <div
+                                        id="passwordStrengthBar"
+                                        class="password-strength-bar"
+                                    ></div>
+
+                                </div>
+
+                                <div
+                                    id="passwordStrengthText"
+                                    class="password-strength-text text-muted"
+                                ></div>
+
+                            </div>
+
+
+                            <!-- CONFIRM PASSWORD -->
+
+                            <div class="col-sm-6">
+
+                                <label
+                                    for="id_password2"
+                                    class="form-label text-dark small fw-semibold"
+                                >
+                                    Confirm Password
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text input-group-text-lux">
+                                        <i class="bi bi-shield-check"></i>
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        name="password2"
+                                        id="id_password2"
+                                        class="form-control form-control-lux"
+                                        placeholder="••••••••"
+                                        autocomplete="new-password"
+                                    >
+
+                                </div>
+
+                                <div
+                                    id="password2_error"
+                                    class="validation-message"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             TERMS
+                        ================================== -->
+
+                        <div class="form-check mb-4 mt-3">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="terms"
+                                value="accepted"
+                                id="termsCheck"
+                            >
+
+                            <label
+                                class="form-check-label small text-muted"
+                                for="termsCheck"
+                            >
+
+                                I agree to the
+
+                                <a
+                                    href="#"
+                                    class="text-dark text-decoration-underline"
+                                >
+                                    Terms of Service
+                                </a>
+
+                                and
+
+                                <a
+                                    href="#"
+                                    class="text-dark text-decoration-underline"
+                                >
+                                    Privacy Policy
+                                </a>
+
+                            </label>
+
+                            <div
+                                id="terms_error"
+                                class="validation-message"
+                            ></div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             SUBMIT BUTTON
+                        ================================== -->
+
+                        <div class="d-grid mb-4">
+
+                            <button
+                                type="submit"
+                                id="registerButton"
+                                class="btn btn-register py-3 rounded-pill fw-semibold bg-dark"
+                            >
+
+                                Create My Account
+
+                                <i class="bi bi-arrow-right ms-2"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- =================================
+                             LOGIN
+                        ================================== -->
+
+                        <div class="text-center">
+
+                            <p class="small text-muted mb-0">
+
+                                Already have an account?
+
+                                <a
+                                    href="{% url 'login' %}"
+                                    class="login-link fw-semibold text-decoration-none"
+                                >
+                                    Sign In
+                                </a>
+
+                            </p>
+
+                        </div>
+
+
+                    </form>
+
                 </div>
-              </div>
-              <div class="col-sm-6">
-                <label
-                  for="id_password2"
-                  class="form-label text-dark small fw-semibold"
-                  >Confirm Password</label
-                >
-                <div class="input-group">
-                  <span class="input-group-text input-group-text-lux"
-                    ><i class="bi bi-shield-check"></i
-                  ></span>
-                  <input
-                    type="password"
-                    name="password2"
-                    id="id_password2"
-                    class="form-control form-control-lux"
-                    placeholder="••••••••"
-                    required
-                  />
-                </div>
-              </div>
+
             </div>
 
-            <!-- Terms & Conditions Checkbox -->
-            <div class="form-check mb-4">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value=""
-                id="termsCheck"
-                required
-              />
-              <label class="form-check-label small text-muted" for="termsCheck">
-                I agree to the
-                <a href="#" class="text-dark text-decoration-underline"
-                  >Terms of Service</a
-                >
-                and
-                <a href="#" class="text-dark text-decoration-underline"
-                  >Privacy Policy</a
-                >.
-              </label>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="d-grid mb-4">
-              <button
-                type="submit"
-                class="btn btn-primary-lux py-3 rounded-pill fw-semibold"
-              >
-                Complete Registration <i class="bi bi-arrow-right ms-2"></i>
-              </button>
-            </div>
-
-            <!-- Footer Link -->
-            <div class="text-center">
-              <p class="small text-muted mb-0">
-                Already have an account?
-                <a
-                  href="{% url 'login' %}"
-                  class="text-dark fw-semibold text-decoration-none"
-                  >Sign In</a
-                >
-              </p>
-            </div>
-          </form>
         </div>
-      </div>
+
     </div>
-  </div>
+
 </section>
+
+
+<!-- =============================================
+     LIVE VALIDATION JAVASCRIPT
+============================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    /* =========================================
+       GET ELEMENTS
+    ========================================= */
+
+    const form = document.getElementById("registerForm");
+
+    const firstName = document.getElementById("first_name");
+    const lastName = document.getElementById("last_name");
+    const username = document.getElementById("id_username");
+    const email = document.getElementById("id_email");
+    const password1 = document.getElementById("id_password1");
+    const password2 = document.getElementById("id_password2");
+    const terms = document.getElementById("termsCheck");
+
+    const passwordStrengthBar =
+        document.getElementById("passwordStrengthBar");
+
+    const passwordStrengthText =
+        document.getElementById("passwordStrengthText");
+
+
+    /* =========================================
+       VALIDATION HELPERS
+    ========================================= */
+
+    function showError(input, errorId, message) {
+
+        const error = document.getElementById(errorId);
+
+        input.classList.remove("is-valid");
+
+        input.classList.add("is-invalid");
+
+        error.className = "validation-message error";
+
+        error.innerHTML =
+            '<i class="bi bi-exclamation-circle me-1"></i>' +
+            message;
+    }
+
+
+    function showSuccess(input, errorId, message) {
+
+        const error = document.getElementById(errorId);
+
+        input.classList.remove("is-invalid");
+
+        input.classList.add("is-valid");
+
+        error.className = "validation-message success";
+
+        error.innerHTML =
+            '<i class="bi bi-check-circle me-1"></i>' +
+            message;
+    }
+
+
+    function clearValidation(input, errorId) {
+
+        const error = document.getElementById(errorId);
+
+        input.classList.remove("is-valid");
+        input.classList.remove("is-invalid");
+
+        error.className = "validation-message";
+
+        error.innerHTML = "";
+    }
+
+
+    /* =========================================
+       FIRST NAME
+    ========================================= */
+
+    function validateFirstName() {
+
+        const value = firstName.value.trim();
+
+        if (value === "") {
+
+            showError(
+                firstName,
+                "first_name_error",
+                "First name is required."
+            );
+
+            return false;
+        }
+
+        if (value.length < 2) {
+
+            showError(
+                firstName,
+                "first_name_error",
+                "At least 2 characters are required."
+            );
+
+            return false;
+        }
+
+        if (!/^[A-Za-z]+$/.test(value)) {
+
+            showError(
+                firstName,
+                "first_name_error",
+                "Only letters are allowed."
+            );
+
+            return false;
+        }
+
+        showSuccess(
+            firstName,
+            "first_name_error",
+            ""
+        );
+
+        return true;
+    }
+  // first letter capital
+    firstName.addEventListener("input", function () {
+    this.value = this.value.replace(/\b\w/g, function (char) {
+        return char.toUpperCase();
+    });
+
+    validateFirstName();
+});
+
+    /* =========================================
+       LAST NAME
+    ========================================= */
+
+    function validateLastName() {
+
+        const value = lastName.value.trim();
+
+        if (value === "") {
+
+            showError(
+                lastName,
+                "last_name_error",
+                "Last name is required."
+            );
+
+            return false;
+        }
+
+        if (value.length < 2) {
+
+            showError(
+                lastName,
+                "last_name_error",
+                "At least 2 characters are required."
+            );
+
+            return false;
+        }
+
+        if (!/^[A-Za-z]+$/.test(value)) {
+
+            showError(
+                lastName,
+                "last_name_error",
+                "Only letters are allowed."
+            );
+
+            return false;
+        }
+
+        showSuccess(
+            lastName,
+            "last_name_error",
+            ""
+        );
+
+        return true;
+    }
+    // first letter capital
+    lastName.addEventListener("input", function () {
+    this.value = this.value.replace(/\b\w/g, function (char) {
+        return char.toUpperCase();
+    });
+
+    validateLastName();
+});
+
+    /* =========================================
+       USERNAME
+    ========================================= */
+
+    function validateUsername() {
+
+        const value = username.value.trim();
+
+        if (value === "") {
+
+            showError(
+                username,
+                "username_error",
+                "Username is required."
+            );
+
+            return false;
+        }
+
+        if (value.length < 4) {
+
+            showError(
+                username,
+                "username_error",
+                "Username must contain at least 4 characters."
+            );
+
+            return false;
+        }
+
+        if (!/^[A-Za-z0-9_]+$/.test(value)) {
+
+            showError(
+                username,
+                "username_error",
+                "Use only letters, numbers and underscores."
+            );
+
+            return false;
+        }
+
+        showSuccess(
+            username,
+            "username_error",
+            ""
+        );
+
+        return true;
+    }
+
+
+    /* =========================================
+       EMAIL
+    ========================================= */
+
+    function validateEmail() {
+
+        const value = email.value.trim();
+
+        if (value === "") {
+
+            showError(
+                email,
+                "email_error",
+                "Email address is required."
+            );
+
+            return false;
+        }
+
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(value)) {
+
+            showError(
+                email,
+                "email_error",
+                "Enter a valid email address."
+            );
+
+            return false;
+        }
+
+        showSuccess(
+            email,
+            "email_error",
+            "Valid email address."
+        );
+
+        return true;
+    }
+
+
+    /* =========================================
+       PASSWORD
+    ========================================= */
+
+    function validatePassword() {
+
+        const value = password1.value;
+
+        if (value === "") {
+
+            showError(
+                password1,
+                "password1_error",
+                "Password is required."
+            );
+
+            updatePasswordStrength("");
+
+            return false;
+        }
+
+        if (value.length < 8) {
+
+            showError(
+                password1,
+                "password1_error",
+                "Password must contain at least 8 characters."
+            );
+
+            updatePasswordStrength(value);
+
+            return false;
+        }
+
+        if (!/[A-Z]/.test(value)) {
+
+            showError(
+                password1,
+                "password1_error",
+                "Include at least one uppercase letter."
+            );
+
+            updatePasswordStrength(value);
+
+            return false;
+        }
+
+        if (!/[a-z]/.test(value)) {
+
+            showError(
+                password1,
+                "password1_error",
+                "Include at least one lowercase letter."
+            );
+
+            updatePasswordStrength(value);
+
+            return false;
+        }
+
+        if (!/[0-9]/.test(value)) {
+
+            showError(
+                password1,
+                "password1_error",
+                "Include at least one number."
+            );
+
+            updatePasswordStrength(value);
+
+            return false;
+        }
+
+        if (!/[!@#$%^&*(),.?":{}|<>_\-]/.test(value)) {
+
+            showError(
+                password1,
+                "password1_error",
+                "Include at least one special character."
+            );
+
+            updatePasswordStrength(value);
+
+            return false;
+        }
+
+        showSuccess(
+            password1,
+            "password1_error",
+            "Strong password."
+        );
+
+        updatePasswordStrength(value);
+
+        return true;
+    }
+
+
+    /* =========================================
+       PASSWORD STRENGTH
+    ========================================= */
+
+    function updatePasswordStrength(value) {
+
+        let strength = 0;
+
+        if (value.length >= 8) {
+            strength++;
+        }
+
+        if (/[A-Z]/.test(value)) {
+            strength++;
+        }
+
+        if (/[a-z]/.test(value)) {
+            strength++;
+        }
+
+        if (/[0-9]/.test(value)) {
+            strength++;
+        }
+
+        if (/[!@#$%^&*(),.?":{}|<>_\-]/.test(value)) {
+            strength++;
+        }
+
+
+        if (value === "") {
+
+            passwordStrengthBar.style.width = "0%";
+
+            passwordStrengthText.textContent = "";
+
+            return;
+        }
+
+
+        if (strength <= 2) {
+
+            passwordStrengthBar.style.width = "35%";
+
+            passwordStrengthText.textContent =
+                "Weak password";
+
+        } else if (strength <= 4) {
+
+            passwordStrengthBar.style.width = "70%";
+
+            passwordStrengthText.textContent =
+                "Good password";
+
+        } else {
+
+            passwordStrengthBar.style.width = "100%";
+
+            passwordStrengthText.textContent =
+                "Strong password";
+        }
+
+    }
+
+
+    /* =========================================
+       CONFIRM PASSWORD
+    ========================================= */
+
+    function validatePassword2() {
+
+        const value = password2.value;
+
+        if (value === "") {
+
+            showError(
+                password2,
+                "password2_error",
+                "Please confirm your password."
+            );
+
+            return false;
+        }
+
+        if (value !== password1.value) {
+
+            showError(
+                password2,
+                "password2_error",
+                "Passwords do not match."
+            );
+
+            return false;
+        }
+
+        showSuccess(
+            password2,
+            "password2_error",
+            "Passwords match."
+        );
+
+        return true;
+    }
+
+
+    /* =========================================
+       LIVE EVENTS
+    ========================================= */
+
+    firstName.addEventListener(
+        "input",
+        validateFirstName
+    );
+
+    lastName.addEventListener(
+        "input",
+        validateLastName
+    );
+
+    username.addEventListener(
+        "input",
+        validateUsername
+    );
+
+    email.addEventListener(
+        "input",
+        validateEmail
+    );
+
+    password1.addEventListener(
+        "input",
+        function () {
+
+            validatePassword();
+
+            if (password2.value !== "") {
+                validatePassword2();
+            }
+
+        }
+    );
+
+    password2.addEventListener(
+        "input",
+        validatePassword2
+    );
+
+
+    /* =========================================
+       TERMS
+    ========================================= */
+
+    terms.addEventListener(
+        "change",
+        function () {
+
+            const error =
+                document.getElementById("terms_error");
+
+            if (terms.checked) {
+
+                error.className =
+                    "validation-message success";
+
+                error.innerHTML =
+                    '<i class="bi bi-check-circle me-1"></i>' +
+                    "Thank you for accepting.";
+
+            } else {
+
+                error.className =
+                    "validation-message error";
+
+                error.innerHTML =
+                    '<i class="bi bi-exclamation-circle me-1"></i>' +
+                    "You must accept the terms.";
+
+            }
+
+        }
+    );
+
+
+    /* =========================================
+       FORM SUBMIT
+    ========================================= */
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            const validFirstName =
+                validateFirstName();
+
+            const validLastName =
+                validateLastName();
+
+            const validUsername =
+                validateUsername();
+
+            const validEmail =
+                validateEmail();
+
+            const validPassword =
+                validatePassword();
+
+            const validPassword2 =
+                validatePassword2();
+
+
+            let validTerms = true;
+
+
+            if (!terms.checked) {
+
+                const error =
+                    document.getElementById("terms_error");
+
+                error.className =
+                    "validation-message error";
+
+                error.innerHTML =
+                    '<i class="bi bi-exclamation-circle me-1"></i>' +
+                    "You must accept the terms.";
+
+                validTerms = false;
+            }
+
+
+            if (
+                !validFirstName ||
+                !validLastName ||
+                !validUsername ||
+                !validEmail ||
+                !validPassword ||
+                !validPassword2 ||
+                !validTerms
+            ) {
+
+                event.preventDefault();
+
+                return false;
+            }
+
+        }
+    );
+
+});
+
+</script>
+
 {% endblock %}
